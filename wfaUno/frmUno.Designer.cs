@@ -1,5 +1,5 @@
 ﻿namespace wfaUno {
-	partial class frmUno {
+	partial class FrmUno {
 		/// <summary>
 		/// 必需的设计器变量。
 		/// </summary>
@@ -79,14 +79,14 @@
             this.lblBox.Size = new System.Drawing.Size(90, 120);
             this.lblBox.TabIndex = 0;
             this.lblBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblBox.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.lblBox.TextChanged += new System.EventHandler(this.lblBox_TextChanged);
-            this.lblBox.Click += new System.EventHandler(this.lblBox_Click);
+            this.lblBox.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.lblBox.TextChanged += new System.EventHandler(this.LblBox_TextChanged);
+            this.lblBox.Click += new System.EventHandler(this.LblBox_Click);
             // 
             // timBoxToPlayers
             // 
             this.timBoxToPlayers.Interval = 10;
-            this.timBoxToPlayers.Tick += new System.EventHandler(this.timBoxToPlayers_Tick);
+            this.timBoxToPlayers.Tick += new System.EventHandler(this.TimBoxToPlayers_Tick);
             // 
             // mnuGame
             // 
@@ -121,7 +121,7 @@
             this.mnuNew.Name = "mnuNew";
             this.mnuNew.Size = new System.Drawing.Size(151, 22);
             this.mnuNew.Text = "开局 (&N)";
-            this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
+            this.mnuNew.Click += new System.EventHandler(this.MnuNew_Click);
             // 
             // separatorNc
             // 
@@ -144,14 +144,14 @@
             this.mnuByColor.Name = "mnuByColor";
             this.mnuByColor.Size = new System.Drawing.Size(103, 22);
             this.mnuByColor.Text = "按颜色";
-            this.mnuByColor.Click += new System.EventHandler(this.mnuRank_Click);
+            this.mnuByColor.Click += new System.EventHandler(this.MnuRank_Click);
             // 
             // mnuByNumber
             // 
             this.mnuByNumber.Name = "mnuByNumber";
             this.mnuByNumber.Size = new System.Drawing.Size(103, 22);
             this.mnuByNumber.Text = "按数字";
-            this.mnuByNumber.Click += new System.EventHandler(this.mnuRank_Click);
+            this.mnuByNumber.Click += new System.EventHandler(this.MnuRank_Click);
             // 
             // mnuScrollBar
             // 
@@ -160,7 +160,7 @@
             this.mnuScrollBar.Name = "mnuScrollBar";
             this.mnuScrollBar.Size = new System.Drawing.Size(151, 22);
             this.mnuScrollBar.Text = "多手持牌";
-            this.mnuScrollBar.Click += new System.EventHandler(this.mnuScrollBar_Click);
+            this.mnuScrollBar.Click += new System.EventHandler(this.MnuScrollBar_Click);
             // 
             // mnuToolTip
             // 
@@ -169,7 +169,7 @@
             this.mnuToolTip.Name = "mnuToolTip";
             this.mnuToolTip.Size = new System.Drawing.Size(151, 22);
             this.mnuToolTip.Text = "显示工具提示 (&T)";
-            this.mnuToolTip.Click += new System.EventHandler(this.mnuToolTip_Click);
+            this.mnuToolTip.Click += new System.EventHandler(this.MnuToolTip_Click);
             // 
             // mnuColor
             // 
@@ -187,14 +187,14 @@
             this.mnuRadioBox.Name = "mnuRadioBox";
             this.mnuRadioBox.Size = new System.Drawing.Size(125, 22);
             this.mnuRadioBox.Text = "使用单选框";
-            this.mnuRadioBox.Click += new System.EventHandler(this.mnuColor_Click);
+            this.mnuRadioBox.Click += new System.EventHandler(this.MnuColor_Click);
             // 
             // mnuRightClick
             // 
             this.mnuRightClick.Name = "mnuRightClick";
             this.mnuRightClick.Size = new System.Drawing.Size(125, 22);
             this.mnuRightClick.Text = "右击 [出牌]";
-            this.mnuRightClick.Click += new System.EventHandler(this.mnuColor_Click);
+            this.mnuRightClick.Click += new System.EventHandler(this.MnuColor_Click);
             // 
             // separatorCx
             // 
@@ -207,21 +207,21 @@
             this.mnuSaveGame.Name = "mnuSaveGame";
             this.mnuSaveGame.Size = new System.Drawing.Size(151, 22);
             this.mnuSaveGame.Text = "储存 (&S)";
-            this.mnuSaveGame.Click += new System.EventHandler(this.mnuSaveGame_Click);
+            this.mnuSaveGame.Click += new System.EventHandler(this.MnuSaveGame_Click);
             // 
             // itmQuit
             // 
             this.itmQuit.Name = "itmQuit";
             this.itmQuit.Size = new System.Drawing.Size(151, 22);
             this.itmQuit.Text = "退出 (&X)";
-            this.itmQuit.Click += new System.EventHandler(this.itmQuit_Click);
+            this.itmQuit.Click += new System.EventHandler(this.ItmQuit_Click);
             // 
             // mnuChat
             // 
             this.mnuChat.Name = "mnuChat";
             this.mnuChat.Size = new System.Drawing.Size(54, 18);
             this.mnuChat.Text = "聊天 (&T)";
-            this.mnuChat.Click += new System.EventHandler(this.mnuChat_Click);
+            this.mnuChat.Click += new System.EventHandler(this.MnuChat_Click);
             // 
             // itmHelp
             // 
@@ -239,7 +239,7 @@
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.mnuContent.Size = new System.Drawing.Size(125, 22);
             this.mnuContent.Text = "目彔 (&C)";
-            this.mnuContent.Click += new System.EventHandler(this.mnuContent_Click);
+            this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
             // 
             // separatorHa
             // 
@@ -251,7 +251,7 @@
             this.itmAbout.Name = "itmAbout";
             this.itmAbout.Size = new System.Drawing.Size(125, 22);
             this.itmAbout.Text = "关于 (&A)";
-            this.itmAbout.Click += new System.EventHandler(this.itmAbout_Click);
+            this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
             // pnlCtrl
             // 
@@ -279,8 +279,8 @@
             this.btnJumpin.Text = "点断";
             this.btnJumpin.UseVisualStyleBackColor = true;
             this.btnJumpin.Visible = false;
-            this.btnJumpin.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.btnJumpin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
+            this.btnJumpin.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.btnJumpin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // rdoUno
             // 
@@ -296,8 +296,8 @@
             this.rdoUno.Text = "UNO";
             this.rdoUno.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rdoUno.UseVisualStyleBackColor = true;
-            this.rdoUno.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.rdoUno.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
+            this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.rdoUno.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // btnChallenge
             // 
@@ -311,9 +311,9 @@
             this.btnChallenge.Text = "检举";
             this.btnChallenge.UseVisualStyleBackColor = true;
             this.btnChallenge.Visible = false;
-            this.btnChallenge.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.btnChallenge.Click += new System.EventHandler(this.btnChallenge_Click);
-            this.btnChallenge.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
+            this.btnChallenge.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.btnChallenge.Click += new System.EventHandler(this.BtnChallenge_Click);
+            this.btnChallenge.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // btnDraw
             // 
@@ -326,9 +326,9 @@
             this.btnDraw.TabIndex = 1;
             this.btnDraw.Text = "摸牌";
             this.btnDraw.UseVisualStyleBackColor = true;
-            this.btnDraw.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.btnDraw.Click += new System.EventHandler(this.btnDraw_Click);
-            this.btnDraw.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
+            this.btnDraw.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.btnDraw.Click += new System.EventHandler(this.BtnDraw_Click);
+            this.btnDraw.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // btnPlay
             // 
@@ -342,21 +342,21 @@
             this.btnPlay.Text = "出牌";
             this.btnPlay.UseVisualStyleBackColor = false;
             this.btnPlay.Visible = false;
-            this.btnPlay.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            this.btnPlay.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
-            this.btnPlay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnPlay_MouseDown);
+            this.btnPlay.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.btnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
+            this.btnPlay.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
+            this.btnPlay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BtnPlay_MouseDown);
             // 
             // timPlayersToCenter
             // 
             this.timPlayersToCenter.Interval = 10;
             this.timPlayersToCenter.Tag = "";
-            this.timPlayersToCenter.Tick += new System.EventHandler(this.timPlayersToCenter_Tick);
+            this.timPlayersToCenter.Tick += new System.EventHandler(this.TimPlayersToCenter_Tick);
             // 
             // timBoxToCenter
             // 
             this.timBoxToCenter.Interval = 10;
-            this.timBoxToCenter.Tick += new System.EventHandler(this.timBoxToCenter_Tick);
+            this.timBoxToCenter.Tick += new System.EventHandler(this.TimBoxToCenter_Tick);
             // 
             // lblDrawMark
             // 
@@ -369,7 +369,7 @@
             this.lblDrawMark.TabIndex = 5;
             this.lblDrawMark.Text = "+";
             this.lblDrawMark.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblDrawMark.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
+            this.lblDrawMark.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
             // lblDraw
             // 
@@ -382,7 +382,7 @@
             this.lblDraw.TabIndex = 6;
             this.lblDraw.Text = "0";
             this.lblDraw.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblDraw.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
+            this.lblDraw.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
             // lblAction
             // 
@@ -392,23 +392,23 @@
             this.lblAction.Size = new System.Drawing.Size(0, 27);
             this.lblAction.TabIndex = 7;
             this.lblAction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblAction.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
+            this.lblAction.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
             // timTurn
             // 
             this.timTurn.Interval = 1000;
             this.timTurn.Tag = "4";
-            this.timTurn.Tick += new System.EventHandler(this.timTurn_Tick);
+            this.timTurn.Tick += new System.EventHandler(this.TimTurn_Tick);
             // 
             // timUno
             // 
             this.timUno.Interval = 1000;
-            this.timUno.Tick += new System.EventHandler(this.timUno_Tick);
+            this.timUno.Tick += new System.EventHandler(this.TimUno_Tick);
             // 
             // timChallenge
             // 
             this.timChallenge.Interval = 1000;
-            this.timChallenge.Tick += new System.EventHandler(this.timChallenge_Tick);
+            this.timChallenge.Tick += new System.EventHandler(this.TimChallenge_Tick);
             // 
             // toolTip
             // 
@@ -418,7 +418,7 @@
             this.toolTip.ReshowDelay = 0;
             this.toolTip.ShowAlways = true;
             this.toolTip.ToolTipTitle = " ";
-            this.toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip_Popup);
+            this.toolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.ToolTip_Popup);
             // 
             // lblWatch
             // 
@@ -431,8 +431,8 @@
             this.lblWatch.Text = "0°0′0″";
             this.toolTip.SetToolTip(this.lblWatch, "游戏时长");
             this.lblWatch.Visible = false;
-            this.lblWatch.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
-            this.lblWatch.Resize += new System.EventHandler(this.lblWatch_Resize);
+            this.lblWatch.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.lblWatch.Resize += new System.EventHandler(this.LblWatch_Resize);
             // 
             // hPlayer
             // 
@@ -441,8 +441,8 @@
             this.hPlayer.Size = new System.Drawing.Size(80, 14);
             this.hPlayer.TabIndex = 9;
             this.hPlayer.Visible = false;
-            this.hPlayer.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hPlayer_Scroll);
-            this.hPlayer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
+            this.hPlayer.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HPlayer_Scroll);
+            this.hPlayer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             // 
             // pnlPlayer
             // 
@@ -451,12 +451,12 @@
             this.pnlPlayer.Name = "pnlPlayer";
             this.pnlPlayer.Size = new System.Drawing.Size(90, 120);
             this.pnlPlayer.TabIndex = 10;
-            this.pnlPlayer.BackColorChanged += new System.EventHandler(this.control_BackColorChanged);
+            this.pnlPlayer.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
             // timWatch
             // 
             this.timWatch.Interval = 1000;
-            this.timWatch.Tick += new System.EventHandler(this.timWatch_Tick);
+            this.timWatch.Tick += new System.EventHandler(this.TimWatch_Tick);
             // 
             // frmUno
             // 
@@ -479,11 +479,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Tag = "0";
             this.Text = "Uno";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmUno_FormClosing);
-            this.Load += new System.EventHandler(this.frmUno_Load);
-            this.Click += new System.EventHandler(this.frmUno_Click);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.control_KeyDown);
-            this.Resize += new System.EventHandler(this.frmUno_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmUno_FormClosing);
+            this.Load += new System.EventHandler(this.FrmUno_Load);
+            this.Click += new System.EventHandler(this.FrmUno_Click);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
+            this.Resize += new System.EventHandler(this.FrmUno_Resize);
             this.mnuGame.ResumeLayout(false);
             this.mnuGame.PerformLayout();
             this.pnlCtrl.ResumeLayout(false);

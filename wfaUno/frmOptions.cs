@@ -258,7 +258,7 @@ namespace wfaUno {
                 mnuOns.Enabled = false;
                 mnuCheat.Enabled = false;
                 mnuBack.Enabled = false;
-                new frmUno(this).Show();
+                new FrmUno(this).Show();
             }
             Hide();
         }
