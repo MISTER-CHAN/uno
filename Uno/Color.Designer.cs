@@ -1,6 +1,6 @@
-﻿namespace wfaUno
+﻿namespace Uno
 {
-    partial class frmColor
+    partial class FrmColor
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -52,7 +52,7 @@
             this.MinimizeBox = false;
             this.Name = "frmColor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmColor_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmColor_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

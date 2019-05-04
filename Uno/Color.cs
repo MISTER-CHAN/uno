@@ -7,17 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace wfaUno
+namespace Uno
 {
-    public partial class frmColor : Form
+    public partial class FrmColor : Form
     {
-        public frmColor()
+        public FrmColor()
         {
             InitializeComponent();
             for (int c = 0; c <= 3; c++)
             {
                 mnuColor.Items.Add("  ");
-                mnuColor.Items[c].Click += new EventHandler(mnuColor_Click);
+                mnuColor.Items[c].Click += new EventHandler(MnuColor_Click);
                 mnuColor.Items[c].Enabled = false;
                 mnuColor.Items[c].Font = new Font(mnuColor.Items[c].Font.FontFamily, mnuColor.Items[c].Font.Size * 4);
                 mnuColor.Items[c].Tag = c;
@@ -25,7 +25,7 @@ namespace wfaUno
             Size = new Size(mnuColor.Items[0].Width * 5, mnuColor.Height);
         }
 
-        private void frmColor_KeyDown(object sender, KeyEventArgs e)
+        private void FrmColor_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -42,7 +42,7 @@ namespace wfaUno
             }
         }
 
-        private void mnuColor_Click(object sender, EventArgs e)
+        private void MnuColor_Click(object sender, EventArgs e)
         {
             Tag = ((ToolStripMenuItem)sender).Tag;
             Close();

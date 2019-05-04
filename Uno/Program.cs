@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace wfaUno
+namespace Uno
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace wfaUno
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmOptions());
+            Application.Run(new Options());
         }
     }
 }

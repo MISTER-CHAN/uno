@@ -8,11 +8,26 @@
     <ProjectGuid>{2F8F21FD-C9BC-4F0A-AD78-B02500F08D16}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>wfaUno</RootNamespace>
-    <AssemblyName>wfaUno</AssemblyName>
+    <RootNamespace>Uno</RootNamespace>
+    <AssemblyName>Uno</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -50,34 +65,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="frmColor.cs">
+    <Compile Include="Color.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmColor.Designer.cs">
-      <DependentUpon>frmColor.cs</DependentUpon>
+    <Compile Include="Color.Designer.cs">
+      <DependentUpon>Color.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmOptions.cs">
+    <Compile Include="Options.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmOptions.Designer.cs">
-      <DependentUpon>frmOptions.cs</DependentUpon>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmUno.cs">
+    <Compile Include="Uno.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmUno.Designer.cs">
-      <DependentUpon>frmUno.cs</DependentUpon>
+    <Compile Include="Uno.Designer.cs">
+      <DependentUpon>Uno.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frmColor.resx">
-      <DependentUpon>frmColor.cs</DependentUpon>
+    <EmbeddedResource Include="Color.resx">
+      <DependentUpon>Color.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmUno.resx">
-      <DependentUpon>frmUno.cs</DependentUpon>
+    <EmbeddedResource Include="Uno.resx">
+      <DependentUpon>Uno.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -87,6 +103,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -97,6 +114,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

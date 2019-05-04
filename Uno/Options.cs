@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace wfaUno {
-	public partial class frmOptions : Form {
+namespace Uno {
+	public partial class Options : Form {
 
         public string[] keys = {};
         bool isPlaying = false;
 
-		public frmOptions() {
+		public Options() {
 			InitializeComponent();
             mnuOptions.Font = new Font(mnuOptions.Font.FontFamily, mnuOptions.Font.Size * 2);
             Size = new Size(mnuQuit.Width * 8, mnuOptions.Height);
@@ -23,11 +23,11 @@ namespace wfaUno {
                 mnuLoadGame.Enabled = false;
 		}
 
-        private void loadGame(string save)
+        private void LoadGame(string save)
         {
             string[] keys = save.Split(char.Parse("K"));
             this.keys = keys;
-            txtBoxes.Text = keys[9];
+            txtDecks.Text = keys[9];
             mnuBlank.Checked = bool.Parse(keys[10]);
             mnuMagentaBlank.Checked = bool.Parse(keys[11]);
             mnuBlackBlank.Checked = bool.Parse(keys[12]);
@@ -49,10 +49,10 @@ namespace wfaUno {
             mnuCheat.Checked = bool.Parse(keys[28]);
         }
 
-        private void mnuAdvanced_Click(object sender, EventArgs e)
+        private void MnuAdvanced_Click(object sender, EventArgs e)
         {
             txtDealt.Text = "11";
-            txtBoxes.Text = "1";
+            txtDecks.Text = "1";
             mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = false;
@@ -74,7 +74,7 @@ namespace wfaUno {
             mnuOneLoser.Checked = true;
         }
 
-        private void mnuBack_Click(object sender, EventArgs e)
+        private void MnuBack_Click(object sender, EventArgs e)
         {
             mnuNew.Visible = true;
             mnuLoad.Visible = true;
@@ -88,7 +88,7 @@ namespace wfaUno {
             mnuBack.Visible = false;
         }
 
-        private void mnuCustom_Click(object sender, EventArgs e)
+        private void MnuCustom_Click(object sender, EventArgs e)
         {
             mnuNew.Visible = false;
             mnuLoad.Visible = false;
@@ -102,10 +102,152 @@ namespace wfaUno {
             mnuBack.Visible = true;
         }
 
-        public string saveRules()
+        private void MnuDurable_Click(object sender, EventArgs e)
+        {
+            txtDealt.Text = "57";
+            txtDecks.Text = "3";
+            mnuBlank.Checked = true;
+            mnuMagentaBlank.Checked = true;
+            mnuBlackBlank.Checked = true;
+            mnuDownpourDraw.Checked = true;
+            mnuAttack.Checked = true;
+            mnuPairs.Checked = true;
+            mnuPlayOrDrawAll.Checked = false;
+            mnuDrawTilCanPlay.Checked = true;
+            mnuDrawAllAndPlay.Checked = false;
+            mnuDrawAndPlay.Checked = true;
+            mnuChallenges.Checked = false;
+            mnuDoubleDraw.Checked = true;
+            mnuDrawBeforePlaying.Checked = true;
+            mnuJumpin.Checked = false;
+            mnuSevenZero.Checked = false;
+            mnuSkipPlayers.Checked = false;
+            mnuSkipTimes.Checked = true;
+            mnuOneWinner.Checked = true;
+            mnuOneLoser.Checked = false;
+        }
+
+        private void MnuImportGame_Click(object sender, EventArgs e)
+        {
+            string s = Interaction.InputBox("导入存档", "读取存档", Clipboard.GetText());
+            if (s == "")
+                return;
+            try
+            {
+                LoadGame(s);
+            }
+            catch
+            {
+                MessageBox.Show("无效的游戏记彔!", "读取游戏", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            mnuLoad.Enabled = false;
+            txtDealt.Text = "1";
+            MnuStart_Click(mnuStart, new EventArgs());
+        }
+
+        private void MnuImportRules_Click(object sender, EventArgs e)
+        {
+            string s = Interaction.InputBox("导入玩法", "快速游戏", Clipboard.GetText());
+            if (s != "")
+                try
+                {
+                    LoadGame(s);
+                }
+                catch
+                {
+                    MessageBox.Show("无效的游戏玩法!", "读取玩法", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+        }
+
+        private void MnuLoadGame_Click(object sender, EventArgs e)
+        {
+            mnuLoad.Enabled = false;
+            txtDealt.Text = "1";
+            LoadGame(Interaction.GetSetting("UNO", "GAME", "SAVE"));
+            MnuStart_Click(mnuStart, new EventArgs());
+        }
+
+        private void MnuLoadRules_Click(object sender, EventArgs e)
+        {
+            mnuQuick.HideDropDown();
+            LoadGame(Interaction.GetSetting("UNO", "GAME", "RULES"));
+        }
+
+        private void MnuNew_Click(object sender, EventArgs e)
+        {
+            MnuStandard_Click(mnuStandard, new EventArgs());
+            MnuStart_Click(mnuStart, new EventArgs());
+        }
+
+        private void MnuQuit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void MnuSaveRules_Click(object sender, EventArgs e)
+        {
+            Interaction.SaveSetting("UNO", "GAME", "RULES", "KKKKKKKKK" + SaveRules());
+        }
+
+        private void MnuSkip_Click(object sender, EventArgs e)
+        {
+            mnuSkipPlayers.Checked = false;
+            mnuSkipTimes.Checked = false;
+            ((ToolStripMenuItem)sender).Checked = true;
+        }
+
+        private void MnuStandard_Click(object sender, EventArgs e)
+        {
+            txtDealt.Text = "7";
+            txtDecks.Text = "1";
+            mnuBlank.Checked = false;
+            mnuMagentaBlank.Checked = false;
+            mnuBlackBlank.Checked = false;
+            mnuDownpourDraw.Checked = false;
+            mnuAttack.Checked = false;
+            mnuPairs.Checked = false;
+            mnuPlayOrDrawAll.Checked = false;
+            mnuDrawTilCanPlay.Checked = false;
+            mnuDrawAllAndPlay.Checked = false;
+            mnuDrawAndPlay.Checked = true;
+            mnuDoubleDraw.Checked = false;
+            mnuDrawBeforePlaying.Checked = false;
+            mnuChallenges.Checked = true;
+            mnuJumpin.Checked = false;
+            mnuSevenZero.Checked = false;
+            mnuSkipPlayers.Checked = true;
+            mnuSkipTimes.Checked = false;
+            mnuOneWinner.Checked = true;
+            mnuOneLoser.Checked = false;
+        }
+
+        private void MnuStart_Click(object sender, EventArgs e)
+        {
+            if (!isPlaying)
+            {
+                isPlaying = true;
+                MnuCustom_Click(mnuCustom, new EventArgs());
+                mnuStart.Text = "继续";
+                mnuOns.Enabled = false;
+                mnuCheat.Enabled = false;
+                mnuBack.Enabled = false;
+                new Uno(this).Show();
+            }
+            Hide();
+        }
+
+        private void MnuWinnerLoser_Click(object sender, EventArgs e)
+        {
+            mnuOneWinner.Checked = false;
+            mnuOneLoser.Checked = false;
+            ((ToolStripMenuItem)sender).Checked = true;
+        }
+
+        public string SaveRules()
         {
             string s = "";
-            s += txtBoxes.Text + "K"; // 9
+            s += txtDecks.Text + "K"; // 9
             s += mnuBlank.Checked + "K"; // 10
             s += mnuMagentaBlank.Checked + "K"; // 11
             s += mnuBlackBlank.Checked + "K"; // 12
@@ -128,149 +270,7 @@ namespace wfaUno {
             return s;
         }
 
-        private void mnuDurable_Click(object sender, EventArgs e)
-        {
-            txtDealt.Text = "57";
-            txtBoxes.Text = "3";
-            mnuBlank.Checked = true;
-            mnuMagentaBlank.Checked = true;
-            mnuBlackBlank.Checked = true;
-            mnuDownpourDraw.Checked = true;
-            mnuAttack.Checked = true;
-            mnuPairs.Checked = true;
-            mnuPlayOrDrawAll.Checked = false;
-            mnuDrawTilCanPlay.Checked = true;
-            mnuDrawAllAndPlay.Checked = false;
-            mnuDrawAndPlay.Checked = true;
-            mnuChallenges.Checked = false;
-            mnuDoubleDraw.Checked = true;
-            mnuDrawBeforePlaying.Checked = true;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
-            mnuSkipPlayers.Checked = false;
-            mnuSkipTimes.Checked = true;
-            mnuOneWinner.Checked = true;
-            mnuOneLoser.Checked = false;
-        }
-
-        private void mnuImportGame_Click(object sender, EventArgs e)
-        {
-            string s = Interaction.InputBox("导入存档", "读取存档", Clipboard.GetText());
-            if (s == "")
-                return;
-            try
-            {
-                loadGame(s);
-            }
-            catch
-            {
-                MessageBox.Show("无效的游戏记彔!", "读取游戏", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            mnuLoad.Enabled = false;
-            txtDealt.Text = "1";
-            mnuStart_Click(mnuStart, new EventArgs());
-        }
-
-        private void mnuImportRules_Click(object sender, EventArgs e)
-        {
-            string s = Interaction.InputBox("导入玩法", "快速游戏", Clipboard.GetText());
-            if (s != "")
-                try
-                {
-                    loadGame(s);
-                }
-                catch
-                {
-                    MessageBox.Show("无效的游戏玩法!", "读取玩法", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-        }
-
-        private void mnuLoadGame_Click(object sender, EventArgs e)
-        {
-            mnuLoad.Enabled = false;
-            txtDealt.Text = "1";
-            loadGame(Interaction.GetSetting("UNO", "GAME", "SAVE"));
-            mnuStart_Click(mnuStart, new EventArgs());
-        }
-
-        private void mnuLoadRules_Click(object sender, EventArgs e)
-        {
-            mnuQuick.HideDropDown();
-            loadGame(Interaction.GetSetting("UNO", "GAME", "RULES"));
-        }
-
-        private void mnuNew_Click(object sender, EventArgs e)
-        {
-            mnuStandard_Click(mnuStandard, new EventArgs());
-            mnuStart_Click(mnuStart, new EventArgs());
-        }
-
-        private void mnuQuit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void mnuSaveRules_Click(object sender, EventArgs e)
-        {
-            Interaction.SaveSetting("UNO", "GAME", "RULES", "KKKKKKKKK" + saveRules());
-        }
-
-        private void mnuSkip_Click(object sender, EventArgs e)
-        {
-            mnuSkipPlayers.Checked = false;
-            mnuSkipTimes.Checked = false;
-            ((ToolStripMenuItem)sender).Checked = true;
-        }
-
-        private void mnuStandard_Click(object sender, EventArgs e)
-        {
-            txtDealt.Text = "7";
-            txtBoxes.Text = "1";
-            mnuBlank.Checked = false;
-            mnuMagentaBlank.Checked = false;
-            mnuBlackBlank.Checked = false;
-            mnuDownpourDraw.Checked = false;
-            mnuAttack.Checked = false;
-            mnuPairs.Checked = false;
-            mnuPlayOrDrawAll.Checked = false;
-            mnuDrawTilCanPlay.Checked = false;
-            mnuDrawAllAndPlay.Checked = false;
-            mnuDrawAndPlay.Checked = true;
-            mnuDoubleDraw.Checked = false;
-            mnuDrawBeforePlaying.Checked = false;
-            mnuChallenges.Checked = true;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
-            mnuSkipPlayers.Checked = true;
-            mnuSkipTimes.Checked = false;
-            mnuOneWinner.Checked = true;
-            mnuOneLoser.Checked = false;
-        }
-
-        private void mnuStart_Click(object sender, EventArgs e)
-        {
-            if (!isPlaying)
-            {
-                isPlaying = true;
-                mnuCustom_Click(mnuCustom, new EventArgs());
-                mnuStart.Text = "继续";
-                mnuOns.Enabled = false;
-                mnuCheat.Enabled = false;
-                mnuBack.Enabled = false;
-                new FrmUno(this).Show();
-            }
-            Hide();
-        }
-
-        private void mnuWinnerLoser_Click(object sender, EventArgs e)
-        {
-            mnuOneWinner.Checked = false;
-            mnuOneLoser.Checked = false;
-            ((ToolStripMenuItem)sender).Checked = true;
-        }
-
-        private void toolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
             foreach (ToolStripItem m in menuItem.DropDownItems)
@@ -278,7 +278,7 @@ namespace wfaUno {
                     m.Enabled = menuItem.Checked;
         }
 
-        public void toolStripMenuItem_Click(object sender, EventArgs e)
+        public void ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
             menuItem.Checked = !menuItem.Checked;

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("wfaUno")]
+[assembly: AssemblyTitle("Uno")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("微软中国")]
-[assembly: AssemblyProduct("wfaUno")]
+[assembly: AssemblyProduct("Uno")]
 [assembly: AssemblyCopyright("Copyright © 微软中国 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
