@@ -2050,6 +2050,7 @@ play:   		Sort();
                         lblDraw.Text = int.Parse(lblDraw.Text) - 1 + "";
                         if (lblDraw.Text == "0")
                             drawAll = true;
+                        CheckPile();
                     }
                     if (int.Parse(lblDraw.Text) <= 0 || MovingCard.one || MovingCard.downpour > -1)
                     {
@@ -2081,6 +2082,7 @@ play:   		Sort();
                                         ons++;
                                 if (MovingCard.downpour % (ons - 1) == 0)
                                     MovingCard.player = NextPlayer(MovingCard.player);
+                                CheckPile();
                                 timPileToPlayers.Enabled = true;
                             }
                         }
