@@ -29,10 +29,6 @@
             this.mnuLoadGame = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuImportGame = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCustom = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuControl = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWatch = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStart = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuick = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStandard = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,6 +82,10 @@
             this.mnuWinnerLoser = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOneWinner = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOneLoser = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuControl = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWatch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
@@ -147,41 +147,6 @@
             this.mnuCustom.Size = new System.Drawing.Size(56, 20);
             this.mnuCustom.Text = "自定义";
             this.mnuCustom.Click += new System.EventHandler(this.MnuCustom_Click);
-            // 
-            // mnuControl
-            // 
-            this.mnuControl.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuWatch,
-            this.mnuCheat,
-            this.mnuSeed});
-            this.mnuControl.Name = "mnuControl";
-            this.mnuControl.Size = new System.Drawing.Size(43, 20);
-            this.mnuControl.Text = "控制";
-            // 
-            // mnuWatch
-            // 
-            this.mnuWatch.Checked = true;
-            this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuWatch.Name = "mnuWatch";
-            this.mnuWatch.Size = new System.Drawing.Size(180, 22);
-            this.mnuWatch.Text = "计时";
-            this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
-            // 
-            // mnuCheat
-            // 
-            this.mnuCheat.Checked = true;
-            this.mnuCheat.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
-            this.mnuCheat.Text = "允许作弊";
-            this.mnuCheat.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
-            // 
-            // mnuSeed
-            // 
-            this.mnuSeed.Name = "mnuSeed";
-            this.mnuSeed.Size = new System.Drawing.Size(180, 22);
-            this.mnuSeed.Text = "不洗牌";
-            this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuStart
             // 
@@ -639,6 +604,41 @@
             this.mnuOneLoser.Size = new System.Drawing.Size(109, 22);
             this.mnuOneLoser.Text = "淘汰制";
             this.mnuOneLoser.Click += new System.EventHandler(this.MnuWinnerLoser_Click);
+            // 
+            // mnuControl
+            // 
+            this.mnuControl.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuWatch,
+            this.mnuCheat,
+            this.mnuSeed});
+            this.mnuControl.Name = "mnuControl";
+            this.mnuControl.Size = new System.Drawing.Size(43, 20);
+            this.mnuControl.Text = "控制";
+            // 
+            // mnuWatch
+            // 
+            this.mnuWatch.Checked = true;
+            this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuWatch.Name = "mnuWatch";
+            this.mnuWatch.Size = new System.Drawing.Size(122, 22);
+            this.mnuWatch.Text = "计时";
+            this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
+            // mnuCheat
+            // 
+            this.mnuCheat.Checked = true;
+            this.mnuCheat.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuCheat.Name = "mnuCheat";
+            this.mnuCheat.Size = new System.Drawing.Size(122, 22);
+            this.mnuCheat.Text = "允许作弊";
+            this.mnuCheat.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
+            // mnuSeed
+            // 
+            this.mnuSeed.Name = "mnuSeed";
+            this.mnuSeed.Size = new System.Drawing.Size(122, 22);
+            this.mnuSeed.Text = "不洗牌";
+            this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuBack
             // 

@@ -60,7 +60,7 @@ namespace Uno {
             mnuAttack.Checked = false;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
-            mnuDrawTilCanPlay.Checked = false;
+            mnuDrawTilCanPlay.Checked = true;
             mnuDrawAllAndPlay.Checked = true;
             mnuDrawAndPlay.Checked = true;
             mnuDoubleDraw.Checked = false;
