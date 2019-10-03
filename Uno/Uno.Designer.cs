@@ -72,15 +72,16 @@
             // 
             // lblPile
             // 
+            this.lblPile.BackColor = System.Drawing.Color.Red;
             this.lblPile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPile.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPile.ForeColor = System.Drawing.Color.White;
             this.lblPile.Location = new System.Drawing.Point(0, 33);
             this.lblPile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPile.Name = "lblPile";
             this.lblPile.Size = new System.Drawing.Size(90, 131);
             this.lblPile.TabIndex = 0;
             this.lblPile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblPile.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             this.lblPile.Click += new System.EventHandler(this.LblPile_Click);
             // 
             // timPileToPlayers

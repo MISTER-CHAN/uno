@@ -141,6 +141,7 @@ namespace Uno
 				label.Add(new Label());
                 controls.Add(label[length]);
                 label[length].AutoSize = false;
+                label[length].BackColor = Color.Red;
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
                 label[length].Font = new Font("MS Gothic", 42);
@@ -730,7 +731,11 @@ deny:
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
 			for (byte i = 0; i < 4; i++) {
 				lblPlayers[i] = new Label();
+                lblPlayers[i].BackColor = Color.Red;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblPlayers[i].ForeColor = Color.White;
+                lblPlayers[i].Text = "UNO";
+                lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblCounts[i] = new Label();
 				Controls.Add(lblPlayers[i]);
 				Controls.Add(lblCounts[i]);
