@@ -740,8 +740,8 @@ deny:
                 lblPlayers[i].Tag = i;
                 lblCounts[i].AutoSize = true;
                 lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[i].Font = new Font("微軟正黑體 Light", lblCounts[i].Font.Size);
                 lblCounts[i].SizeChanged += LblCounts_SizeChanged;
-                lblCounts[i].Font = new Font("GulimChe", lblCounts[i].Font.Size);
 				lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
 				lblCounts[i].Tag = i;
 				lblCounts[i].Text = "0";

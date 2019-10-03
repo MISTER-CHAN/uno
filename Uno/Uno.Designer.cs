@@ -73,11 +73,11 @@
             // lblPile
             // 
             this.lblPile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblPile.Font = new System.Drawing.Font("GulimChe", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPile.Location = new System.Drawing.Point(0, 30);
+            this.lblPile.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPile.Location = new System.Drawing.Point(0, 33);
             this.lblPile.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPile.Name = "lblPile";
-            this.lblPile.Size = new System.Drawing.Size(90, 120);
+            this.lblPile.Size = new System.Drawing.Size(90, 131);
             this.lblPile.TabIndex = 0;
             this.lblPile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblPile.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
@@ -97,7 +97,7 @@
             this.mnuGame.Location = new System.Drawing.Point(0, 0);
             this.mnuGame.Name = "mnuGame";
             this.mnuGame.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.mnuGame.Size = new System.Drawing.Size(890, 24);
+            this.mnuGame.Size = new System.Drawing.Size(890, 25);
             this.mnuGame.TabIndex = 2;
             // 
             // itmGame
@@ -113,20 +113,20 @@
             this.mnuSaveGame,
             this.itmQuit});
             this.itmGame.Name = "itmGame";
-            this.itmGame.Size = new System.Drawing.Size(67, 18);
+            this.itmGame.Size = new System.Drawing.Size(63, 19);
             this.itmGame.Text = "游戏 (&G)";
             // 
             // mnuNew
             // 
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Size = new System.Drawing.Size(170, 22);
+            this.mnuNew.Size = new System.Drawing.Size(164, 22);
             this.mnuNew.Text = "开局 (&N)";
             this.mnuNew.Click += new System.EventHandler(this.MnuNew_Click);
             // 
             // separatorNc
             // 
             this.separatorNc.Name = "separatorNc";
-            this.separatorNc.Size = new System.Drawing.Size(167, 6);
+            this.separatorNc.Size = new System.Drawing.Size(161, 6);
             // 
             // mnuRank
             // 
@@ -134,7 +134,7 @@
             this.mnuByColor,
             this.mnuByNumber});
             this.mnuRank.Name = "mnuRank";
-            this.mnuRank.Size = new System.Drawing.Size(170, 22);
+            this.mnuRank.Size = new System.Drawing.Size(164, 22);
             this.mnuRank.Text = "排序 (&R)";
             // 
             // mnuByColor
@@ -142,14 +142,14 @@
             this.mnuByColor.Checked = true;
             this.mnuByColor.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuByColor.Name = "mnuByColor";
-            this.mnuByColor.Size = new System.Drawing.Size(109, 22);
+            this.mnuByColor.Size = new System.Drawing.Size(110, 22);
             this.mnuByColor.Text = "按颜色";
             this.mnuByColor.Click += new System.EventHandler(this.MnuRank_Click);
             // 
             // mnuByNumber
             // 
             this.mnuByNumber.Name = "mnuByNumber";
-            this.mnuByNumber.Size = new System.Drawing.Size(109, 22);
+            this.mnuByNumber.Size = new System.Drawing.Size(110, 22);
             this.mnuByNumber.Text = "按数字";
             this.mnuByNumber.Click += new System.EventHandler(this.MnuRank_Click);
             // 
@@ -158,7 +158,7 @@
             this.mnuScrollBar.Checked = true;
             this.mnuScrollBar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuScrollBar.Name = "mnuScrollBar";
-            this.mnuScrollBar.Size = new System.Drawing.Size(170, 22);
+            this.mnuScrollBar.Size = new System.Drawing.Size(164, 22);
             this.mnuScrollBar.Text = "多手持牌";
             this.mnuScrollBar.Click += new System.EventHandler(this.MnuScrollBar_Click);
             // 
@@ -167,7 +167,7 @@
             this.mnuToolTip.Checked = true;
             this.mnuToolTip.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuToolTip.Name = "mnuToolTip";
-            this.mnuToolTip.Size = new System.Drawing.Size(170, 22);
+            this.mnuToolTip.Size = new System.Drawing.Size(164, 22);
             this.mnuToolTip.Text = "显示工具提示 (&T)";
             this.mnuToolTip.Click += new System.EventHandler(this.MnuToolTip_Click);
             // 
@@ -177,7 +177,7 @@
             this.mnuRadioBox,
             this.mnuRightClick});
             this.mnuColor.Name = "mnuColor";
-            this.mnuColor.Size = new System.Drawing.Size(170, 22);
+            this.mnuColor.Size = new System.Drawing.Size(164, 22);
             this.mnuColor.Text = "变色 (&C)";
             // 
             // mnuRadioBox
@@ -185,41 +185,41 @@
             this.mnuRadioBox.Checked = true;
             this.mnuRadioBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuRadioBox.Name = "mnuRadioBox";
-            this.mnuRadioBox.Size = new System.Drawing.Size(136, 22);
+            this.mnuRadioBox.Size = new System.Drawing.Size(134, 22);
             this.mnuRadioBox.Text = "使用单选框";
             this.mnuRadioBox.Click += new System.EventHandler(this.MnuColor_Click);
             // 
             // mnuRightClick
             // 
             this.mnuRightClick.Name = "mnuRightClick";
-            this.mnuRightClick.Size = new System.Drawing.Size(136, 22);
+            this.mnuRightClick.Size = new System.Drawing.Size(134, 22);
             this.mnuRightClick.Text = "右击 [出牌]";
             this.mnuRightClick.Click += new System.EventHandler(this.MnuColor_Click);
             // 
             // separatorCx
             // 
             this.separatorCx.Name = "separatorCx";
-            this.separatorCx.Size = new System.Drawing.Size(167, 6);
+            this.separatorCx.Size = new System.Drawing.Size(161, 6);
             // 
             // mnuSaveGame
             // 
             this.mnuSaveGame.Enabled = false;
             this.mnuSaveGame.Name = "mnuSaveGame";
-            this.mnuSaveGame.Size = new System.Drawing.Size(170, 22);
+            this.mnuSaveGame.Size = new System.Drawing.Size(164, 22);
             this.mnuSaveGame.Text = "储存 (&S)";
             this.mnuSaveGame.Click += new System.EventHandler(this.MnuSaveGame_Click);
             // 
             // itmQuit
             // 
             this.itmQuit.Name = "itmQuit";
-            this.itmQuit.Size = new System.Drawing.Size(170, 22);
+            this.itmQuit.Size = new System.Drawing.Size(164, 22);
             this.itmQuit.Text = "退出 (&X)";
             this.itmQuit.Click += new System.EventHandler(this.ItmQuit_Click);
             // 
             // mnuChat
             // 
             this.mnuChat.Name = "mnuChat";
-            this.mnuChat.Size = new System.Drawing.Size(65, 18);
+            this.mnuChat.Size = new System.Drawing.Size(61, 19);
             this.mnuChat.Text = "聊天 (&T)";
             this.mnuChat.Click += new System.EventHandler(this.MnuChat_Click);
             // 
@@ -230,26 +230,26 @@
             this.separatorHa,
             this.itmAbout});
             this.itmHelp.Name = "itmHelp";
-            this.itmHelp.Size = new System.Drawing.Size(67, 18);
+            this.itmHelp.Size = new System.Drawing.Size(63, 19);
             this.itmHelp.Text = "帮助 (&H)";
             // 
             // mnuContent
             // 
             this.mnuContent.Name = "mnuContent";
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuContent.Size = new System.Drawing.Size(139, 22);
+            this.mnuContent.Size = new System.Drawing.Size(137, 22);
             this.mnuContent.Text = "目彔 (&C)";
             this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
             // 
             // separatorHa
             // 
             this.separatorHa.Name = "separatorHa";
-            this.separatorHa.Size = new System.Drawing.Size(136, 6);
+            this.separatorHa.Size = new System.Drawing.Size(134, 6);
             // 
             // itmAbout
             // 
             this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(139, 22);
+            this.itmAbout.Size = new System.Drawing.Size(137, 22);
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
@@ -260,10 +260,10 @@
             this.pnlCtrl.Controls.Add(this.btnChallenge);
             this.pnlCtrl.Controls.Add(this.btnDraw);
             this.pnlCtrl.Controls.Add(this.btnPlay);
-            this.pnlCtrl.Location = new System.Drawing.Point(0, 153);
+            this.pnlCtrl.Location = new System.Drawing.Point(0, 168);
             this.pnlCtrl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pnlCtrl.Name = "pnlCtrl";
-            this.pnlCtrl.Size = new System.Drawing.Size(399, 36);
+            this.pnlCtrl.Size = new System.Drawing.Size(399, 39);
             this.pnlCtrl.TabIndex = 4;
             this.pnlCtrl.Visible = false;
             // 
@@ -274,7 +274,7 @@
             this.btnJumpin.Location = new System.Drawing.Point(253, 0);
             this.btnJumpin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnJumpin.Name = "btnJumpin";
-            this.btnJumpin.Size = new System.Drawing.Size(76, 36);
+            this.btnJumpin.Size = new System.Drawing.Size(76, 39);
             this.btnJumpin.TabIndex = 4;
             this.btnJumpin.Text = "点断";
             this.btnJumpin.UseVisualStyleBackColor = true;
@@ -287,10 +287,11 @@
             this.rdoUno.Appearance = System.Windows.Forms.Appearance.Button;
             this.rdoUno.FlatAppearance.BorderSize = 0;
             this.rdoUno.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rdoUno.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rdoUno.Location = new System.Drawing.Point(337, 0);
             this.rdoUno.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.rdoUno.Name = "rdoUno";
-            this.rdoUno.Size = new System.Drawing.Size(62, 36);
+            this.rdoUno.Size = new System.Drawing.Size(62, 39);
             this.rdoUno.TabIndex = 3;
             this.rdoUno.TabStop = true;
             this.rdoUno.Text = "UNO";
@@ -306,7 +307,7 @@
             this.btnChallenge.Location = new System.Drawing.Point(169, 0);
             this.btnChallenge.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnChallenge.Name = "btnChallenge";
-            this.btnChallenge.Size = new System.Drawing.Size(76, 36);
+            this.btnChallenge.Size = new System.Drawing.Size(76, 39);
             this.btnChallenge.TabIndex = 2;
             this.btnChallenge.Text = "检举";
             this.btnChallenge.UseVisualStyleBackColor = true;
@@ -322,7 +323,7 @@
             this.btnDraw.Location = new System.Drawing.Point(84, 0);
             this.btnDraw.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnDraw.Name = "btnDraw";
-            this.btnDraw.Size = new System.Drawing.Size(77, 36);
+            this.btnDraw.Size = new System.Drawing.Size(77, 39);
             this.btnDraw.TabIndex = 1;
             this.btnDraw.Text = "摸牌";
             this.btnDraw.UseVisualStyleBackColor = true;
@@ -337,7 +338,7 @@
             this.btnPlay.Location = new System.Drawing.Point(0, 0);
             this.btnPlay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(76, 36);
+            this.btnPlay.Size = new System.Drawing.Size(76, 39);
             this.btnPlay.TabIndex = 0;
             this.btnPlay.Text = "出牌";
             this.btnPlay.UseVisualStyleBackColor = false;
@@ -361,11 +362,11 @@
             // lblDrawMark
             // 
             this.lblDrawMark.AutoSize = true;
-            this.lblDrawMark.Font = new System.Drawing.Font("GulimChe", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDrawMark.Location = new System.Drawing.Point(90, 30);
+            this.lblDrawMark.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDrawMark.Location = new System.Drawing.Point(90, 33);
             this.lblDrawMark.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDrawMark.Name = "lblDrawMark";
-            this.lblDrawMark.Size = new System.Drawing.Size(26, 27);
+            this.lblDrawMark.Size = new System.Drawing.Size(34, 34);
             this.lblDrawMark.TabIndex = 5;
             this.lblDrawMark.Text = "+";
             this.lblDrawMark.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -374,11 +375,11 @@
             // lblDraw
             // 
             this.lblDraw.AutoSize = true;
-            this.lblDraw.Font = new System.Drawing.Font("GulimChe", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDraw.Location = new System.Drawing.Point(116, 30);
+            this.lblDraw.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDraw.Location = new System.Drawing.Point(116, 33);
             this.lblDraw.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDraw.Name = "lblDraw";
-            this.lblDraw.Size = new System.Drawing.Size(26, 27);
+            this.lblDraw.Size = new System.Drawing.Size(30, 34);
             this.lblDraw.TabIndex = 6;
             this.lblDraw.Text = "0";
             this.lblDraw.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -387,9 +388,9 @@
             // lblAction
             // 
             this.lblAction.AutoSize = true;
-            this.lblAction.Location = new System.Drawing.Point(-5, 489);
+            this.lblAction.Location = new System.Drawing.Point(-5, 536);
             this.lblAction.Name = "lblAction";
-            this.lblAction.Size = new System.Drawing.Size(0, 27);
+            this.lblAction.Size = new System.Drawing.Size(0, 34);
             this.lblAction.TabIndex = 7;
             this.lblAction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblAction.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
@@ -423,10 +424,10 @@
             // lblWatch
             // 
             this.lblWatch.AutoSize = true;
-            this.lblWatch.Font = new System.Drawing.Font("GulimChe", 10F);
-            this.lblWatch.Location = new System.Drawing.Point(820, 30);
+            this.lblWatch.Font = new System.Drawing.Font("微軟正黑體 Light", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWatch.Location = new System.Drawing.Point(820, 33);
             this.lblWatch.Name = "lblWatch";
-            this.lblWatch.Size = new System.Drawing.Size(70, 14);
+            this.lblWatch.Size = new System.Drawing.Size(43, 17);
             this.lblWatch.TabIndex = 11;
             this.lblWatch.Text = "0°0′0″";
             this.toolTip.SetToolTip(this.lblWatch, "游戏时长");
@@ -436,7 +437,7 @@
             // 
             // hPlayer
             // 
-            this.hPlayer.Location = new System.Drawing.Point(0, 195);
+            this.hPlayer.Location = new System.Drawing.Point(0, 214);
             this.hPlayer.Name = "hPlayer";
             this.hPlayer.Size = new System.Drawing.Size(80, 14);
             this.hPlayer.TabIndex = 9;
@@ -447,9 +448,9 @@
             // pnlPlayer
             // 
             this.pnlPlayer.Font = new System.Drawing.Font("MS Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlPlayer.Location = new System.Drawing.Point(0, 195);
+            this.pnlPlayer.Location = new System.Drawing.Point(0, 214);
             this.pnlPlayer.Name = "pnlPlayer";
-            this.pnlPlayer.Size = new System.Drawing.Size(90, 120);
+            this.pnlPlayer.Size = new System.Drawing.Size(90, 132);
             this.pnlPlayer.TabIndex = 10;
             this.pnlPlayer.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
@@ -461,16 +462,16 @@
             // pnlMovingCards
             // 
             this.pnlMovingCards.AutoSize = true;
-            this.pnlMovingCards.Location = new System.Drawing.Point(97, 60);
+            this.pnlMovingCards.Location = new System.Drawing.Point(97, 66);
             this.pnlMovingCards.Name = "pnlMovingCards";
-            this.pnlMovingCards.Size = new System.Drawing.Size(64, 90);
+            this.pnlMovingCards.Size = new System.Drawing.Size(64, 99);
             this.pnlMovingCards.TabIndex = 12;
             // 
             // Uno
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 27F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(890, 600);
+            this.ClientSize = new System.Drawing.Size(890, 658);
             this.Controls.Add(this.pnlMovingCards);
             this.Controls.Add(this.lblWatch);
             this.Controls.Add(this.hPlayer);
@@ -481,9 +482,9 @@
             this.Controls.Add(this.pnlCtrl);
             this.Controls.Add(this.mnuGame);
             this.Controls.Add(this.lblPile);
-            this.Font = new System.Drawing.Font("MingLiU", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("微軟正黑體", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MainMenuStrip = this.mnuGame;
-            this.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+            this.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.Name = "Uno";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Tag = "0";
