@@ -39,7 +39,7 @@
             this.mnuColor.TabIndex = 0;
             this.mnuColor.Text = "menuStrip1";
             // 
-            // frmColor
+            // FrmColor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -50,7 +50,8 @@
             this.MainMenuStrip = this.mnuColor;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmColor";
+            this.Name = "FrmColor";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmColor_KeyDown);
             this.ResumeLayout(false);
