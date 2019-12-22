@@ -10,8 +10,8 @@ namespace Uno
 {
     public partial class Uno : Form {
 		public class Card {
-			public byte color = UnoColor.MAX_VALUE;
-			public byte number = UnoNumber.MAX_VALUE;
+            public byte color = UnoColor.MAX_VALUE;
+            public byte number = UnoNumber.MAX_VALUE;
 		}
 
 		public class Cards {
@@ -76,6 +76,20 @@ namespace Uno
         }
 
         bool reverse = false, isSelectingCards = false;
+        byte[] playlist = new byte[21] {
+            UnoNumber.DISCARD_ALL,
+            UnoNumber.SKIP,
+            UnoNumber.REVERSE,
+            UnoNumber.DRAW_2,
+            9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+            UnoNumber.BLANK,
+            UnoNumber.WILD,
+            UnoNumber.WILD_DOWNPOUR_DRAW_1,
+            UnoNumber.WILD_DOWNPOUR_DRAW_2,
+            UnoNumber.WILD_DOWNPOUR_DRAW_4,
+            UnoNumber.WILD_DRAW_4,
+            UnoNumber.WILD_HITFIRE
+        };
         readonly Cards Pile = new Cards();
         readonly Cards[] Players = new Cards[4];
         readonly Options form;
@@ -203,8 +217,9 @@ namespace Uno
             {
                 if (!form.mnuPairs.Checked)
                 {
-                    for (byte n = 0; n <= UnoNumber.BLANK; n++)
+                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
+                        byte n = playlist[b];
                         if (Players[player].cards[backColor, n] > 0)
                         {
                             bestCard.color = backColor;
@@ -216,8 +231,9 @@ namespace Uno
                 else if (form.mnuDrawBeforePlaying.Checked && int.Parse(lblCounts[player].Text) > 7)
                 {
                     mostQuantity = 0;
-                    for (byte n = 0; n <= UnoNumber.BLANK; n++)
+                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
+                        byte n = playlist[b];
                         if (Players[player].cards[backColor, n] <= 0)
                         {
                             continue;
@@ -234,13 +250,14 @@ namespace Uno
                 else
                 {
                     int fewestQuantity = 5;
-                    for (byte n = 0; n <= UnoNumber.BLANK; n++)
+                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
+                        byte n = playlist[b];
                         if (Players[player].cards[backColor, n] <= 0)
                         {
                             continue;
                         }
-                        quantity = GetColorQuantityByNumber(player, n);
+                         quantity = GetColorQuantityByNumber(player, n);
                         if (0 < quantity && quantity < fewestQuantity)
                         {
                             fewestQuantity = quantity;
@@ -730,26 +747,26 @@ deny:
             if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
 			for (byte i = 0; i < 4; i++) {
-				lblPlayers[i] = new Label();
+                lblPlayers[i] = new Label();
+				Controls.Add(lblPlayers[i]);
+                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
                 lblPlayers[i].BackColor = Color.Black;
-                lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
                 lblPlayers[i].ForeColor = Color.White;
                 lblPlayers[i].Text = "UNO";
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblCounts[i] = new Label();
-				Controls.Add(lblPlayers[i]);
-				Controls.Add(lblCounts[i]);
-                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
-				if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
                 lblPlayers[i].Tag = i;
+				if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
+                lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[i] = new Label();
+				Controls.Add(lblCounts[i]);
                 lblCounts[i].AutoSize = true;
-                lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
                 lblCounts[i].Font = new Font("微軟正黑體 Light", lblCounts[i].Font.Size);
-                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
 				lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
 				lblCounts[i].Tag = i;
 				lblCounts[i].Text = "0";
+                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
+                lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
 				lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
             }
             lblPlayers[0].BackColor = Color.Transparent;

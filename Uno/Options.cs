@@ -104,7 +104,7 @@ namespace Uno {
 
         private void MnuDurable_Click(object sender, EventArgs e)
         {
-            txtDealt.Text = "57";
+            txtDealt.Text = "30";
             txtDecks.Text = "3";
             mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
