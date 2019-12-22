@@ -64,6 +64,7 @@
             this.mnuBlackBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAttack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDaWdd1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWildHitfire = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTradeHands = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSpin = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRules = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,7 +92,6 @@
             this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWildHitfire = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -450,7 +450,16 @@
             this.mnuDaWdd1.Name = "mnuDaWdd1";
             this.mnuDaWdd1.Size = new System.Drawing.Size(286, 22);
             this.mnuDaWdd1.Text = "[Discard All], [Wild Downpour Draw 1]";
+            this.mnuDaWdd1.CheckedChanged += new System.EventHandler(this.MnuAttack_CheckedChanged);
             this.mnuDaWdd1.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
+            // mnuWildHitfire
+            // 
+            this.mnuWildHitfire.Enabled = false;
+            this.mnuWildHitfire.Name = "mnuWildHitfire";
+            this.mnuWildHitfire.Size = new System.Drawing.Size(286, 22);
+            this.mnuWildHitfire.Text = "[Wild Hitfire]";
+            this.mnuWildHitfire.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuTradeHands
             // 
@@ -646,7 +655,7 @@
             this.mnuWatch.Checked = true;
             this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuWatch.Name = "mnuWatch";
-            this.mnuWatch.Size = new System.Drawing.Size(180, 22);
+            this.mnuWatch.Size = new System.Drawing.Size(122, 22);
             this.mnuWatch.Text = "计时";
             this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -655,14 +664,14 @@
             this.mnuCheat.Checked = true;
             this.mnuCheat.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheat.Size = new System.Drawing.Size(122, 22);
             this.mnuCheat.Text = "允许作弊";
             this.mnuCheat.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuSeed
             // 
             this.mnuSeed.Name = "mnuSeed";
-            this.mnuSeed.Size = new System.Drawing.Size(180, 22);
+            this.mnuSeed.Size = new System.Drawing.Size(122, 22);
             this.mnuSeed.Text = "不洗牌";
             this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -680,14 +689,6 @@
             this.mnuQuit.Size = new System.Drawing.Size(43, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
-            // 
-            // mnuWildHitfire
-            // 
-            this.mnuWildHitfire.Enabled = false;
-            this.mnuWildHitfire.Name = "mnuWildHitfire";
-            this.mnuWildHitfire.Size = new System.Drawing.Size(286, 22);
-            this.mnuWildHitfire.Text = "[Wild Hitfire]";
-            this.mnuWildHitfire.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // Options
             // 

@@ -74,6 +74,11 @@ namespace Uno {
             mnuOneLoser.Checked = true;
         }
 
+        private void MnuAttack_CheckedChanged(object sender, EventArgs e)
+        {
+            mnuWildHitfire.Enabled = mnuDaWdd1.Checked;
+        }
+
         private void MnuBack_Click(object sender, EventArgs e)
         {
             mnuNew.Visible = true;
