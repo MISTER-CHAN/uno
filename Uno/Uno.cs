@@ -1782,7 +1782,6 @@ gameOver:
                 else if (!CanPlay(cards, GetColorId(btnPlay.BackColor))) return;
 				for (int c = 0; c < cards.ToArray().Length; c++) {
 					Players[0].cards[cards[c].color, cards[c].number]--;
-					Controls.Remove(chkPlayer[0]);
 					chkPlayer.RemoveAt(0);
 				}
 				for (int c = 0; c < chkPlayer.ToArray().Length; c++) if (chkPlayer[c].Checked) {
@@ -1837,7 +1836,14 @@ play:   		Sort();
                                 color.ShowDialog();
                                 MovingCard.color = byte.Parse(color.Tag + "");
                             }
-                            else if (cards[0].color != UnoColor.MAGENTA) MovingCard.color = cards.First().color;
+                            else if (cards[0].color != UnoColor.MAGENTA)
+                            {
+                                MovingCard.color = cards.First().color;
+                            }
+                            else
+                            {
+                                MovingCard.color = GetColorId(BackColor);
+                            }
                         }
                         else
                             MovingCard.color = GetColorId(btnPlay.BackColor);
