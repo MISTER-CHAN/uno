@@ -31,7 +31,7 @@ namespace Uno {
             mnuBlank.Checked = bool.Parse(keys[10]);
             mnuMagentaBlank.Checked = bool.Parse(keys[11]);
             mnuBlackBlank.Checked = bool.Parse(keys[12]);
-            mnuDownpourDraw.Checked = bool.Parse(keys[13]);
+            mnuWater.Checked = bool.Parse(keys[13]);
             mnuAttack.Checked = bool.Parse(keys[14]);
             mnuCanShowCards.Checked = bool.Parse(keys[15]);
             mnuPairs.Checked = bool.Parse(keys[16]);
@@ -56,7 +56,7 @@ namespace Uno {
             mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = false;
-            mnuDownpourDraw.Checked = false;
+            mnuWater.Checked = false;
             mnuAttack.Checked = false;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
@@ -88,6 +88,15 @@ namespace Uno {
             mnuBack.Visible = false;
         }
 
+        private void MnuBlank_CheckedChanged(object sender, EventArgs e)
+        {
+            mnuMagentaBlank.Enabled = mnuRygbBlank.Checked;
+            mnuBlankText.Enabled = mnuRygbBlank.Checked;
+            mnuBlankSkip.Enabled = mnuRygbBlank.Checked;
+            mnuBlankReverse.Enabled = mnuRygbBlank.Checked;
+            mnuBlankDraw.Enabled = mnuRygbBlank.Checked;
+        }
+
         private void MnuCustom_Click(object sender, EventArgs e)
         {
             mnuNew.Visible = false;
@@ -109,7 +118,7 @@ namespace Uno {
             mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
-            mnuDownpourDraw.Checked = true;
+            mnuWater.Checked = true;
             mnuAttack.Checked = true;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
@@ -204,7 +213,7 @@ namespace Uno {
             mnuBlank.Checked = false;
             mnuMagentaBlank.Checked = false;
             mnuBlackBlank.Checked = false;
-            mnuDownpourDraw.Checked = false;
+            mnuWater.Checked = false;
             mnuAttack.Checked = false;
             mnuPairs.Checked = false;
             mnuPlayOrDrawAll.Checked = false;
@@ -237,6 +246,11 @@ namespace Uno {
             Hide();
         }
 
+        private void MnuWater_CheckedChanged(object sender, EventArgs e)
+        {
+            mnuBlackBlank.Enabled = mnuDownpourDraw.Checked;
+        }
+
         private void MnuWinnerLoser_Click(object sender, EventArgs e)
         {
             mnuOneWinner.Checked = false;
@@ -251,7 +265,7 @@ namespace Uno {
             s += mnuBlank.Checked + "K"; // 10
             s += mnuMagentaBlank.Checked + "K"; // 11
             s += mnuBlackBlank.Checked + "K"; // 12
-            s += mnuDownpourDraw.Checked + "K"; // 13
+            s += mnuWater.Checked + "K"; // 13
             s += mnuAttack.Checked + "K"; // 14
             s += mnuCanShowCards.Checked + "K"; // 15
             s += mnuPairs.Checked + "K"; // 16
@@ -270,18 +284,10 @@ namespace Uno {
             return s;
         }
 
-        private void ToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-            foreach (ToolStripItem m in menuItem.DropDownItems)
-                if (m.Tag + "" != "e")
-                    m.Enabled = menuItem.Checked;
-        }
-
         public void ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
             menuItem.Checked = !menuItem.Checked;
         }
-	}
+    }
 }

@@ -49,15 +49,17 @@
             this.txtDecks = new System.Windows.Forms.ToolStripTextBox();
             this.mnuCards = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlank = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuRygbBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMagentaBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.separatorBlank = new System.Windows.Forms.ToolStripSeparator();
-            this.munBlankText = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBlankText = new System.Windows.Forms.ToolStripMenuItem();
             this.txtBlankText = new System.Windows.Forms.ToolStripTextBox();
             this.mnuBlankSkip = new System.Windows.Forms.ToolStripMenuItem();
             this.txtBlankSkip = new System.Windows.Forms.ToolStripTextBox();
             this.mnuBlankReverse = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlankDraw = new System.Windows.Forms.ToolStripMenuItem();
             this.txtBlankDraw = new System.Windows.Forms.ToolStripTextBox();
+            this.mnuWater = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDownpourDraw = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlackBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAttack = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,6 +90,7 @@
             this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDaWhWdd1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -305,7 +308,7 @@
             // 
             this.mnuCards.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBlank,
-            this.mnuDownpourDraw,
+            this.mnuWater,
             this.mnuAttack,
             this.mnuSpin});
             this.mnuCards.Name = "mnuCards";
@@ -316,40 +319,47 @@
             // mnuBlank
             // 
             this.mnuBlank.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuRygbBlank,
             this.mnuMagentaBlank,
             this.separatorBlank,
-            this.munBlankText,
+            this.mnuBlankText,
             this.mnuBlankSkip,
             this.mnuBlankReverse,
             this.mnuBlankDraw});
             this.mnuBlank.Name = "mnuBlank";
-            this.mnuBlank.Size = new System.Drawing.Size(141, 22);
+            this.mnuBlank.Size = new System.Drawing.Size(180, 22);
             this.mnuBlank.Text = "[空白]";
-            this.mnuBlank.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
-            this.mnuBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
+            // mnuRygbBlank
+            // 
+            this.mnuRygbBlank.Name = "mnuRygbBlank";
+            this.mnuRygbBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuRygbBlank.Text = "[红黃绿蓝 空白]";
+            this.mnuRygbBlank.CheckedChanged += new System.EventHandler(this.MnuBlank_CheckedChanged);
+            this.mnuRygbBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuMagentaBlank
             // 
             this.mnuMagentaBlank.Enabled = false;
             this.mnuMagentaBlank.Name = "mnuMagentaBlank";
-            this.mnuMagentaBlank.Size = new System.Drawing.Size(130, 22);
-            this.mnuMagentaBlank.Text = "[紫色空白]";
+            this.mnuMagentaBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuMagentaBlank.Text = "[紫 空白]";
             this.mnuMagentaBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // separatorBlank
             // 
             this.separatorBlank.Name = "separatorBlank";
-            this.separatorBlank.Size = new System.Drawing.Size(127, 6);
+            this.separatorBlank.Size = new System.Drawing.Size(177, 6);
             this.separatorBlank.Tag = "e";
             // 
-            // munBlankText
+            // mnuBlankText
             // 
-            this.munBlankText.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuBlankText.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtBlankText});
-            this.munBlankText.Enabled = false;
-            this.munBlankText.Name = "munBlankText";
-            this.munBlankText.Size = new System.Drawing.Size(130, 22);
-            this.munBlankText.Text = "文本";
+            this.mnuBlankText.Enabled = false;
+            this.mnuBlankText.Name = "mnuBlankText";
+            this.mnuBlankText.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlankText.Text = "文本";
             // 
             // txtBlankText
             // 
@@ -365,7 +375,7 @@
             this.txtBlankSkip});
             this.mnuBlankSkip.Enabled = false;
             this.mnuBlankSkip.Name = "mnuBlankSkip";
-            this.mnuBlankSkip.Size = new System.Drawing.Size(130, 22);
+            this.mnuBlankSkip.Size = new System.Drawing.Size(180, 22);
             this.mnuBlankSkip.Text = "禁止";
             // 
             // txtBlankSkip
@@ -379,7 +389,7 @@
             // 
             this.mnuBlankReverse.Enabled = false;
             this.mnuBlankReverse.Name = "mnuBlankReverse";
-            this.mnuBlankReverse.Size = new System.Drawing.Size(130, 22);
+            this.mnuBlankReverse.Size = new System.Drawing.Size(180, 22);
             this.mnuBlankReverse.Text = "反转";
             this.mnuBlankReverse.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -389,7 +399,7 @@
             this.txtBlankDraw});
             this.mnuBlankDraw.Enabled = false;
             this.mnuBlankDraw.Name = "mnuBlankDraw";
-            this.mnuBlankDraw.Size = new System.Drawing.Size(130, 22);
+            this.mnuBlankDraw.Size = new System.Drawing.Size(180, 22);
             this.mnuBlankDraw.Text = "摸牌";
             // 
             // txtBlankDraw
@@ -399,47 +409,54 @@
             this.txtBlankDraw.Text = "0";
             this.txtBlankDraw.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // mnuWater
+            // 
+            this.mnuWater.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDownpourDraw,
+            this.mnuBlackBlank});
+            this.mnuWater.Name = "mnuWater";
+            this.mnuWater.Size = new System.Drawing.Size(180, 22);
+            this.mnuWater.Text = "UNO H₂O";
+            // 
             // mnuDownpourDraw
             // 
-            this.mnuDownpourDraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuBlackBlank});
             this.mnuDownpourDraw.Name = "mnuDownpourDraw";
-            this.mnuDownpourDraw.Size = new System.Drawing.Size(141, 22);
-            this.mnuDownpourDraw.Text = "UNO H₂O";
-            this.mnuDownpourDraw.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
+            this.mnuDownpourDraw.Size = new System.Drawing.Size(239, 22);
+            this.mnuDownpourDraw.Text = "[Wild Downpour Draw 1, 2, 4]";
+            this.mnuDownpourDraw.CheckedChanged += new System.EventHandler(this.MnuWater_CheckedChanged);
             this.mnuDownpourDraw.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuBlackBlank
             // 
             this.mnuBlackBlank.Enabled = false;
             this.mnuBlackBlank.Name = "mnuBlackBlank";
-            this.mnuBlackBlank.Size = new System.Drawing.Size(130, 22);
-            this.mnuBlackBlank.Text = "[黑色空白]";
+            this.mnuBlackBlank.Size = new System.Drawing.Size(254, 22);
+            this.mnuBlackBlank.Text = "[黑 空白]";
             this.mnuBlackBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuAttack
             // 
             this.mnuAttack.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDaWhWdd1,
             this.mnuTradeHands});
             this.mnuAttack.Name = "mnuAttack";
-            this.mnuAttack.Size = new System.Drawing.Size(141, 22);
+            this.mnuAttack.Size = new System.Drawing.Size(180, 22);
             this.mnuAttack.Text = "UNO Attack";
-            this.mnuAttack.CheckedChanged += new System.EventHandler(this.ToolStripMenuItem_CheckedChanged);
-            this.mnuAttack.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuTradeHands
             // 
             this.mnuTradeHands.Enabled = false;
             this.mnuTradeHands.Name = "mnuTradeHands";
-            this.mnuTradeHands.Size = new System.Drawing.Size(154, 22);
+            this.mnuTradeHands.Size = new System.Drawing.Size(363, 22);
             this.mnuTradeHands.Tag = "e";
             this.mnuTradeHands.Text = "[Trade Hands]";
+            this.mnuTradeHands.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuSpin
             // 
             this.mnuSpin.Enabled = false;
             this.mnuSpin.Name = "mnuSpin";
-            this.mnuSpin.Size = new System.Drawing.Size(141, 22);
+            this.mnuSpin.Size = new System.Drawing.Size(180, 22);
             this.mnuSpin.Text = "UNO Spin";
             // 
             // mnuRules
@@ -655,6 +672,13 @@
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
             // 
+            // mnuDaWhWdd1
+            // 
+            this.mnuDaWhWdd1.Name = "mnuDaWhWdd1";
+            this.mnuDaWhWdd1.Size = new System.Drawing.Size(363, 22);
+            this.mnuDaWhWdd1.Text = "[Discard All], [Wild Hitfire], [Wild Downpour Draw 1]";
+            this.mnuDaWhWdd1.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -707,7 +731,7 @@
         public System.Windows.Forms.ToolStripTextBox txtDecks;
         private System.Windows.Forms.ToolStripMenuItem mnuQuit;
         public System.Windows.Forms.ToolStripMenuItem mnuCheat;
-        private System.Windows.Forms.ToolStripMenuItem munBlankText;
+        private System.Windows.Forms.ToolStripMenuItem mnuBlankText;
         public System.Windows.Forms.ToolStripTextBox txtBlankText;
         private System.Windows.Forms.ToolStripMenuItem mnuBlankSkip;
         public System.Windows.Forms.ToolStripMenuItem mnuBlankReverse;
@@ -735,13 +759,15 @@
         public System.Windows.Forms.ToolStripMenuItem mnuWatch;
         private System.Windows.Forms.ToolStripMenuItem mnuTradeHands;
         public System.Windows.Forms.ToolStripMenuItem mnuBlank;
-        public System.Windows.Forms.ToolStripMenuItem mnuDownpourDraw;
+        public System.Windows.Forms.ToolStripMenuItem mnuWater;
         public System.Windows.Forms.ToolStripMenuItem mnuSeed;
         private System.Windows.Forms.ToolStripMenuItem mnuLoadRules;
         private System.Windows.Forms.ToolStripMenuItem mnuSaveRules;
         private System.Windows.Forms.ToolStripMenuItem mnuLoadGame;
         private System.Windows.Forms.ToolStripMenuItem mnuImportGame;
         private System.Windows.Forms.ToolStripMenuItem mnuImportRules;
-
+        public System.Windows.Forms.ToolStripMenuItem mnuRygbBlank;
+        public System.Windows.Forms.ToolStripMenuItem mnuDownpourDraw;
+        public System.Windows.Forms.ToolStripMenuItem mnuDaWhWdd1;
     }
 }
