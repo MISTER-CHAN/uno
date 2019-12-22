@@ -793,8 +793,7 @@ deny:
             }
             lblCards.Add(new Label());
 			Controls.Add(lblCards[0]);
-            lblCards[0].AutoSize = false;
-            lblCards[0].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
+            lblCards[0].Visible = false;
             ResizeForm();
             int decks = int.Parse(form.txtDecks.Text);
 			for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
@@ -1432,7 +1431,6 @@ gameOver:
                 card.BackColor = BackColor;
                 card.Text = GetNumber(byte.Parse(keys[3]));
             }
-            lblCards[0].Text = UnoNumberName.NULL;
             skip = int.Parse(keys[4]);
             string[] sks = keys[5].Split(char.Parse("P"));
             for (byte sk = 0; sk <= 3; sk++)
