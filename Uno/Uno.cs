@@ -18,6 +18,12 @@ namespace Uno
 			public int[,] cards = new int[UnoColor.MAX_VALUE + 1, UnoNumber.MAX_VALUE + 1];
 		}
 
+        public class Downpour
+        {
+            public static byte player = 4;
+            public static int count = 0;
+        }
+
 		public class MovingCard {
             public static byte color = 0, number = 0, player = 0;
 			public static bool drew = false, one = false, playing = false, quickly = false, unoDraw = false;
@@ -75,7 +81,8 @@ namespace Uno
             public const string NULL = "   ";
         }
 
-        bool reverse = false, isSelectingCards = false;
+        private bool reverse = false, isSelectingCards = false;
+        byte gameOver = 4;
         readonly byte[] playlist = new byte[21] {
             UnoNumber.DISCARD_ALL,
             UnoNumber.SKIP,
@@ -411,7 +418,7 @@ namespace Uno
         }
 
 		bool CanPlay(List<Card> card, byte color) {
-            if (form.mnuDaWhWdd1.Checked)
+            if (form.mnuDaWdd1.Checked)
             {
                 byte discardColor = UnoColor.MAX_VALUE;
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
@@ -477,7 +484,7 @@ deny:
 
 		private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
 			int index = (int) ((CheckBox) sender).Tag;
-            if (!form.mnuPairs.Checked && !form.mnuDaWhWdd1.Checked && ((CheckBox)sender).Checked)
+            if (!form.mnuPairs.Checked && !form.mnuDaWdd1.Checked && ((CheckBox)sender).Checked)
                 for (int c = 0; c < chkPlayer.ToArray().Length; c++)
                     if (c != index) chkPlayer[c].Checked = false;
 			if (mnuRightClick.Checked) if (chkPlayer[index].Checked && !new Regex("^Magenta|Black$").IsMatch(chkPlayer[index].BackColor.Name)) btnPlay.BackColor = chkPlayer[index].BackColor;
@@ -710,7 +717,7 @@ deny:
             foreach (Label p in lblPlayers)
                 if (p.Visible)
                     ons++;
-            MovingCard.downpour = draw * (ons - 1);
+            MovingCard.downpour = draw * (ons - gameOver / 4);
             MovingCard.player = NextPlayer(player);
             MovingCard.progress = 0;
             MovingCard.quickly = false;
@@ -793,7 +800,7 @@ deny:
 				Pile.cards[c, 0] = decks;
                 for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
                     Pile.cards[c, n] = 2 * decks;
-                if (form.mnuDaWhWdd1.Checked)
+                if (form.mnuDaWdd1.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
                     // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks;
@@ -819,10 +826,13 @@ deny:
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks;
             }
             Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks;
-            if (form.mnuDaWhWdd1.Checked)
+            if (form.mnuDaWdd1.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks;
+            }
+            if (form.mnuWildHitfire.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] = 2 * decks;
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks;
             }
 			lblPile.Text = GetPile().Length + "";
             for (byte p = 0; p < 4; p++)
@@ -863,6 +873,132 @@ play:
 		private void Uno_Resize(object sender, EventArgs e) {
 			ResizeForm();
 		}
+
+        private void GameOver()
+        {
+            timPileToCenter.Enabled = false;
+            timPileToPlayers.Enabled = false;
+            timTurn.Enabled = false;
+            timPlayersToCenter.Enabled = false;
+            timWatch.Enabled = false;
+            FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+            if (form.mnuOneWinner.Checked)
+            {
+                List<Label> label = new List<Label>();
+                for (byte p = 1; p <= 3; p++)
+                {
+                    int playerPos = label.ToArray().Length;
+                    if (mnuByColor.Checked)
+                        for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                                for (int c = 1; c <= Players[p].cards[color, number]; c++)
+                                {
+                                    int length = label.ToArray().Length;
+                                    AddLabel(label);
+                                    label[length].BackColor = GetColor(color);
+                                    if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
+                                    label[length].Text = GetNumber(number);
+                                    if (p == 2) label[length].Top = lblPlayers[2].Top;
+                                }
+                    else
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                                for (int c = 1; c <= Players[p].cards[color, number]; c++)
+                                {
+                                    int length = label.ToArray().Length;
+                                    AddLabel(label);
+                                    label[length].BackColor = GetColor(color);
+                                    if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
+                                    label[length].Text = GetNumber(number);
+                                    if (p == 2) label[length].Top = lblPlayers[2].Top;
+                                }
+                    for (int c = playerPos; c < label.ToArray().Length; c++)
+                    {
+                        switch (p)
+                        {
+                            case 1:
+                            case 3:
+                                if (height / 2 - UnoSize.HEIGHT * (label.ToArray().Length - playerPos) / 2 >= 0)
+                                    label[c].Top = height / 2 - UnoSize.HEIGHT * (label.ToArray().Length - playerPos) / 2 + UnoSize.HEIGHT * (c - playerPos);
+                                else
+                                    label[c].Top = height / (label.ToArray().Length - playerPos) * (c - playerPos);
+                                break;
+                            case 2:
+                                if (width / 2 - UnoSize.WIDTH * (label.ToArray().Length - playerPos) / 2 >= 0)
+                                    label[c].Left = width / 2 - UnoSize.WIDTH * (label.ToArray().Length - playerPos) / 2 + UnoSize.WIDTH * (c - playerPos);
+                                else
+                                    label[c].Left = width / (label.ToArray().Length - playerPos) * (c - playerPos);
+                                break;
+                        }
+                    }
+                }
+                string msg = (gameOver == 0 ? "你" : "Player" + gameOver) + " 赢了!\n" +
+                    "\n" +
+                    (form.mnuWatch.Checked ? "游戏时长\t" + lblWatch.Text + "\n" +
+                    "\n" : "") +
+                    "玩家\t得分";
+                for (byte p = 0; p <= 3; p++)
+                    msg += "\n" + (p == 0 ? "你" : "Player" + p) + "\t" + GetPoints(p);
+                if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
+            }
+            else
+            {
+                if (gameOver != 0)
+                {
+                    List<Label> label = new List<Label>();
+                    if (mnuByColor.Checked)
+                        for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                                for (int c = 1; c <= Players[gameOver].cards[color, number]; c++)
+                                {
+                                    int length = label.ToArray().Length;
+                                    AddLabel(label);
+                                    label[length].BackColor = GetColor(color);
+                                    if (new Regex("^(1|3)$").IsMatch(gameOver + "")) label[length].Left = lblPlayers[gameOver].Left;
+                                    label[length].Text = GetNumber(number);
+                                    if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
+                                }
+                    else
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                                for (int c = 1; c <= Players[gameOver].cards[color, number]; c++)
+                                {
+                                    int length = label.ToArray().Length;
+                                    AddLabel(label);
+                                    label[length].BackColor = GetColor(color);
+                                    if (new Regex("^(1|3)$").IsMatch(gameOver + "")) label[length].Left = lblPlayers[gameOver].Left;
+                                    label[length].Text = GetNumber(number);
+                                    if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
+                                }
+                    for (int c = 0; c < label.ToArray().Length; c++)
+                    {
+                        switch (gameOver)
+                        {
+                            case 1:
+                            case 3:
+                                if (height / 2 - UnoSize.HEIGHT * label.ToArray().Length / 2 >= 0)
+                                    label[c].Top = height / 2 - UnoSize.HEIGHT * label.ToArray().Length / 2 + UnoSize.HEIGHT * c;
+                                else
+                                    label[c].Top = height / label.ToArray().Length * c;
+                                break;
+                            case 2:
+                                if (width / 2 - UnoSize.WIDTH * label.ToArray().Length / 2 >= 0)
+                                    label[c].Left = width / 2 - UnoSize.WIDTH * label.ToArray().Length / 2 + UnoSize.WIDTH * c;
+                                else
+                                    label[c].Left = width / label.ToArray().Length * c;
+                                break;
+                        }
+                    }
+                }
+                if (MessageBox.Show((gameOver == 0 ? "你" : "Player" + gameOver) + " 输了!\n" +
+                    (form.mnuWatch.Checked ? "\n" +
+                    "游戏时长\t" + lblWatch.Text : ""), "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
+            }
+            Application.Exit();
+            return;
+        retry:
+            Application.Restart();
+        }
 
 		Color GetColor(byte id) {
             return id switch
@@ -1201,12 +1337,13 @@ play:
             }
             if (MovingCard.playing)
             {
-                byte player = 0, winners = 0;
+                byte winners = 0;
                 if (int.Parse(lblCounts[index].Text) <= 0)
                 {
                     lblPlayers[index].Visible = false;
                     lblCounts[index].Visible = false;
                 }
+                byte player;
                 if (form.mnuOneWinner.Checked)
                 {
                     if (!lblPlayers[index].Visible)
@@ -1232,129 +1369,29 @@ play:
                 }
                 return;
 gameOver:
-
-                timPileToCenter.Enabled = false;
-                timPileToPlayers.Enabled = false;
-                timTurn.Enabled = false;
-                timPlayersToCenter.Enabled = false;
-                timWatch.Enabled = false;
-                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+                gameOver = player;
                 if (form.mnuOneWinner.Checked)
                 {
-                    List<Label> label = new List<Label>();
-                    for (byte p = 1; p <= 3; p++)
+                    byte currentNumber = GetNumberId(lblCards[1].Text);
+                    switch (currentNumber)
                     {
-                        int playerPos = label.ToArray().Length;
-                        if (mnuByColor.Checked)
-                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                                for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                                    for (int c = 1; c <= Players[p].cards[color, number]; c++)
-                                    {
-                                        int length = label.ToArray().Length;
-                                        AddLabel(label);
-                                        label[length].BackColor = GetColor(color);
-                                        if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
-                                        label[length].Text = GetNumber(number);
-                                        if (p == 2) label[length].Top = lblPlayers[2].Top;
-                                    }
-                        else
-                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                                for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                                    for (int c = 1; c <= Players[p].cards[color, number]; c++)
-                                    {
-                                        int length = label.ToArray().Length;
-                                        AddLabel(label);
-                                        label[length].BackColor = GetColor(color);
-                                        if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
-                                        label[length].Text = GetNumber(number);
-                                        if (p == 2) label[length].Top = lblPlayers[2].Top;
-                                    }
-                        for (int c = playerPos; c < label.ToArray().Length; c++)
-                        {
-                            switch (p)
-                            {
-                                case 1:
-                                case 3:
-                                    if (height / 2 - UnoSize.HEIGHT * (label.ToArray().Length - playerPos) / 2 >= 0)
-                                        label[c].Top = height / 2 - UnoSize.HEIGHT * (label.ToArray().Length - playerPos) / 2 + UnoSize.HEIGHT * (c - playerPos);
-                                    else
-                                        label[c].Top = height / (label.ToArray().Length - playerPos) * (c - playerPos);
-                                    break;
-                                case 2:
-                                    if (width / 2 - UnoSize.WIDTH * (label.ToArray().Length - playerPos) / 2 >= 0)
-                                        label[c].Left = width / 2 - UnoSize.WIDTH * (label.ToArray().Length - playerPos) / 2 + UnoSize.WIDTH * (c - playerPos);
-                                    else
-                                        label[c].Left = width / (label.ToArray().Length - playerPos) * (c - playerPos);
-                                    break;
-                            }
-                        }
+                        case UnoNumber.DRAW_2:
+                        case UnoNumber.WILD_DRAW_4:
+                            Draw(NextPlayer(index));
+                            break;
+                        case UnoNumber.WILD_DOWNPOUR_DRAW_1:
+                        case UnoNumber.WILD_DOWNPOUR_DRAW_2:
+                        case UnoNumber.WILD_DOWNPOUR_DRAW_4:
+                            break;
+                        default:
+                            GameOver();
+                            break;
                     }
-                    string msg = (player == 0 ? "你" : "Player" + player) + " 赢了!\n" +
-                        "\n" +
-                        (form.mnuWatch.Checked ? "游戏时长\t" + lblWatch.Text + "\n" +
-                        "\n" : "") +
-                        "玩家\t得分";
-                    for (byte p = 0; p <= 3; p++)
-                        msg += "\n" + (p == 0 ? "你" : "Player" + p) + "\t" + GetPoints(p);
-                    if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
                 }
                 else
                 {
-                    if (player != 0)
-                    {
-                        List<Label> label = new List<Label>();
-                        if (mnuByColor.Checked)
-                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                                for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                                    for (int c = 1; c <= Players[player].cards[color, number]; c++)
-                                    {
-                                        int length = label.ToArray().Length;
-                                        AddLabel(label);
-                                        label[length].BackColor = GetColor(color);
-                                        if (new Regex("^(1|3)$").IsMatch(player + "")) label[length].Left = lblPlayers[player].Left;
-                                        label[length].Text = GetNumber(number);
-                                        if (player == 2) label[length].Top = lblPlayers[2].Top;
-                                    }
-                        else
-                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                                for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                                    for (int c = 1; c <= Players[player].cards[color, number]; c++)
-                                    {
-                                        int length = label.ToArray().Length;
-                                        AddLabel(label);
-                                        label[length].BackColor = GetColor(color);
-                                        if (new Regex("^(1|3)$").IsMatch(player + "")) label[length].Left = lblPlayers[player].Left;
-                                        label[length].Text = GetNumber(number);
-                                        if (player == 2) label[length].Top = lblPlayers[2].Top;
-                                    }
-                        for (int c = 0; c < label.ToArray().Length; c++)
-                        {
-                            switch (player)
-                            {
-                                case 1:
-                                case 3:
-                                    if (height / 2 - UnoSize.HEIGHT * label.ToArray().Length / 2 >= 0)
-                                        label[c].Top = height / 2 - UnoSize.HEIGHT * label.ToArray().Length / 2 + UnoSize.HEIGHT * c;
-                                    else
-                                        label[c].Top = height / label.ToArray().Length * c;
-                                    break;
-                                case 2:
-                                    if (width / 2 - UnoSize.WIDTH * label.ToArray().Length / 2 >= 0)
-                                        label[c].Left = width / 2 - UnoSize.WIDTH * label.ToArray().Length / 2 + UnoSize.WIDTH * c;
-                                    else
-                                        label[c].Left = width / label.ToArray().Length * c;
-                                    break;
-                            }
-                        }
-                    }
-                    if (MessageBox.Show((player == 0 ? "你" : "Player" + player) + " 输了!\n" +
-                        (form.mnuWatch.Checked ? "\n" +
-                        "游戏时长\t" + lblWatch.Text : ""), "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
+                    GameOver();
                 }
-                Application.Exit();
-                return;
-retry:
-                Application.Restart();
             }
 		}
 
@@ -1708,7 +1745,7 @@ retry:
         {
 			List<Card> cards = new List<Card>();
 			if (player == 0) {
-                if (form.mnuDaWhWdd1.Checked)
+                if (form.mnuDaWdd1.Checked)
                 {
                     List<Card> discardAll = new List<Card>();
                     foreach (CheckBox c in chkPlayer)
@@ -1870,6 +1907,12 @@ play:   		Sort();
                     return;
                 }
                 timTurn.Tag = "4,";
+                if (Downpour.count > 0)
+                {
+                    DownpourDraw(Downpour.player, Downpour.count);
+                    Downpour.count = 0;
+                    return;
+                }
                 if (skip > 0 || skips[player] > 0)
                 {
                     if (form.mnuSkipPlayers.Checked)
@@ -2003,7 +2046,7 @@ play:   		Sort();
                 Pile.cards[c, 0] = decks - GetOnplayersCards(c, 0);
                 for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
                     Pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
-                if (form.mnuDaWhWdd1.Checked)
+                if (form.mnuDaWdd1.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
                     // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks - getOnplayersCards(c, UnoNumber.TRADE_HANDS);
@@ -2023,10 +2066,13 @@ play:   		Sort();
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4);
             }
             Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
-            if (form.mnuDaWhWdd1.Checked)
+            if (form.mnuDaWdd1.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);
+            }
+            if (form.mnuWildHitfire.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);
             }
             lblPile.Text = GetPile().Length + "";
         }
@@ -2217,6 +2263,10 @@ play:   		Sort();
                     {
                         lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                         timPileToPlayers.Enabled = false;
+                        if (gameOver < 4 && MovingCard.downpour <= -1)
+                        {
+                            GameOver();
+                        }
                         if (!form.mnuDrawTilCanPlay.Checked && !MovingCard.one && MovingCard.downpour <= -1)
                             MovingCard.drew = !MovingCard.unoDraw;
                         if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour <= 3)
@@ -2231,18 +2281,25 @@ play:   		Sort();
                             MovingCard.downpour--;
                             if (MovingCard.downpour == 0)
                             {
+                                if (gameOver < 4)
+                                {
+                                    GameOver();
+                                }
                                 MovingCard.downpour = -1;
                                 PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, form.mnuDrawBeforePlaying.Checked);
                             }
                             else
                             {
                                 MovingCard.player = NextPlayer(MovingCard.player);
-                                byte ons = 0;
-                                foreach (Label p in lblPlayers)
-                                    if (p.Visible)
-                                        ons++;
-                                if (MovingCard.downpour % (ons - 1) == 0)
-                                    MovingCard.player = NextPlayer(MovingCard.player);
+                                if (gameOver >= 4)
+                                {
+                                    byte ons = 0;
+                                    foreach (Label p in lblPlayers)
+                                        if (p.Visible)
+                                            ons++;
+                                    if (MovingCard.downpour % (ons - 1) == 0)
+                                        MovingCard.player = NextPlayer(MovingCard.player);
+                                }
                                 CheckPile();
                                 timPileToPlayers.Enabled = true;
                             }
@@ -2405,6 +2462,15 @@ arrived:
                         break;
                 }
             }
+            timPlayersToCenter.Enabled = false;
+            if (gameOver < 4)
+            {
+                if (downpour > 0)
+                {
+                    DownpourDraw(MovingCard.player, downpour);
+                }
+                return;
+            }
             if (MovingCard.player == 0 && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
             {
                 Action(0, "UNO? +2");
@@ -2413,7 +2479,6 @@ arrived:
 				rdoUno.Checked = false;
                 MovingCard.unoDraw = true;
 			}
-            timPlayersToCenter.Enabled = false;
             if (!form.mnuDrawTilCanPlay.Checked)
                 MovingCard.drew = false;
             if (MovingCard.unoDraw)
@@ -2421,7 +2486,11 @@ arrived:
             else if (reversed)
                 PlayersTurn(MovingCard.player, true, form.mnuDrawBeforePlaying.Checked);
             else if (downpour > 0)
-                DownpourDraw(MovingCard.player, downpour);
+            {
+                Downpour.player = MovingCard.player;
+                Downpour.count = downpour;
+                PlayersTurn(MovingCard.player, true, form.mnuDrawBeforePlaying.Checked);
+            }
             else
                 PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, form.mnuDrawBeforePlaying.Checked);
 		}

@@ -32,7 +32,7 @@ namespace Uno {
             mnuMagentaBlank.Checked = bool.Parse(keys[11]);
             mnuBlackBlank.Checked = bool.Parse(keys[12]);
             mnuWildDownpourDraw.Checked = bool.Parse(keys[13]);
-            mnuDaWhWdd1.Checked = bool.Parse(keys[14]);
+            mnuDaWdd1.Checked = bool.Parse(keys[14]);
             mnuCanShowCards.Checked = bool.Parse(keys[15]);
             mnuPairs.Checked = bool.Parse(keys[16]);
             mnuPlayOrDrawAll.Checked = bool.Parse(keys[17]);
@@ -57,7 +57,7 @@ namespace Uno {
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = false;
             mnuWildDownpourDraw.Checked = false;
-            mnuDaWhWdd1.Checked = false;
+            mnuDaWdd1.Checked = false;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
             mnuDrawTilCanPlay.Checked = true;
@@ -119,7 +119,7 @@ namespace Uno {
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
             mnuWildDownpourDraw.Checked = true;
-            mnuDaWhWdd1.Checked = true;
+            mnuDaWdd1.Checked = true;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
             mnuDrawTilCanPlay.Checked = true;
@@ -214,7 +214,7 @@ namespace Uno {
             mnuMagentaBlank.Checked = false;
             mnuBlackBlank.Checked = false;
             mnuWildDownpourDraw.Checked = false;
-            mnuDaWhWdd1.Checked = false;
+            mnuDaWdd1.Checked = false;
             mnuPairs.Checked = false;
             mnuPlayOrDrawAll.Checked = false;
             mnuDrawTilCanPlay.Checked = false;
@@ -266,7 +266,7 @@ namespace Uno {
             s += mnuMagentaBlank.Checked + "K"; // 11
             s += mnuBlackBlank.Checked + "K"; // 12
             s += mnuWildDownpourDraw.Checked + "K"; // 13
-            s += mnuDaWhWdd1.Checked + "K"; // 14
+            s += mnuDaWdd1.Checked + "K"; // 14
             s += mnuCanShowCards.Checked + "K"; // 15
             s += mnuPairs.Checked + "K"; // 16
             s += mnuPlayOrDrawAll.Checked + "K"; // 17
