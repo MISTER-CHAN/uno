@@ -411,7 +411,7 @@ namespace Uno
         }
 
 		bool CanPlay(List<Card> card, byte color) {
-            if (form.mnuAttack.Checked)
+            if (form.mnuDaWhWdd1.Checked)
             {
                 byte discardColor = UnoColor.MAX_VALUE;
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
@@ -477,7 +477,7 @@ deny:
 
 		private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
 			int index = (int) ((CheckBox) sender).Tag;
-            if (!form.mnuPairs.Checked && !form.mnuAttack.Checked && ((CheckBox)sender).Checked)
+            if (!form.mnuPairs.Checked && !form.mnuDaWhWdd1.Checked && ((CheckBox)sender).Checked)
                 for (int c = 0; c < chkPlayer.ToArray().Length; c++)
                     if (c != index) chkPlayer[c].Checked = false;
 			if (mnuRightClick.Checked) if (chkPlayer[index].Checked && !new Regex("^Magenta|Black$").IsMatch(chkPlayer[index].BackColor.Name)) btnPlay.BackColor = chkPlayer[index].BackColor;
@@ -799,12 +799,12 @@ deny:
             {
                 Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks;
             }
-            if (form.mnuDownpourDraw.Checked && form.mnuBlackBlank.Checked)
+            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks;
             }
             Pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks;
-            if (form.mnuDownpourDraw.Checked)
+            if (form.mnuWildDownpourDraw.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks;
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks;
@@ -1700,7 +1700,7 @@ retry:
         {
 			List<Card> cards = new List<Card>();
 			if (player == 0) {
-                if (form.mnuAttack.Checked)
+                if (form.mnuDaWhWdd1.Checked)
                 {
                     List<Card> discardAll = new List<Card>();
                     foreach (CheckBox c in chkPlayer)
@@ -1991,27 +1991,27 @@ play:   		Sort();
                 Pile.cards[c, 0] = decks - GetOnplayersCards(c, 0);
                 for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
                     Pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
-                if (form.mnuAttack.Checked)
+                if (form.mnuDaWhWdd1.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
                     // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks - getOnplayersCards(c, UnoNumber.TRADE_HANDS);
                 }
-                if (form.mnuBlank.Checked)
+                if (form.mnuRygbBlank.Checked)
                     Pile.cards[c, UnoNumber.BLANK] = decks - GetOnplayersCards(c, UnoNumber.BLANK);
             }
-            if (form.mnuBlank.Checked && form.mnuMagentaBlank.Checked)
+            if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
                 Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks - GetOnplayersCards(UnoColor.MAGENTA, UnoNumber.BLANK);
-            if (form.mnuWater.Checked && form.mnuBlackBlank.Checked)
+            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
                 Pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.BLANK);
             Pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD);
-            if (form.mnuWater.Checked)
+            if (form.mnuWildDownpourDraw.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2);
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4);
             }
             Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
-            if (form.mnuAttack.Checked)
+            if (form.mnuDaWhWdd1.Checked)
             {
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
                 Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);

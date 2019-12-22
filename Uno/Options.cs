@@ -28,11 +28,11 @@ namespace Uno {
             string[] keys = save.Split(char.Parse("K"));
             this.keys = keys;
             txtDecks.Text = keys[9];
-            mnuBlank.Checked = bool.Parse(keys[10]);
+            mnuRygbBlank.Checked = bool.Parse(keys[10]);
             mnuMagentaBlank.Checked = bool.Parse(keys[11]);
             mnuBlackBlank.Checked = bool.Parse(keys[12]);
-            mnuWater.Checked = bool.Parse(keys[13]);
-            mnuAttack.Checked = bool.Parse(keys[14]);
+            mnuWildDownpourDraw.Checked = bool.Parse(keys[13]);
+            mnuDaWhWdd1.Checked = bool.Parse(keys[14]);
             mnuCanShowCards.Checked = bool.Parse(keys[15]);
             mnuPairs.Checked = bool.Parse(keys[16]);
             mnuPlayOrDrawAll.Checked = bool.Parse(keys[17]);
@@ -53,11 +53,11 @@ namespace Uno {
         {
             txtDealt.Text = "11";
             txtDecks.Text = "1";
-            mnuBlank.Checked = true;
+            mnuRygbBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = false;
-            mnuWater.Checked = false;
-            mnuAttack.Checked = false;
+            mnuWildDownpourDraw.Checked = false;
+            mnuDaWhWdd1.Checked = false;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
             mnuDrawTilCanPlay.Checked = true;
@@ -115,11 +115,11 @@ namespace Uno {
         {
             txtDealt.Text = "30";
             txtDecks.Text = "3";
-            mnuBlank.Checked = true;
+            mnuRygbBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
-            mnuWater.Checked = true;
-            mnuAttack.Checked = true;
+            mnuWildDownpourDraw.Checked = true;
+            mnuDaWhWdd1.Checked = true;
             mnuPairs.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
             mnuDrawTilCanPlay.Checked = true;
@@ -210,11 +210,11 @@ namespace Uno {
         {
             txtDealt.Text = "7";
             txtDecks.Text = "1";
-            mnuBlank.Checked = false;
+            mnuRygbBlank.Checked = false;
             mnuMagentaBlank.Checked = false;
             mnuBlackBlank.Checked = false;
-            mnuWater.Checked = false;
-            mnuAttack.Checked = false;
+            mnuWildDownpourDraw.Checked = false;
+            mnuDaWhWdd1.Checked = false;
             mnuPairs.Checked = false;
             mnuPlayOrDrawAll.Checked = false;
             mnuDrawTilCanPlay.Checked = false;
@@ -248,7 +248,7 @@ namespace Uno {
 
         private void MnuWater_CheckedChanged(object sender, EventArgs e)
         {
-            mnuBlackBlank.Enabled = mnuDownpourDraw.Checked;
+            mnuBlackBlank.Enabled = mnuWildDownpourDraw.Checked;
         }
 
         private void MnuWinnerLoser_Click(object sender, EventArgs e)
@@ -262,11 +262,11 @@ namespace Uno {
         {
             string s = "";
             s += txtDecks.Text + "K"; // 9
-            s += mnuBlank.Checked + "K"; // 10
+            s += mnuRygbBlank.Checked + "K"; // 10
             s += mnuMagentaBlank.Checked + "K"; // 11
             s += mnuBlackBlank.Checked + "K"; // 12
-            s += mnuWater.Checked + "K"; // 13
-            s += mnuAttack.Checked + "K"; // 14
+            s += mnuWildDownpourDraw.Checked + "K"; // 13
+            s += mnuDaWhWdd1.Checked + "K"; // 14
             s += mnuCanShowCards.Checked + "K"; // 15
             s += mnuPairs.Checked + "K"; // 16
             s += mnuPlayOrDrawAll.Checked + "K"; // 17
