@@ -335,7 +335,7 @@ namespace Uno
                     }
                     else if (Players[player].cards[bestCard.color, bestCard.number] > 0)
                     {
-                        MovingCard.color = bestCard.color;
+                        MovingCard.color = bestCard.color == UnoColor.MAGENTA ? backColor : bestCard.color;
                         cards.Add(bestCard);
                     }
                 }
@@ -2371,14 +2371,15 @@ play:   		Sort();
 			}
             MovingCard.progress++;
 			return;
-        arrived:
+arrived:
             pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2, height / 2 - pnlMovingCards.Height / 2);
             MovingCard.progress = 0;
 			RemoveLabel(lblCards);
 			AddLabel(lblCards, lblMovingCards.ToArray().Length - 1);
 			for (int c = 1; c < lblCards.ToArray().Length; c++)
             {
-				lblCards[c].BackColor = lblMovingCards[c].BackColor; lblCards[c].Text = lblMovingCards[c].Text;
+				lblCards[c].BackColor = lblMovingCards[c].BackColor;
+                lblCards[c].Text = lblMovingCards[c].Text;
 				lblCards[c].BringToFront();
                 lblCards[c].Location = new Point(lblMovingCards[c].Left + pnlMovingCards.Left, lblMovingCards[c].Top + pnlMovingCards.Top);
                 SetUsage(lblCards[c]);
