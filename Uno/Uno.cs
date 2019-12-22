@@ -793,7 +793,9 @@ deny:
             }
             lblCards.Add(new Label());
 			Controls.Add(lblCards[0]);
-			ResizeForm();
+            lblCards[0].AutoSize = false;
+            lblCards[0].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
+            ResizeForm();
             int decks = int.Parse(form.txtDecks.Text);
 			for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
             {
@@ -2371,7 +2373,8 @@ play:   		Sort();
 			}
             MovingCard.progress++;
 			return;
-arrived:     
+        arrived:
+            pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2, height / 2 - pnlMovingCards.Height / 2);
             MovingCard.progress = 0;
 			RemoveLabel(lblCards);
 			AddLabel(lblCards, lblMovingCards.ToArray().Length - 1);
