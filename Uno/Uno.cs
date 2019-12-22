@@ -555,16 +555,24 @@ deny:
                 switch (Math.Sign(e.Delta))
                 {
                     case -1:
-                        if (hPlayer.Maximum - hPlayer.Value >= width)
-                            hPlayer.Value += width;
+                        if (hPlayer.Maximum - hPlayer.Value >= width / 2)
+                        {
+                            hPlayer.Value += width / 2;
+                        }
                         else
+                        {
                             hPlayer.Value = hPlayer.Maximum;
+                        }
                         break;
                     case 1:
-                        if (hPlayer.Value - hPlayer.Minimum >= width)
-                            hPlayer.Value -= width;
+                        if (hPlayer.Value - hPlayer.Minimum >= width / 2)
+                        {
+                            hPlayer.Value -= width / 2;
+                        }
                         else
+                        {
                             hPlayer.Value = hPlayer.Minimum;
+                        }
                         break;
                     default:
                         return;
@@ -1747,7 +1755,7 @@ retry:
 				btnPlay.Visible = false;
 play:   		Sort();
                 btnPlay.Visible = false;
-			} else {
+            } else {
                 Card[] ais = Ai(player);
 				foreach (Card card in ais) cards.Add(card);
 				for (int c = 0; c < cards.ToArray().Length; c++) Players[player].cards[cards[c].color, cards[c].number]--;
@@ -1975,6 +1983,10 @@ play:   		Sort();
                 for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = UnoSize.WIDTH * i;
                 hPlayer.Maximum = width - this.width;
                 hPlayer.Visible = true;
+                if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
+                {
+                    HPlayer_Scroll(hPlayer, new ScrollEventArgs(new ScrollEventType(), hPlayer.Value));
+                }
             }
             else
             {
