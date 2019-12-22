@@ -2079,7 +2079,6 @@ play:   		Sort();
 
 		void RemoveChkPlayer() {
 			while (chkPlayer.ToArray().Length > 0) {
-				Controls.Remove(chkPlayer[0]);
 				chkPlayer.RemoveAt(0);
 			}
 		}
