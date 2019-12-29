@@ -230,13 +230,13 @@ namespace Uno
                 {
                     bestCard.number = UnoNumber.NUMBER;
                 }
-                if (Players[player].cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
+                else if (Players[player].cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
                 {
                     bestCard.color = UnoColor.MAGENTA;
                     bestCard.number = UnoNumber.BLANK;
                 }
                 else
-                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    for ( byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
                         if (Players[player].cards[UnoColor.BLACK, n] > 0)
                         {
                             bestCard.color = UnoColor.BLACK;
