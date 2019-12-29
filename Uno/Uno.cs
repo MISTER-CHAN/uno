@@ -910,13 +910,15 @@ deny:
 			for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
             {
 				Pile.cards[c, 0] = decks;
-                for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
+                for (byte n = 1; n <= 9; n++)
                     Pile.cards[c, n] = 2 * decks;
                 if (form.mnuDos.Checked)
                 {
                     Pile.cards[c, 10] = 2 * decks;
                     Pile.cards[c, UnoNumber.NUMBER] = 2 * decks;
                 }
+                for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
+                    Pile.cards[c, n] = 2 * decks;
                 if (form.mnuDaWah.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
@@ -2176,13 +2178,15 @@ play:   		Sort();
             for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
             {
                 Pile.cards[c, 0] = decks - GetOnplayersCards(c, 0);
-                for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
+                for (byte n = 1; n <= 9; n++)
                     Pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
                 if (form.mnuDos.Checked)
                 {
                     Pile.cards[c, 10] = 2 * decks - GetOnplayersCards(c, 10);
                     Pile.cards[c, UnoNumber.NUMBER] = 2 * decks - GetOnplayersCards(c, UnoNumber.NUMBER);
                 }
+                for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
+                    Pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
                 if (form.mnuDaWah.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
