@@ -536,7 +536,7 @@ exit:
                         if (n == UnoNumber.MAX_VALUE)
                             n = c.number;
                         else if (c.number != n)
-                            goto deny;
+                            goto number;
                     }
                     else if (c.number != UnoNumber.NUMBER)
                         goto number;
@@ -1282,14 +1282,19 @@ play:
                     case UnoNumber.SKIP:
                     case UnoNumber.REVERSE:
                     case UnoNumber.DRAW_2:
-                    case UnoNumber.DISCARD_ALL:
-                    case UnoNumber.TRADE_HANDS:
                     case UnoNumber.BLANK:
-                        point += 20;
-                        break;
-                    case UnoNumber.WILD:
                     case UnoNumber.WILD_DOWNPOUR_DRAW_1:
                     case UnoNumber.WILD_DOWNPOUR_DRAW_2:
+                        point += 20;
+                        break;
+                    case UnoNumber.DISCARD_ALL:
+                    case UnoNumber.TRADE_HANDS:
+                        point += 30;
+                        break;
+                    case UnoNumber.NUMBER:
+                        point += 40;
+                        break;
+                    case UnoNumber.WILD:
                     case UnoNumber.WILD_DOWNPOUR_DRAW_4:
                     case UnoNumber.WILD_DRAW_4:
                         point += 50;
@@ -1335,12 +1340,13 @@ play:
                 UnoNumberName.DRAW_2 => usages[2].Replace("%AMOUNT%", "2"),
                 UnoNumberName.DISCARD_ALL => "允许玩家打出所有相同颜色的牌.",
                 UnoNumberName.TRADE_HANDS => "所有玩家互相交換手牌.",
+                UnoNumberName.NUMBER => "任意指定数字.",
                 UnoNumberName.WILD => "任意指定颜色.",
                 UnoNumberName.WILD_DOWNPOUR_DRAW_1 => usage.Replace("%AMOUNT%", "1"),
                 UnoNumberName.WILD_DOWNPOUR_DRAW_2 => usage.Replace("%AMOUNT%", "2"),
                 UnoNumberName.WILD_DOWNPOUR_DRAW_4 => usage.Replace("%AMOUNT%", "4"),
                 UnoNumberName.WILD_DRAW_4 => "任意指定颜色幷且下家罚抽 4 张牌.",
-                UnoNumberName.WILD_HITFIRE => "下家罚抽牌盒中的所有牌.",
+                UnoNumberName.WILD_HITFIRE => "任意指定颜色幷且下家罚抽牌盒中的所有牌.",
                 _ => "普通的 " + number + " 号牌.",
             };
         }
