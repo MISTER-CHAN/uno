@@ -303,8 +303,7 @@ namespace Uno
                 bestCard.number = backNumber;
             }
             mostQuantity = 0;
-            if (bestCard.number < UnoNumber.BLANK
-                || bestCard.number == UnoNumber.BLANK && Players[player].cards[UnoColor.BLACK, UnoNumber.BLANK] <= 0)
+            if (Players[player].cards[UnoColor.BLACK, bestCard.number] <= 0)
             {
                 if (form.mnuPairs.Checked)
                 {
@@ -878,12 +877,14 @@ deny:
                 lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
                 lblPlayers[i].BackColor = Color.Black;
                 lblPlayers[i].ForeColor = Color.White;
+                lblPlayers[i].Tag = i;
                 lblPlayers[i].Text = "UNO";
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
                 lblPlayers[i].Tag = i;
 				if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblPlayers[i].Click += new EventHandler(LblPlayers_Click);
                 lblCounts[i] = new Label();
 				Controls.Add(lblCounts[i]);
                 lblCounts[i].AutoSize = true;
@@ -1373,32 +1374,59 @@ play:
             if (form.mnuCanShowCards.Checked)
             {
                 int i = 0;
-                if (form.mnuCanShowCards.Checked)
-                {
-                    string cards = "";
-                    for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                        for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                string cards = "";
+                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    {
+                        string q = Pile.cards[c, n] + "";
+                        if (q != "0")
                         {
-                            string q = Pile.cards[c, n] + "";
-                            if (q != "0")
+                            if (q == "1")
                             {
-                                if (q == "1")
-                                {
-                                    q = "";
-                                }
-                                cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                                i++;
-                                if (i % Math.Floor((double)width / UnoSize.WIDTH) == 0)
-                                {
-                                    cards += "\n";
-                                }
+                                q = "";
+                            }
+                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                            i++;
+                            if (i % Math.Floor((double)width / UnoSize.WIDTH) == 0)
+                            {
+                                cards += "\n";
                             }
                         }
-                    Action(0, cards);
-                }
+                    }
+                Action(0, cards);
             }
             else if (btnDraw.Visible)
                 BtnDraw_Click(sender, e);
+        }
+
+        private void LblPlayers_Click(object sender, EventArgs e)
+        {
+            byte p = (byte)((Label)sender).Tag;
+            lblPlayers[p].AutoSize = form.mnuCanShowCards.Checked;
+            if (form.mnuCanShowCards.Checked)
+            {
+                int i = 0;
+                string cards = "";
+                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    {
+                        string q = Players[p].cards[c, n] + "";
+                        if (q != "0")
+                        {
+                            if (q == "1")
+                            {
+                                q = "";
+                            }
+                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                            i++;
+                            if (i % Math.Floor((double)width / UnoSize.WIDTH) == 0)
+                            {
+                                cards += "\n";
+                            }
+                        }
+                    }
+                Action(p, cards);
+            }
         }
 
         void CheckPile()
