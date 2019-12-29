@@ -366,14 +366,16 @@ namespace Uno
                 if (bestCard.number == UnoNumber.NUMBER)
                 {
                     List<Card> numbers = new List<Card>();
-                    byte number = UnoNumber.MAX_VALUE;
+                    byte number;
                     for (byte n = 10; n >= 0; n--)
                     {
                         for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                         {
                             if (Players[player].cards[c, n] > 0)
+                            {
                                 number = n;
                                 goto number_color;
+                            }
                         }
                     }
                     goto exit;
