@@ -187,7 +187,7 @@ namespace Uno
             int mostQuantity, quantity, quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
             if (backNumber == UnoNumber.NUMBER)
             {
-                for (byte b = 10; b >= 0; b--)
+                for (byte b = 10; b >= 0 && b < byte.MaxValue; b--)
                 {
                     int i = GetQuantityByNumber(player, b);
                     if (i > quantityNumber)
@@ -367,7 +367,7 @@ namespace Uno
                 {
                     List<Card> numbers = new List<Card>();
                     byte number;
-                    for (byte n = 10; n >= 0; n--)
+                    for (byte n = 10; n >= 0 && n < byte.MaxValue; n--)
                     {
                         for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                         {
@@ -1868,52 +1868,33 @@ gameOver:
         {
 			List<Card> cards = new List<Card>();
 			if (player == 0) {
-                if (form.mnuDaWah.Checked)
+                List<Card> discardAll = new List<Card>(), number = new List<Card>();
+                foreach (CheckBox c in chkPlayer)
                 {
-                    List<Card> discardAll = new List<Card>();
-                    foreach (CheckBox c in chkPlayer)
-                        if (c.Checked)
-                        {
-                            Card card = new Card
-                            {
-                                color = GetColorId(c.BackColor),
-                                number = GetNumberId(c.Text)
-                            };
-                            if (c.Text == UnoNumberName.DISCARD_ALL)
-                                discardAll.Add(card);
-                            else
-                                cards.Add(card);
-                        }
-                    discardAll.AddRange(cards);
-                    cards = discardAll;
-                }
-                else if (form.mnuDos.Checked)
-                {
-                    List<Card> number = new List<Card>();
-                    foreach (CheckBox c in chkPlayer)
+                    if (c.Checked)
                     {
-                        if (c.Checked)
+                        Card card = new Card
                         {
-                            Card card = new Card { color = GetColorId(c.BackColor), number = GetNumberId(c.Text) };
-                            if (c.Text == UnoNumberName.NUMBER) 
-                                number.Add(card);
-                            else
+                            color = GetColorId(c.BackColor),
+                            number = GetNumberId(c.Text)
+                        };
+                        switch (c.Text)
+                        {
+                            default:
                                 cards.Add(card);
+                                break;
+                            case UnoNumberName.DISCARD_ALL:
+                                discardAll.Add(card);
+                                break;
+                            case UnoNumberName.NUMBER:
+                                number.Add(card);
+                                break;
                         }
                     }
-                    cards.AddRange(number);
                 }
-                else
-                    foreach (CheckBox c in chkPlayer)
-                        if (c.Checked)
-                        {
-                            Card card = new Card
-                            {
-                                color = GetColorId(c.BackColor),
-                                number = GetNumberId(c.Text)
-                            };
-                            cards.Add(card);
-				        }
+                discardAll.AddRange(cards);
+                cards = discardAll;
+                cards.AddRange(number);
                 if (mnuRadioBox.Checked)
                 {
                     if (!CanPlay(cards, cards.First().color)) return;
