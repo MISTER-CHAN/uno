@@ -49,20 +49,21 @@ namespace Uno
         }
 
         public class UnoNumber {
-            public const byte SKIP = 10;
-            public const byte REVERSE = 11;
-            public const byte DRAW_2 = 12;
-            public const byte DISCARD_ALL = 13;
-            public const byte TRADE_HANDS = 14;
-            public const byte BLANK = 15;
-            public const byte WILD = 16;
-            public const byte WILD_DOWNPOUR_DRAW_1 = 17;
-            public const byte WILD_DOWNPOUR_DRAW_2 = 18;
-            public const byte WILD_DOWNPOUR_DRAW_4 = 19;
-            public const byte WILD_DRAW_4 = 20;
-            public const byte WILD_HITFIRE = 21;
-            public const byte NULL = 22;
-            public const byte MAX_VALUE = 22;
+            public const byte SKIP = 11;
+            public const byte REVERSE = 12;
+            public const byte DRAW_2 = 13;
+            public const byte DISCARD_ALL = 14;
+            public const byte TRADE_HANDS = 15;
+            public const byte NUMBER = 16;
+            public const byte BLANK = 17;
+            public const byte WILD = 18;
+            public const byte WILD_DOWNPOUR_DRAW_1 = 19;
+            public const byte WILD_DOWNPOUR_DRAW_2 = 20;
+            public const byte WILD_DOWNPOUR_DRAW_4 = 21;
+            public const byte WILD_DRAW_4 = 22;
+            public const byte WILD_HITFIRE = 23;
+            public const byte NULL = 24;
+            public const byte MAX_VALUE = 24;
         }
 
         public class UnoNumberName
@@ -72,6 +73,7 @@ namespace Uno
             public const string DRAW_2 = "+2";
             public const string DISCARD_ALL = "×";
             public const string TRADE_HANDS = "<>";
+            public const string NUMBER = "#";
             public const string WILD = "::";
             public const string WILD_DOWNPOUR_DRAW_1 = "!1";
             public const string WILD_DOWNPOUR_DRAW_2 = "!2";
@@ -83,12 +85,14 @@ namespace Uno
 
         private bool reverse = false, isSelectingCards = false;
         byte gameOver = 4;
-        readonly byte[] playlist = new byte[21] {
+        readonly byte[] playlist = new byte[UnoNumber.MAX_VALUE] {
             UnoNumber.DISCARD_ALL,
             UnoNumber.SKIP,
             UnoNumber.REVERSE,
             UnoNumber.DRAW_2,
-            9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+            10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+            UnoNumber.NUMBER,
+            UnoNumber.TRADE_HANDS,
             UnoNumber.BLANK,
             UnoNumber.WILD,
             UnoNumber.WILD_DOWNPOUR_DRAW_1,
@@ -357,6 +361,27 @@ namespace Uno
                         }
                     }
                 }
+                else if (form.mnuDos.Checked)
+                {
+                    if (bestCard.number <= 10)
+                    {
+                        List<Card> number = new List<Card>();
+                        for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
+                        {
+                            for (byte u = 1; u <= Players[player].cards[c, UnoNumber.NUMBER]; u++)
+                            {
+                                Card card = new Card
+                                {
+                                    color = c,
+                                    number = UnoNumber.NUMBER
+                                };
+                                number.Add(card);
+                            }
+                        }
+                        if (cards.Count + number.Count == int.Parse(lblCounts[player].Text))
+                            cards.AddRange(number);
+                    }
+                }
             }
             else
             {
@@ -371,6 +396,7 @@ namespace Uno
                     }
                 }
                 if (form.mnuPairs.Checked)
+                {
                     for (byte c = UnoColor.RED; c <= UnoColor.BLACK; c++)
                         for (byte u = 1; u <= Players[player].cards[c, bestCard.number]; u++)
                         {
@@ -381,6 +407,7 @@ namespace Uno
                             };
                             cards.Add(card);
                         }
+                }
                 else if (Players[player].cards[UnoColor.BLACK, bestCard.number] > 0)
                     cards.Add(bestCard);
             }
@@ -418,11 +445,12 @@ namespace Uno
         }
 
 		bool CanPlay(List<Card> card, byte color) {
+            byte backColor = GetColorId(BackColor), number = GetNumberId(lblCards[1].Text);
             if (form.mnuDaWdd1.Checked)
             {
                 byte discardColor = UnoColor.MAX_VALUE;
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
-                    discardColor = GetColorId(BackColor);
+                    discardColor = backColor;
                 foreach (Card d in card)
                     if (d.number == UnoNumber.DISCARD_ALL)
                     {
@@ -433,16 +461,46 @@ namespace Uno
                             if (c.color != discardColor && c.number != UnoNumber.DISCARD_ALL)
                                 goto deny;
                         }
-                        goto discardAll;
+                        goto draw;
                     }
                 if (!form.mnuPairs.Checked)
                     if (card.ToArray().Length > 1)
                         goto deny;
             }
+            if (form.mnuDos.Checked)
+            {
+                byte n = number;
+                foreach (Card c in card)
+                {
+                    if (c.color == backColor)
+                    {
+                        n = UnoNumber.MAX_VALUE;
+                        break;
+                    }
+                }
+                if (n > 10 && n < UnoNumber.MAX_VALUE)
+                    goto number;
+                foreach (Card c in card)
+                {
+                    if (c.number <= 10)
+                    {
+                        if (n == UnoNumber.MAX_VALUE)
+                            n = c.number;
+                        else if (c.number != n)
+                            goto deny;
+                    }
+                    else if (c.number != UnoNumber.NUMBER)
+                        goto number;
+                }
+                goto accept;
+            }
+number:
             foreach (Card c in card)
+            {
                 if (c.number != card[0].number)
                     goto deny;
-            discardAll:
+            }
+draw:
             if (!form.mnuPlayOrDrawAll.Checked)
             {
                 switch (lblCards[1].Text)
@@ -470,9 +528,13 @@ namespace Uno
 color:
             for (int c = 0; c < card.ToArray().Length; c++) if (card[c].color == color) goto btn;
 			goto deny;
-btn:        
-            for (int c = 0; c < card.ToArray().Length; c++) if (new Regex("^(" + GetColorId(BackColor) + "|" + UnoColor.MAGENTA + ")$").IsMatch(card[c].color + "")) goto accept;
-            if (card[0].number == GetNumberId(lblCards[1].Text))
+btn:
+            for (int c = 0; c < card.ToArray().Length; c++)
+            {
+                if (card[c].color == backColor || card[c].color == UnoColor.MAGENTA)
+                    goto accept;
+            }
+            if (card[0].number == number || number == UnoNumber.NUMBER)
                 goto accept;
 			goto deny;
 accept:		
@@ -801,6 +863,11 @@ deny:
 				Pile.cards[c, 0] = decks;
                 for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
                     Pile.cards[c, n] = 2 * decks;
+                if (form.mnuDos.Checked)
+                {
+                    Pile.cards[c, 10] = 2 * decks;
+                    Pile.cards[c, UnoNumber.NUMBER] = 2 * decks;
+                }
                 if (form.mnuDaWdd1.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
@@ -811,6 +878,10 @@ deny:
                     Pile.cards[c, UnoNumber.BLANK] = 1 * decks;
                 }
 			}
+            if (form.mnuDos.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, 2] = 4 * decks;
+            }
             if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
             {
                 Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks;
@@ -1059,6 +1130,7 @@ play:
                 UnoNumber.DRAW_2 => UnoNumberName.DRAW_2,
                 UnoNumber.DISCARD_ALL => UnoNumberName.DISCARD_ALL,
                 UnoNumber.TRADE_HANDS => UnoNumberName.TRADE_HANDS,
+                UnoNumber.NUMBER => UnoNumberName.NUMBER,
                 UnoNumber.BLANK => form.txtBlankText.Text,
                 UnoNumber.WILD => UnoNumberName.WILD,
                 UnoNumber.WILD_DOWNPOUR_DRAW_1 => UnoNumberName.WILD_DOWNPOUR_DRAW_1,
@@ -1083,6 +1155,7 @@ play:
                 UnoNumberName.DRAW_2 => UnoNumber.DRAW_2,
                 UnoNumberName.DISCARD_ALL => UnoNumber.DISCARD_ALL,
                 UnoNumberName.TRADE_HANDS => UnoNumber.TRADE_HANDS,
+                UnoNumberName.NUMBER => UnoNumber.NUMBER,
                 UnoNumberName.WILD => UnoNumber.WILD,
                 UnoNumberName.WILD_DOWNPOUR_DRAW_1 => UnoNumber.WILD_DOWNPOUR_DRAW_1,
                 UnoNumberName.WILD_DOWNPOUR_DRAW_2 => UnoNumber.WILD_DOWNPOUR_DRAW_2,
@@ -1107,6 +1180,7 @@ play:
                 UnoNumber.DRAW_2 => "Draw Two",
                 UnoNumber.DISCARD_ALL => "Discard All",
                 UnoNumber.TRADE_HANDS => "Trade Hands",
+                UnoNumber.NUMBER => "Wild Number",
                 UnoNumber.WILD => "Wild",
                 UnoNumber.WILD_DOWNPOUR_DRAW_1 => "Wild Downpour Draw One",
                 UnoNumber.WILD_DOWNPOUR_DRAW_2 => "Wild Downpour Draw Two",
@@ -1764,6 +1838,22 @@ gameOver:
                     discardAll.AddRange(cards);
                     cards = discardAll;
                 }
+                else if (form.mnuDos.Checked)
+                {
+                    List<Card> number = new List<Card>();
+                    foreach (CheckBox c in chkPlayer)
+                    {
+                        if (c.Checked)
+                        {
+                            Card card = new Card { color = GetColorId(c.BackColor), number = GetNumberId(c.Text) };
+                            if (c.Text == UnoNumberName.NUMBER) 
+                                number.Add(card);
+                            else
+                                cards.Add(card);
+                        }
+                    }
+                    cards.AddRange(number);
+                }
                 else
                     foreach (CheckBox c in chkPlayer)
                         if (c.Checked)
@@ -1810,11 +1900,11 @@ play:   		Sort();
                     {
                         if (mnuRadioBox.Checked)
                         {
-                            FrmColor color = new FrmColor();
+                            FrmColor c = new FrmColor();
                             int colors = 0;
                             if (cards.Last().color == UnoColor.BLACK)
                             {
-                                foreach (ToolStripMenuItem menu in color.mnuColor.Items)
+                                foreach (ToolStripMenuItem menu in c.mnuColor.Items)
                                 {
                                     menu.Enabled = true;
                                     menu.BackColor = GetColor(byte.Parse(menu.Tag + ""));
@@ -1826,15 +1916,15 @@ play:   		Sort();
                                 foreach (Card card in cards)
                                     if (!new Regex("^(" + UnoColor.MAGENTA + "|" + UnoColor.BLACK + ")$").IsMatch(card.color + ""))
                                     {
-                                        color.mnuColor.Items[card.color].Enabled = true;
-                                        color.mnuColor.Items[card.color].BackColor = GetColor(card.color);
+                                        c.mnuColor.Items[card.color].Enabled = true;
+                                        c.mnuColor.Items[card.color].BackColor = GetColor(card.color);
                                     }
-                                foreach (ToolStripMenuItem menu in color.mnuColor.Items) if (menu.Enabled) colors++;
+                                foreach (ToolStripMenuItem menu in c.mnuColor.Items) if (menu.Enabled) colors++;
                             }
                             if (colors > 1)
                             {
-                                color.ShowDialog();
-                                MovingCard.color = byte.Parse(color.Tag + "");
+                                c.ShowDialog();
+                                MovingCard.color = byte.Parse(c.Tag + "");
                             }
                             else if (cards[0].color != UnoColor.MAGENTA)
                             {
@@ -2052,6 +2142,11 @@ play:   		Sort();
                 Pile.cards[c, 0] = decks - GetOnplayersCards(c, 0);
                 for (byte n = 1; n <= UnoNumber.DRAW_2; n++)
                     Pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
+                if (form.mnuDos.Checked)
+                {
+                    Pile.cards[c, 10] = 2 * decks - GetOnplayersCards(c, 10);
+                    Pile.cards[c, UnoNumber.NUMBER] = 2 * decks - GetOnplayersCards(c, UnoNumber.NUMBER);
+                }
                 if (form.mnuDaWdd1.Checked)
                 {
                     Pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
@@ -2059,6 +2154,10 @@ play:   		Sort();
                 }
                 if (form.mnuRygbBlank.Checked)
                     Pile.cards[c, UnoNumber.BLANK] = decks - GetOnplayersCards(c, UnoNumber.BLANK);
+            }
+            if (form.mnuDos.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, 2] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, 2);
             }
             if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
                 Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks - GetOnplayersCards(UnoColor.MAGENTA, UnoNumber.BLANK);
