@@ -2411,18 +2411,44 @@ play:   		Sort();
 				lblCards[1].Text = GetNumber(rndCard.number);
 				lblCards[1].TextAlign = ContentAlignment.MiddleCenter;
                 SetUsage(lblCards[1]);
-				BackColor = lblCards[1].BackColor;
-                if (new Regex("^(Magenta|Black)$").IsMatch(BackColor.Name))
+                if (new Regex("^(Magenta|Black)$").IsMatch(lblCards[1].BackColor.Name))
                 {
                     MovingCard.progress = 0;
                     return;
                 }
+                BackColor = lblCards[1].BackColor;
                 timPileToCenter.Enabled = false;
                 lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                 MovingCard.playing = true;
                 reverse = Math.Floor(2 * Rnd()) == 0;
                 if (form.keys.Length == 0)
-                    PlayersTurn(NextPlayer((byte)(4 * Rnd())), true, GetDbp());
+                {
+                    byte nextPlayer = NextPlayer((byte)(4 * Rnd()));
+                    if (lblCards[1].Text == form.txtBlankText.Text)
+                    {
+                        if (form.mnuSkipPlayers.Checked)
+                            skip = int.Parse(form.txtBlankSkip.Text);
+                        else
+                            skips[nextPlayer] = int.Parse(form.txtBlankSkip.Text);
+                        lblDraw.Text = form.txtBlankDraw.Text;
+                    }
+                    else
+                    {
+                        switch (lblCards[1].Text)
+                        {
+                            case UnoNumberName.SKIP:
+                                if (form.mnuSkipPlayers.Checked)
+                                    skip = 1;
+                                else
+                                    skips[nextPlayer] = 1;
+                                break;
+                            case UnoNumberName.DRAW_2:
+                                lblDraw.Text = "2";
+                                break;
+                        }
+                    }
+                    PlayersTurn(nextPlayer, true, GetDbp());
+                }
                 else
                 {
                     PlayersTurn(0);
@@ -2662,7 +2688,7 @@ arrived:
                     case UnoNumberName.TRADE_HANDS:
                         break;
                     case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
-                        downpour += (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
                         break;
                     case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
                         downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);

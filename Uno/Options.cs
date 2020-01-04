@@ -123,7 +123,7 @@ namespace Uno {
 
         private void MnuDurable_Click(object sender, EventArgs e)
         {
-            txtDealt.Text = "30";
+            txtDealt.Text = "35";
             txtDecks.Text = "3";
             mnuRygbBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
