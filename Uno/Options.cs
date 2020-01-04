@@ -138,7 +138,7 @@ namespace Uno {
             mnuDrawAndPlay.Checked = true;
             mnuChallenges.Checked = false;
             mnuDoubleDraw.Checked = false;
-            mnuDrawBeforePlaying.Checked = true;
+            mnuDrawBeforePlaying.Checked = false;
             mnuDrawTwoBeforePlaying.Checked = true;
             mnuJumpin.Checked = false;
             mnuSevenZero.Checked = false;
