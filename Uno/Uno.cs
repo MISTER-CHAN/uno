@@ -1482,6 +1482,8 @@ play:
                                 break;
                             case DialogResult.Ignore:
                                 lblDraw.Text = "0";
+                                MovingCard.dbp = 0;
+                                MovingCard.downpour = -1;
                                 break;
                         }
                     }
@@ -2213,7 +2215,6 @@ play:   		Sort();
                             i++;
                         }
             pnlPlayer.Width = chkPlayer.ToArray().Length * UnoSize.WIDTH;
-            pnlPlayer.Width = Width;
             hPlayer.Visible = false;
             int width = UnoSize.WIDTH * chkPlayer.ToArray().Length;
             if (width <= this.width)
@@ -2463,17 +2464,23 @@ play:   		Sort();
                 if (MovingCard.playing)
                 {
                     bool drawAll = false;
+                    lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
+                    timPileToPlayers.Enabled = false;
+draw:
                     if (int.Parse(lblDraw.Text) > 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                     {
                         lblDraw.Text = int.Parse(lblDraw.Text) - 1 + "";
                         if (lblDraw.Text == "0")
                             drawAll = true;
-                        CheckPile();
+                        if (int.Parse(lblDraw.Text) > 0)
+                            CheckPile();
+                        if (int.Parse(lblDraw.Text) <= 0)
+                            goto draw;
+                        else
+                            timPileToPlayers.Enabled = true;
                     }
-                    if (int.Parse(lblDraw.Text) <= 0 || MovingCard.dbp > 0 || MovingCard.downpour > -1)
+                    else if (int.Parse(lblDraw.Text) <= 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                     {
-                        lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
-                        timPileToPlayers.Enabled = false;
                         if (gameOver < 4 && MovingCard.downpour <= -1)
                         {
                             GameOver();
@@ -2482,43 +2489,7 @@ play:   		Sort();
                             MovingCard.drew = !MovingCard.unoDraw;
                         if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour <= 3)
                             Sort();
-                        if (MovingCard.dbp > 0)
-                        {
-                            MovingCard.dbp--;
-                            if (MovingCard.dbp <= 0)
-                                PlayersTurn(MovingCard.player);
-                            else
-                                timPileToPlayers.Enabled = true;
-                        }
-                        else if (MovingCard.downpour > -1)
-                        {
-                            MovingCard.downpour--;
-                            if (MovingCard.downpour == 0)
-                            {
-                                if (gameOver < 4)
-                                {
-                                    GameOver();
-                                }
-                                MovingCard.downpour = -1;
-                                PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, GetDbp());
-                            }
-                            else
-                            {
-                                MovingCard.player = NextPlayer(MovingCard.player);
-                                if (gameOver >= 4)
-                                {
-                                    byte ons = 0;
-                                    foreach (Label p in lblPlayers)
-                                        if (p.Visible)
-                                            ons++;
-                                    if (MovingCard.downpour % (ons - 1) == 0)
-                                        MovingCard.player = NextPlayer(MovingCard.player);
-                                }
-                                CheckPile();
-                                timPileToPlayers.Enabled = true;
-                            }
-                        }
-                        else if (MovingCard.unoDraw)
+                        if (MovingCard.unoDraw)
                         {
                             MovingCard.unoDraw = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
@@ -2531,7 +2502,46 @@ play:   		Sort();
                         else
                             PlayersTurn(MovingCard.player);
                     }
-				}
+                    else if (MovingCard.dbp > 0)
+                    {
+                        MovingCard.dbp--;
+                        if (MovingCard.dbp > 0)
+                            CheckPile();
+                        if (MovingCard.dbp <= 0)
+                            PlayersTurn(MovingCard.player);
+                        else
+                            timPileToPlayers.Enabled = true;
+                    }
+                    else if (MovingCard.downpour > -1)
+                    {
+                        MovingCard.downpour--;
+                        if (MovingCard.downpour > 0)
+                            CheckPile();
+                        if (MovingCard.downpour <= 0)
+                        {
+                            if (gameOver < 4)
+                            {
+                                GameOver();
+                            }
+                            MovingCard.downpour = -1;
+                            PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, GetDbp());
+                        }
+                        else
+                        {
+                            MovingCard.player = NextPlayer(MovingCard.player);
+                            if (gameOver >= 4)
+                            {
+                                byte ons = 0;
+                                foreach (Label p in lblPlayers)
+                                    if (p.Visible)
+                                        ons++;
+                                if (MovingCard.downpour % (ons - 1) == 0)
+                                    MovingCard.player = NextPlayer(MovingCard.player);
+                            }
+                            timPileToPlayers.Enabled = true;
+                        }
+                    }
+                }
                 else
                 {
                     if (MovingCard.player == NextPlayer(0, true)) 
