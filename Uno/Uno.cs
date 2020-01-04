@@ -281,7 +281,7 @@ namespace Uno
                         }
                     }
                 }
-                else if (int.Parse(lblCounts[player].Text) > GetDbp() * 7)
+                else if (int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
                 {
                     mostQuantity = 0;
                     for (byte b = 0; b <= UnoNumber.BLANK; b++)
