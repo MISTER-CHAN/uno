@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -26,8 +27,8 @@ namespace Uno
 
 		public class MovingCard {
             public static byte color = 0, number = 0, player = 0;
-			public static bool drew = false, one = false, playing = false, quickly = false, unoDraw = false;
-			public static int downpour = -1, progress = 0;
+			public static bool drew = false, playing = false, quickly = false, unoDraw = false;
+			public static int dbp = 0, downpour = -1, progress = 0;
 		}
 
         public class UnoSize
@@ -103,7 +104,7 @@ namespace Uno
         };
         readonly Cards Pile = new Cards();
         readonly Cards[] Players = new Cards[4];
-        readonly Options form;
+        readonly Image imgUno;
         int gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
@@ -111,6 +112,7 @@ namespace Uno
         readonly List<CheckBox> chkPlayer = new List<CheckBox>();
         private readonly List<Label> lblCards = new List<Label>();
         private readonly List<Label> lblMovingCards = new List<Label>();
+        readonly Options form;
 
         void Action(byte player, string msg)
         {
@@ -132,11 +134,11 @@ namespace Uno
 				pnlPlayer.Controls.Add(chkPlayer[length]);
 				chkPlayer[length].AutoSize = false;
 				chkPlayer[length].Appearance = Appearance.Button;
+                chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
 				chkPlayer[length].BringToFront();
 				chkPlayer[length].CheckedChanged += new EventHandler(ChkPlayer_CheckedChanged);
                 chkPlayer[length].Enter += new EventHandler(ChkPlayer_Enter);
                 chkPlayer[length].FlatStyle = FlatStyle.Flat;
-                chkPlayer[length].Font = new Font(chkPlayer[length].Font.FontFamily, 42);
                 chkPlayer[length].ForeColor = Color.White;
                 chkPlayer[length].KeyDown += new KeyEventHandler(Control_KeyDown);
                 chkPlayer[length].MouseDown += new MouseEventHandler(ChkPlayer_MouseDown);
@@ -147,9 +149,26 @@ namespace Uno
                 chkPlayer[length].MouseWheel += new MouseEventHandler(ChkPlayer_MouseWheel);
                 chkPlayer[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 chkPlayer[length].Tag = length;
+                if (mnuAppearance.Checked)
+                    chkPlayer[length].TextChanged += Card_TextChanged;
 				chkPlayer[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
+
+        private void Card_TextChanged(object sender, EventArgs e)
+        {
+            Control control = (Control)sender;
+            byte b = GetNumberId(control.Text);
+            if (!(b < 10 || UnoNumber.SKIP <= b && b <= UnoNumber.DRAW_2 || b == UnoNumber.BLANK || b == UnoNumber.WILD || b == UnoNumber.WILD_DRAW_4))
+                return;
+            Image image = new Bitmap(180, 270);
+            Graphics graphics = Graphics.FromImage(image);
+            graphics.DrawImage(imgUno, new Rectangle(0, 0, 180, 270), b * 180, GetColorId(control.BackColor) * 270, 180, 270, GraphicsUnit.Pixel);
+            control.BackgroundImage = image;
+            control.Font = new Font(control.Font.FontFamily, 1);
+            graphics.Flush();
+            graphics.Dispose();
+        }
 
         void AddDraw(int count)
         {
@@ -167,6 +186,7 @@ namespace Uno
                 controls.Add(label[length]);
                 label[length].AutoSize = false;
                 label[length].BackColor = Color.Black;
+                label[length].BackgroundImageLayout = ImageLayout.Stretch;
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
                 label[length].Font = new Font("MS Gothic", 42);
@@ -176,6 +196,8 @@ namespace Uno
                 label[length].MouseLeave += new EventHandler(Label_MouseLeave);
                 label[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 label[length].Text = UnoNumberName.NULL;
+                if (mnuAppearance.Checked)
+                    label[length].TextChanged += Card_TextChanged;
                 label[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
@@ -859,7 +881,7 @@ deny:
                 Action(player, "过牌");
                 MovingCard.drew = false;
                 PlayersTurn(player, false);
-                PlayersTurn(NextPlayer(player), true, form.mnuDrawBeforePlaying.Checked);
+                PlayersTurn(NextPlayer(player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
 			}
 		}
 
@@ -868,6 +890,7 @@ deny:
             InitializeComponent();
             height = Height - mnuGame.Height;
             this.form = form;
+            imgUno = Properties.Resources.uno;
             lblPile.Top = mnuGame.Height;
             if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
@@ -1599,6 +1622,11 @@ gameOver:
             gametime = int.Parse(keys[8]);
         }
 
+        private void MnuAppearance_Click(object sender, EventArgs e)
+        {
+            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
+        }
+
         private void MnuChat_Click(object sender, EventArgs e)
         {
             string cmd = Interaction.InputBox(">", "Chat");
@@ -1767,7 +1795,7 @@ gameOver:
                             {
                                 case 1:
                                     PlayersTurn(0, false);
-                                    PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, form.mnuDrawBeforePlaying.Checked);
+                                    PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                                     Action(0, "跳过");
                                     break;
                                 case 2:
@@ -2059,12 +2087,12 @@ play:   		Sort();
 			return cards.ToArray();
 		}
 
-		void PlayersTurn(byte player, bool turn = true, bool one = false) {
+		void PlayersTurn(byte player, bool turn = true, int dbp = 0) {
             if (turn)
             {
                 if (timTurn.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
-                    timTurn.Tag = player + "," + one;
+                    timTurn.Tag = player + "," + dbp;
                     timTurn.Enabled = true;
                     return;
                 }
@@ -2088,14 +2116,14 @@ play:   		Sort();
                         skips[player]--;
                     }
                     PlayersTurn(player, false);
-                    PlayersTurn(NextPlayer(player), true, form.mnuDrawBeforePlaying.Checked);
+                    PlayersTurn(NextPlayer(player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                     return;
                 }
             }
-            if (one && int.Parse(lblCounts[player].Text) > 7)
+            if (dbp > 0 && int.Parse(lblCounts[player].Text) > 7)
             {
                 Action(player, "摸牌");
-                MovingCard.one = true; MovingCard.player = player; MovingCard.progress = 0; MovingCard.quickly = false;
+                MovingCard.dbp = dbp; MovingCard.player = player; MovingCard.progress = 0; MovingCard.quickly = false;
                 CheckPile();
                 if (int.Parse(lblPile.Text) > 0)
                 {
@@ -2109,7 +2137,7 @@ play:   		Sort();
                 mnuSaveGame.Enabled = turn;
                 if (turn)
                 {
-                    MovingCard.one = false;
+                    MovingCard.dbp = 0;
                     Action(0, "你的回合");
                     btnChallenge.Visible = form.mnuChallenges.Checked && lblCards[1].Text == UnoNumberName.WILD_DRAW_4 && int.Parse(lblDraw.Text) >= 4;
                     rdoUno.Checked = false;
@@ -2382,7 +2410,7 @@ play:   		Sort();
                 MovingCard.playing = true;
                 reverse = Math.Floor(2 * Rnd()) == 0;
                 if (form.keys.Length == 0)
-                    PlayersTurn(NextPlayer((byte)(4 * Rnd())), true, form.mnuDrawBeforePlaying.Checked);
+                    PlayersTurn(NextPlayer((byte)(4 * Rnd())), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                 else
                 {
                     PlayersTurn(0);
@@ -2424,14 +2452,14 @@ play:   		Sort();
                 if (MovingCard.playing)
                 {
                     bool drawAll = false;
-                    if (int.Parse(lblDraw.Text) > 0 && !MovingCard.one && MovingCard.downpour <= -1)
+                    if (int.Parse(lblDraw.Text) > 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                     {
                         lblDraw.Text = int.Parse(lblDraw.Text) - 1 + "";
                         if (lblDraw.Text == "0")
                             drawAll = true;
                         CheckPile();
                     }
-                    if (int.Parse(lblDraw.Text) <= 0 || MovingCard.one || MovingCard.downpour > -1)
+                    if (int.Parse(lblDraw.Text) <= 0 || MovingCard.dbp > 0 || MovingCard.downpour > -1)
                     {
                         lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                         timPileToPlayers.Enabled = false;
@@ -2439,14 +2467,17 @@ play:   		Sort();
                         {
                             GameOver();
                         }
-                        if (!form.mnuDrawTilCanPlay.Checked && !MovingCard.one && MovingCard.downpour <= -1)
+                        if (!form.mnuDrawTilCanPlay.Checked && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                             MovingCard.drew = !MovingCard.unoDraw;
                         if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour <= 3)
                             Sort();
-                        if (MovingCard.one)
+                        if (MovingCard.dbp > 0)
                         {
-                            MovingCard.one = false;
-                            PlayersTurn(MovingCard.player);
+                            MovingCard.dbp--;
+                            if (MovingCard.dbp <= 0)
+                                PlayersTurn(MovingCard.player);
+                            else
+                                timPileToPlayers.Enabled = true;
                         }
                         else if (MovingCard.downpour > -1)
                         {
@@ -2458,7 +2489,7 @@ play:   		Sort();
                                     GameOver();
                                 }
                                 MovingCard.downpour = -1;
-                                PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, form.mnuDrawBeforePlaying.Checked);
+                                PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                             }
                             else
                             {
@@ -2479,12 +2510,12 @@ play:   		Sort();
                         else if (MovingCard.unoDraw)
                         {
                             MovingCard.unoDraw = false;
-                            PlayersTurn(NextPlayer(MovingCard.player), true, form.mnuDrawBeforePlaying.Checked);
+                            PlayersTurn(NextPlayer(MovingCard.player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                         }
                         else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawAllAndPlay.Checked && drawAll)
                         {
                             MovingCard.drew = false;
-                            PlayersTurn(NextPlayer(MovingCard.player), true, form.mnuDrawBeforePlaying.Checked);
+                            PlayersTurn(NextPlayer(MovingCard.player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
                         }
                         else
                             PlayersTurn(MovingCard.player);
@@ -2513,7 +2544,7 @@ play:   		Sort();
             Draw(0);
         }
 
-		private void TimPlayersToCenter_Tick(object sender, EventArgs e)
+        private void TimPlayersToCenter_Tick(object sender, EventArgs e)
         {
             switch (MovingCard.player)
             {
@@ -2658,22 +2689,22 @@ arrived:
             if (MovingCard.unoDraw)
                 timUno.Enabled = true;
             else if (reversed)
-                PlayersTurn(MovingCard.player, true, form.mnuDrawBeforePlaying.Checked);
+                PlayersTurn(MovingCard.player, true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
             else if (downpour > 0)
             {
                 Downpour.player = MovingCard.player;
                 Downpour.count = downpour;
-                PlayersTurn(MovingCard.player, true, form.mnuDrawBeforePlaying.Checked);
+                PlayersTurn(MovingCard.player, true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
             }
             else
-                PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, form.mnuDrawBeforePlaying.Checked);
+                PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, (form.mnuDrawBeforePlaying.Checked ? 1 : 0) + (form.mnuDrawTwoBeforePlaying.Checked ? 2 : 0));
 		}
 
         private void TimTurn_Tick(object sender, EventArgs e)
         {
             timTurn.Enabled = false;
             string[] tag = timTurn.Tag.ToString().Split(char.Parse(","));
-            PlayersTurn(byte.Parse(tag[0]), true, bool.Parse(tag[1]));
+            PlayersTurn(byte.Parse(tag[0]), true, int.Parse(tag[1]));
         }
 
         private void TimUno_Tick(object sender, EventArgs e)

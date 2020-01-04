@@ -93,6 +93,7 @@
             this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawTwoBeforePlaying = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -482,7 +483,7 @@
             // mnuDos
             // 
             this.mnuDos.Name = "mnuDos";
-            this.mnuDos.Size = new System.Drawing.Size(180, 22);
+            this.mnuDos.Size = new System.Drawing.Size(141, 22);
             this.mnuDos.Text = "Dos";
             this.mnuDos.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -498,6 +499,7 @@
             this.mnuCrazySkipAndReverse,
             this.mnuDoubleDraw,
             this.mnuDrawBeforePlaying,
+            this.mnuDrawTwoBeforePlaying,
             this.mnuChallenges,
             this.mnuJumpin,
             this.mnuSevenZero,
@@ -699,6 +701,13 @@
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
             // 
+            // mnuDrawTwoBeforePlaying
+            // 
+            this.mnuDrawTwoBeforePlaying.Name = "mnuDrawTwoBeforePlaying";
+            this.mnuDrawTwoBeforePlaying.Size = new System.Drawing.Size(203, 22);
+            this.mnuDrawTwoBeforePlaying.Text = "每回合 +2";
+            this.mnuDrawTwoBeforePlaying.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -791,5 +800,6 @@
         public System.Windows.Forms.ToolStripMenuItem mnuDaWah;
         public System.Windows.Forms.ToolStripMenuItem mnuWildHitfire;
         public System.Windows.Forms.ToolStripMenuItem mnuDos;
+        public System.Windows.Forms.ToolStripMenuItem mnuDrawTwoBeforePlaying;
     }
 }
