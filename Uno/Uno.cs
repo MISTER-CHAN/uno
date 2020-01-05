@@ -846,10 +846,10 @@ deny:
         void DownpourDraw(byte player, int draw)
         {
             byte ons = 0;
-            foreach (Label p in lblPlayers)
-                if (p.Visible)
+            for (byte p = 0; p <= 3; p++)
+                if (lblPlayers[p].Visible && p != player)
                     ons++;
-            MovingCard.downpour = draw * (ons - gameOver / 4);
+            MovingCard.downpour = draw * ons;
             MovingCard.player = NextPlayer(player);
             MovingCard.progress = 0;
             MovingCard.quickly = false;
@@ -2513,8 +2513,6 @@ draw:
                         }
                         if (!form.mnuDrawTilCanPlay.Checked && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                             MovingCard.drew = !MovingCard.unoDraw;
-                        if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour <= 3)
-                            Sort();
                         if (MovingCard.unoDraw)
                         {
                             MovingCard.unoDraw = false;
@@ -2541,6 +2539,8 @@ draw:
                     else if (MovingCard.downpour > -1)
                     {
                         MovingCard.downpour--;
+                        if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour < 3)
+                            Sort();
                         if (MovingCard.downpour > 0)
                             CheckPile();
                         if (MovingCard.downpour <= 0)
@@ -2550,20 +2550,16 @@ draw:
                                 GameOver();
                             }
                             MovingCard.downpour = -1;
-                            PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, GetDbp());
+                            if (NextPlayer(MovingCard.player) == Downpour.player)
+                                PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, GetDbp());
+                            else
+                                PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
                         else
                         {
                             MovingCard.player = NextPlayer(MovingCard.player);
-                            if (gameOver >= 4)
-                            {
-                                byte ons = 0;
-                                foreach (Label p in lblPlayers)
-                                    if (p.Visible)
-                                        ons++;
-                                if (MovingCard.downpour % (ons - 1) == 0)
-                                    MovingCard.player = NextPlayer(MovingCard.player);
-                            }
+                            if (MovingCard.player == Downpour.player)
+                                MovingCard.player = NextPlayer(MovingCard.player);
                             timPileToPlayers.Enabled = true;
                         }
                     }
