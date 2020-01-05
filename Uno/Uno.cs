@@ -143,7 +143,6 @@ namespace Uno
                 chkPlayer[length].ForeColor = Color.White;
                 chkPlayer[length].KeyDown += new KeyEventHandler(Control_KeyDown);
                 chkPlayer[length].MouseDown += new MouseEventHandler(ChkPlayer_MouseDown);
-                chkPlayer[length].MouseEnter += new EventHandler(ChkPlayer_MouseEnter);
                 chkPlayer[length].MouseLeave += new EventHandler(ChkPlayer_MouseLeave);
                 chkPlayer[length].MouseMove += new MouseEventHandler(ChkPlayer_MouseMove);
                 chkPlayer[length].MouseUp += new MouseEventHandler(ChkPlayer_MouseUp);
@@ -646,11 +645,6 @@ deny:
             isSelectingCards = true;
         }
 
-        private void ChkPlayer_MouseEnter(object sender, EventArgs e)
-        {
-            ((CheckBox)sender).Focus();
-        }
-
         void ChkPlayer_MouseLeave(object sender, EventArgs e)
         {
             toolTip.Hide(this);
@@ -662,7 +656,12 @@ deny:
             {
                 if (e.X >= 0 && e.X < UnoSize.WIDTH || e.Y < chkPlayer[0].Top || e.Y >= chkPlayer[0].Top + chkPlayer[0].Height)
                     return;
-                int i = (int)Math.Floor((double)e.X / (hPlayer.Visible ? UnoSize.WIDTH : width / chkPlayer.ToArray().Length)) + int.Parse(((CheckBox)sender).Tag + "");
+                int w;
+                if (hPlayer.Visible || pnlPlayer.Left > 0)
+                    w = UnoSize.WIDTH;
+                else
+                    w = width / chkPlayer.ToArray().Length;
+                int i = (int)Math.Floor((double)e.X / w) + int.Parse(((CheckBox)sender).Tag + "");
                 if (i >= 0 && i < chkPlayer.ToArray().Length)
                     switch (e.Button)
                     {
