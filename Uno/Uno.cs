@@ -105,7 +105,8 @@ namespace Uno
         readonly Cards Pile = new Cards();
         readonly Cards[] Players = new Cards[4];
         readonly Image imgUno;
-        int gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
+        private readonly int distance = 20;
+        private int gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
@@ -892,6 +893,16 @@ deny:
             this.form = form;
             imgUno = Properties.Resources.uno;
             lblPile.Top = mnuGame.Height;
+            distance = form.animation;
+            int interval = form.animation * 50;
+            if (interval <= 0)
+            {
+                distance = 1;
+                interval = 1;
+            }
+            timTurn.Interval = interval;
+            timChallenge.Interval = interval;
+            timUno.Interval = interval;
             if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
 			for (byte i = 0; i < 4; i++) {
@@ -2394,7 +2405,7 @@ play:   		Sort();
         }
 
 		private void TimPileToCenter_Tick(object sender, EventArgs e) {
-            lblMovingCards[0].Location = new Point(lblCards[0].Left / 20 * MovingCard.progress, lblCards[0].Top / 20 * MovingCard.progress + mnuGame.Height);
+            lblMovingCards[0].Location = new Point(lblCards[0].Left / distance * MovingCard.progress, lblCards[0].Top / distance * MovingCard.progress + mnuGame.Height);
 			if (lblMovingCards[0].Left >= lblCards[0].Left && lblMovingCards[0].Top >= lblCards[0].Top)
             {
                 MovingCard.progress = 0;
@@ -2476,7 +2487,7 @@ play:   		Sort();
             if (MovingCard.quickly)
                 lblMovingCards[0].Location = lblPlayers[MovingCard.player].Location;
             else
-                lblMovingCards[0].Location = new Point(lblPlayers[MovingCard.player].Left / 20 * MovingCard.progress, lblPlayers[MovingCard.player].Top / 20 * MovingCard.progress + mnuGame.Height);
+                lblMovingCards[0].Location = new Point(lblPlayers[MovingCard.player].Left / distance * MovingCard.progress, lblPlayers[MovingCard.player].Top / distance * MovingCard.progress + mnuGame.Height);
             if (lblMovingCards[0].Left >= lblPlayers[MovingCard.player].Left && lblMovingCards[0].Top >= lblPlayers[MovingCard.player].Top)
             {
                 Card[] pile = GetPile();
@@ -2513,6 +2524,8 @@ draw:
                         }
                         if (!form.mnuDrawTilCanPlay.Checked && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                             MovingCard.drew = !MovingCard.unoDraw;
+                        if (MovingCard.player == 0 && MovingCard.quickly)
+                            Sort();
                         if (MovingCard.unoDraw)
                         {
                             MovingCard.unoDraw = false;
@@ -2593,26 +2606,26 @@ draw:
             {
 				case 0:
                     pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2,
-                        height - (lblPlayers[0].Top - lblCards[0].Top) / 20 * MovingCard.progress - pnlMovingCards.Height / 2 - UnoSize.HEIGHT / 2);
-					if (MovingCard.progress >= 20)
+                        height - (lblPlayers[0].Top - lblCards[0].Top) / distance * MovingCard.progress - pnlMovingCards.Height / 2 - UnoSize.HEIGHT / 2);
+					if (MovingCard.progress >= distance)
                         goto arrived;
 					break;
 				case 1:
-                    pnlMovingCards.Location = new Point(lblCards[0].Left / 20 * MovingCard.progress - pnlMovingCards.Width / 2 + UnoSize.WIDTH / 2,
+                    pnlMovingCards.Location = new Point(lblCards[0].Left / distance * MovingCard.progress - pnlMovingCards.Width / 2 + UnoSize.WIDTH / 2,
                         height / 2 - pnlMovingCards.Height / 2);
-					if (MovingCard.progress >= 20)
+					if (MovingCard.progress >= distance)
                         goto arrived;
 					break;
 				case 2:
                     pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2,
-                        lblCards[0].Top / 20 * MovingCard.progress - pnlMovingCards.Height / 2 + UnoSize.HEIGHT / 2);
-					if (MovingCard.progress >= 20)
+                        lblCards[0].Top / distance * MovingCard.progress - pnlMovingCards.Height / 2 + UnoSize.HEIGHT / 2);
+					if (MovingCard.progress >= distance)
                         goto arrived;
 					break;
 				case 3:
-                    pnlMovingCards.Location = new Point(width - (lblPlayers[MovingCard.player].Left - lblCards[0].Left) / 20 * MovingCard.progress - pnlMovingCards.Width / 2 - UnoSize.WIDTH / 2,
+                    pnlMovingCards.Location = new Point(width - (lblPlayers[MovingCard.player].Left - lblCards[0].Left) / distance * MovingCard.progress - pnlMovingCards.Width / 2 - UnoSize.WIDTH / 2,
                         height / 2 - pnlMovingCards.Height / 2);
-					if (MovingCard.progress >= 20)
+					if (MovingCard.progress >= distance)
                         goto arrived;
 					break;
 			}

@@ -78,6 +78,7 @@
             this.mnuCrazySkipAndReverse = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDoubleDraw = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawBeforePlaying = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawTwoBeforePlaying = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChallenges = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuJumpin = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSevenZero = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,9 +92,14 @@
             this.mnuWatch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSeed = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnimation = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnim0 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnim10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnim20 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDrawTwoBeforePlaying = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnim15 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAnim5 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -576,6 +582,13 @@
             this.mnuDrawBeforePlaying.Text = "每回合 +1";
             this.mnuDrawBeforePlaying.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
+            // mnuDrawTwoBeforePlaying
+            // 
+            this.mnuDrawTwoBeforePlaying.Name = "mnuDrawTwoBeforePlaying";
+            this.mnuDrawTwoBeforePlaying.Size = new System.Drawing.Size(203, 22);
+            this.mnuDrawTwoBeforePlaying.Text = "每回合 +2";
+            this.mnuDrawTwoBeforePlaying.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
             // mnuChallenges
             // 
             this.mnuChallenges.Checked = true;
@@ -656,7 +669,8 @@
             this.mnuControl.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuWatch,
             this.mnuCheat,
-            this.mnuSeed});
+            this.mnuSeed,
+            this.mnuAnimation});
             this.mnuControl.Name = "mnuControl";
             this.mnuControl.Size = new System.Drawing.Size(43, 20);
             this.mnuControl.Text = "控制";
@@ -686,6 +700,44 @@
             this.mnuSeed.Text = "不洗牌";
             this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
+            // mnuAnimation
+            // 
+            this.mnuAnimation.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuAnim0,
+            this.mnuAnim5,
+            this.mnuAnim10,
+            this.mnuAnim15,
+            this.mnuAnim20});
+            this.mnuAnimation.Name = "mnuAnimation";
+            this.mnuAnimation.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnimation.Text = "动画长度";
+            // 
+            // mnuAnim0
+            // 
+            this.mnuAnim0.Name = "mnuAnim0";
+            this.mnuAnim0.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnim0.Tag = "0";
+            this.mnuAnim0.Text = "无";
+            this.mnuAnim0.Click += new System.EventHandler(this.MnuAnimation_Click);
+            // 
+            // mnuAnim10
+            // 
+            this.mnuAnim10.Name = "mnuAnim10";
+            this.mnuAnim10.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnim10.Tag = "10";
+            this.mnuAnim10.Text = "快";
+            this.mnuAnim10.Click += new System.EventHandler(this.MnuAnimation_Click);
+            // 
+            // mnuAnim20
+            // 
+            this.mnuAnim20.Checked = true;
+            this.mnuAnim20.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuAnim20.Name = "mnuAnim20";
+            this.mnuAnim20.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnim20.Tag = "20";
+            this.mnuAnim20.Text = "中";
+            this.mnuAnim20.Click += new System.EventHandler(this.MnuAnimation_Click);
+            // 
             // mnuBack
             // 
             this.mnuBack.Name = "mnuBack";
@@ -701,12 +753,21 @@
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
             // 
-            // mnuDrawTwoBeforePlaying
+            // mnuAnim15
             // 
-            this.mnuDrawTwoBeforePlaying.Name = "mnuDrawTwoBeforePlaying";
-            this.mnuDrawTwoBeforePlaying.Size = new System.Drawing.Size(203, 22);
-            this.mnuDrawTwoBeforePlaying.Text = "每回合 +2";
-            this.mnuDrawTwoBeforePlaying.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            this.mnuAnim15.Name = "mnuAnim15";
+            this.mnuAnim15.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnim15.Tag = "15";
+            this.mnuAnim15.Text = "较快";
+            this.mnuAnim15.Click += new System.EventHandler(this.MnuAnimation_Click);
+            // 
+            // mnuAnim5
+            // 
+            this.mnuAnim5.Name = "mnuAnim5";
+            this.mnuAnim5.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnim5.Tag = "5";
+            this.mnuAnim5.Text = "很快";
+            this.mnuAnim5.Click += new System.EventHandler(this.MnuAnimation_Click);
             // 
             // Options
             // 
@@ -801,5 +862,11 @@
         public System.Windows.Forms.ToolStripMenuItem mnuWildHitfire;
         public System.Windows.Forms.ToolStripMenuItem mnuDos;
         public System.Windows.Forms.ToolStripMenuItem mnuDrawTwoBeforePlaying;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnimation;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnim0;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnim10;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnim20;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnim5;
+        private System.Windows.Forms.ToolStripMenuItem mnuAnim15;
     }
 }

@@ -11,8 +11,9 @@ using System.Windows.Forms;
 namespace Uno {
 	public partial class Options : Form {
 
-        public string[] keys = {};
         bool isPlaying = false;
+        public int animation = 20;
+        public string[] keys = {};
 
 		public Options() {
 			InitializeComponent();
@@ -77,6 +78,20 @@ namespace Uno {
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = false;
             mnuOneLoser.Checked = true;
+        }
+
+        private void MnuAnimation_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            if (menuItem.Checked)
+            {
+                foreach (ToolStripMenuItem mnu in mnuAnimation.DropDownItems)
+                {
+                    if (mnu != menuItem)
+                        mnu.Checked = false;
+                }
+            }
+            animation = int.Parse((string)menuItem.Tag);
         }
 
         private void MnuAttack_CheckedChanged(object sender, EventArgs e)
@@ -254,6 +269,7 @@ namespace Uno {
                 mnuStart.Text = "继续";
                 mnuOns.Enabled = false;
                 mnuCheat.Enabled = false;
+                mnuAnimation.Enabled = false;
                 mnuBack.Enabled = false;
                 new Uno(this).Show();
             }
