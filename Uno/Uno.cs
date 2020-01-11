@@ -84,7 +84,7 @@ namespace Uno
             public const string NULL = "   ";
         }
 
-        private bool reverse = false, isSelectingCards = false;
+        private bool reverse = false, isAutomatic = false, isSelectingCards = false;
         byte gameOver = 4;
         readonly byte[] playlist = new byte[UnoNumber.MAX_VALUE] {
             UnoNumber.DISCARD_ALL,
@@ -376,7 +376,10 @@ namespace Uno
                             }
                         }
                         bestCard.color = MovingCard.color;
-                        cards.Add(bestCard);
+                        if (bestCard.number < UnoNumber.MAX_VALUE)
+                        {
+                            cards.Add(bestCard);
+                        }
                     }
                     else if (Players[player].cards[bestCard.color, bestCard.number] > 0)
                     {
@@ -1659,6 +1662,12 @@ gameOver:
                     string[] data = cmd.Split(char.Parse(" "));
                     switch (data[0].ToLower())
                     {
+                        case "/auto":
+                            isAutomatic = !isAutomatic;
+                            pnlCtrl.Visible = false;
+                            mnuSaveGame.Enabled = false;
+                            Action(0, "已切換託管");
+                            break;
                         case "/clear":
                             byte fromColor = 0, fromNumber = 0, player = 0, toColor = UnoColor.MAX_VALUE, toNumber = UnoNumber.MAX_VALUE;
                             switch (data.Length)
@@ -1948,7 +1957,7 @@ gameOver:
         void Play(byte player)
         {
 			List<Card> cards = new List<Card>();
-			if (player == 0) {
+			if (player == 0 && !isAutomatic) {
                 List<Card> discardAll = new List<Card>(), number = new List<Card>();
                 foreach (CheckBox c in chkPlayer)
                 {
@@ -1983,7 +1992,6 @@ gameOver:
                 else if (!CanPlay(cards, GetColorId(btnPlay.BackColor))) return;
 				for (int c = 0; c < cards.ToArray().Length; c++) {
 					Players[0].cards[cards[c].color, cards[c].number]--;
-					chkPlayer.RemoveAt(0);
 				}
 				for (int c = 0; c < chkPlayer.ToArray().Length; c++) if (chkPlayer[c].Checked) {
 					btnPlay.Visible = true;
@@ -1992,20 +2000,32 @@ gameOver:
 				btnPlay.Visible = false;
 play:   		Sort();
                 btnPlay.Visible = false;
-            } else {
+            }
+            else if (player == 0 && isAutomatic)
+            {
+                Card[] ais = Ai(player);
+                foreach (Card card in ais)
+                {
+                    cards.Add(card);
+                    Players[0].cards[card.color, card.number]--;
+                }
+                Sort();
+            }
+            else
+            {
                 Card[] ais = Ai(player);
 				foreach (Card card in ais) cards.Add(card);
 				for (int c = 0; c < cards.ToArray().Length; c++) Players[player].cards[cards[c].color, cards[c].number]--;
 			}
-            if (player == 0)
+            if (player == 0 && !isAutomatic)
                 Action(0, rdoUno.Checked ? "UNO!" : "出牌");
             else
-                Action(player, player != 0 && PlayersCards(player).Length == 1 ? "UNO!" : "出牌");
+                Action(player, (player != 0 || isAutomatic) && PlayersCards(player).Length == 1 ? "UNO!" : "出牌");
 			PlayersTurn(player, false);
             if (cards.Count > 0)
             {
                 MovingCard.player = player; MovingCard.progress = 0;
-                if (player == 0)
+                if (player == 0 && !isAutomatic)
                 {
                     if (int.Parse(lblCounts[0].Text) - cards.Count > 0 || form.mnuOneLoser.Checked)
                     {
@@ -2084,7 +2104,7 @@ play:   		Sort();
                 pnlMovingCards.Location = new Point(-pnlMovingCards.Width, -pnlMovingCards.Height);
                 pnlMovingCards.BringToFront();
             }
-            else if (player > 0) {
+            else if (player > 0 || isAutomatic) {
                 Draw(player);
             }
 		}
@@ -2152,7 +2172,7 @@ play:   		Sort();
                     timPileToPlayers.Enabled = true;
                 }
             } 
-            else if (player == 0 && (skip <= 0 || skips[0] <= 0))
+            else if (player == 0 && !isAutomatic && (skip <= 0 || skips[0] <= 0))
             {
                 pnlCtrl.Visible = turn;
                 mnuSaveGame.Enabled = turn;
@@ -2731,7 +2751,7 @@ arrived:
                 }
                 return;
             }
-            if (MovingCard.player == 0 && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
+            if (MovingCard.player == 0 && !isAutomatic && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
             {
                 Action(0, "UNO? +2");
 				AddDraw(2);
