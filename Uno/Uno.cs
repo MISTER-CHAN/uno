@@ -206,6 +206,10 @@ namespace Uno
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
             Card bestCard = new Card();
             List<Card> cards = new List<Card>();
+            if (!form.mnuStackDraw.Checked && int.Parse(lblDraw.Text) > 0)
+            {
+                goto exit;
+            }
             int mostQuantity, quantity, quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
             if (backNumber == UnoNumber.NUMBER)
             {
@@ -522,7 +526,12 @@ exit:
             }
         }
 
-		bool CanPlay(List<Card> card, byte color) {
+		bool CanPlay(List<Card> card, byte color)
+        {
+            if (!form.mnuStackDraw.Checked && int.Parse(lblDraw.Text) > 0)
+            {
+                goto deny;
+            }
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
             if (form.mnuDaWah.Checked)
             {
@@ -768,32 +777,9 @@ deny:
                     MnuChat_Click(mnuChat, new EventArgs());
                     return;
                 case Keys.Decimal:
-                    if (form.mnuPairs.Checked)
-                        return;
-                    string n = "%NULL%";
-                    foreach (CheckBox c in chkPlayer)
-                    {
-                        if (c.Text == n)
-                        {
-                            if (c.Left + pnlPlayer.Left < 0 || c.Left + c.Width + pnlPlayer.Left > width)
-                                pnlPlayer.Left = -c.Left;
-                            c.Checked = true;
-                            break;
-                        }
-                        if (c.Checked)
-                            n = c.Text;
-                    }
-                    return;
-                case Keys.OemQuotes:
                     if (mnuRadioBox.Checked)
                         return;
                     BtnPlay_MouseDown(btnPlay, new MouseEventArgs(MouseButtons.Right, 1, 0, 0, 0));
-                    return;
-                case Keys.OemCloseBrackets:
-                    if (btnChallenge.Visible)
-                        BtnChallenge_Click(btnChallenge, new EventArgs());
-                    return;
-                case Keys.OemOpenBrackets:
                     return;
                 case Keys.NumPad0:
                 case Keys.NumPad1:
@@ -828,19 +814,46 @@ deny:
                 default:
                     return;
             }
-            foreach (CheckBox c in chkPlayer)
-                c.Checked = false;
             if (form.mnuPairs.Checked)
             {
                 foreach (CheckBox c in chkPlayer)
+                {
                     if (c.Text == number)
                     {
                         c.Checked = true;
                         c.Focus();
                     }
+                    else
+                    {
+                        c.Checked = false;
+                    }
+                }
             }
             else
+            {
+                bool b = true;
                 foreach (CheckBox c in chkPlayer)
+                {
+                    if (c.Checked && c.Text == number)
+                    {
+                        b = false;
+                    }
+                    else
+                    {
+                        c.Checked = false;
+                    }
+                }
+                foreach (CheckBox c in chkPlayer)
+                {
+                    if (!b)
+                    {
+                        if (c.Checked)
+                        {
+                            b = true;
+                            c.Checked = false;
+                        }
+                        continue;
+                    }
                     if (c.Text == number)
                     {
                         if (c.Left + pnlPlayer.Left < 0 || c.Left + c.Width + pnlPlayer.Left > width)
@@ -849,6 +862,8 @@ deny:
                         c.Focus();
                         break;
                     }
+                }
+            }
         }
 
         void DownpourDraw(byte player, int draw)
@@ -874,7 +889,7 @@ deny:
                 if (player == 0)
                 {
                     pnlCtrl.Visible = false;
-                    if (rdoUno.Checked)
+                    if (form.mnuUno.Checked && rdoUno.Checked)
                     {
                         AddDraw(2);
                         Action(0, "UNO? +2");
@@ -1925,17 +1940,14 @@ gameOver:
                 "[" + form.txtBlankText.Text + "]\tInsert\n" +
                 "[" + UnoNumberName.WILD + "]\tHome\n" +
                 "[" + UnoNumberName.WILD_DRAW_4 + "]\tPageUp\n" +
-                "下张牌\tNumpad.\n" +
                 "上一页\tNumpad/\n" +
                 "下一页\tNumpad*\n" +
                 "光标移动\t←↑→↓\n" +
                 "选定卡牌\tSpace\n" +
                 "选择颜色\tNumpad0~3\n" +
-                "切換颜色\t'\n" +
+                "切換颜色\tNumpad.\n" +
                 "出牌\tEnter\n" +
                 "摸牌\tNumpad+\n" +
-                "检举\t]\n" +
-                "点断\t[\n" +
                 "喊 UNO!\tNumpad-\n" +
                 "聊天\tT\n" +
                 "指令\t/\n", "按键说明", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2046,9 +2058,9 @@ play:   		Sort();
 				for (int c = 0; c < cards.ToArray().Length; c++) Players[player].cards[cards[c].color, cards[c].number]--;
 			}
             if (player == 0 && !isAutomatic)
-                Action(0, rdoUno.Checked ? "UNO!" : "出牌");
+                Action(0, form.mnuUno.Checked && rdoUno.Checked ? "UNO!" : "出牌");
             else
-                Action(player, (player != 0 || isAutomatic) && PlayersCards(player).Length == 1 ? "UNO!" : "出牌");
+                Action(player, form.mnuUno.Checked && (player != 0 || isAutomatic) && PlayersCards(player).Length == 1 ? "UNO!" : "出牌");
 			PlayersTurn(player, false);
             if (cards.Count > 0)
             {
@@ -2210,6 +2222,8 @@ play:   		Sort();
                     Action(0, "你的回合");
                     btnChallenge.Visible = form.mnuChallenges.Checked && lblCards[1].Text == UnoNumberName.WILD_DRAW_4 && int.Parse(lblDraw.Text) >= 4;
                     rdoUno.Checked = false;
+                    if (!form.Visible)
+                        chkPlayer[0].Focus();
                 }
             }
             else if (turn)
@@ -2294,6 +2308,10 @@ play:   		Sort();
             {
                 pnlPlayer.Left = 0;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
+            }
+            if (!form.Visible)
+            {
+                chkPlayer[0].Focus();
             }
 		}
 
@@ -2779,7 +2797,7 @@ arrived:
                 }
                 return;
             }
-            if (MovingCard.player == 0 && !isAutomatic && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
+            if (form.mnuUno.Checked && MovingCard.player == 0 && !isAutomatic && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
             {
                 Action(0, "UNO? +2");
 				AddDraw(2);
