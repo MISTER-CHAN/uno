@@ -324,18 +324,19 @@ namespace Uno
             {
                 bestCard.number = backNumber;
             }
-            mostQuantity = 0;
             if (Players[player].cards[UnoColor.BLACK, bestCard.number] <= 0)
             {
                 if (form.mnuPairs.Checked)
                 {
+                    int mp = 0, mq = 0;
                     for (byte color = UnoColor.RED; color <= UnoColor.BLUE; color++)
                         if (Players[player].cards[color, bestCard.number] > 0)
                         {
-                            quantity = GetQuantityByColor(player, color);
-                            if (quantity > mostQuantity)
+                            int q = GetQuantityByColor(player, color);
+                            int p = GetPointsByColor(player, color);
+                            if (q > mq || q == mq && p > mp)
                             {
-                                mostQuantity = quantity;
+                                mq = q;
                                 MovingCard.color = color;
                             }
                             Card card = new Card
@@ -363,14 +364,16 @@ namespace Uno
                 {
                     if (bestCard.color == UnoColor.WHITE)
                     {
+                        int mp = 0, mq = 0;
                         for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                         {
                             if (Players[player].cards[c, bestCard.number] > 0)
                             {
-                                quantity = GetQuantityByColor(player, c);
-                                if (quantity > mostQuantity)
+                                int q = GetQuantityByColor(player, c);
+                                int p = GetPointsByColor(player, c);
+                                if (q > mq || q == mq && p > mp)
                                 {
-                                    mostQuantity = quantity;
+                                    mq = q;
                                     MovingCard.color = c;
                                 }
                             }
@@ -458,12 +461,14 @@ number_color:
             else
             {
                 bestCard.color = UnoColor.BLACK;
+                int mp = 0, mq = 0;
                 for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                 {
-                    quantity = GetQuantityByColor(player, c);
-                    if (quantity > mostQuantity)
+                    int q = GetQuantityByColor(player, c);
+                    int p = GetPointsByColor(player, c);
+                    if (q > mq || q == mq && p > mp)
                     {
-                        mostQuantity = quantity;
+                        mq = q;
                         MovingCard.color = c;
                     }
                 }
@@ -1098,7 +1103,7 @@ play:
                     "\n" : "") +
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
-                    msg += "\n" + (p == 0 ? "你" : "Player" + p) + "\t" + GetPoints(p);
+                    msg += "\n" + (p == 0 ? "你" : "Player" + p) + "\t" + GetPointsByPlayer(p);
                 if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
             else
@@ -1313,38 +1318,49 @@ play:
             return cards.ToArray();
         }
 
-        int GetPoints(byte player)
+        int GetPoints(byte number)
         {
-            int point = 0;
+            switch (number)
+            {
+                default:
+                    return number;
+                case UnoNumber.SKIP:
+                case UnoNumber.REVERSE:
+                case UnoNumber.DRAW_2:
+                case UnoNumber.BLANK:
+                case UnoNumber.WILD_DOWNPOUR_DRAW_1:
+                case UnoNumber.WILD_DOWNPOUR_DRAW_2:
+                    return 20;
+                case UnoNumber.DISCARD_ALL:
+                case UnoNumber.TRADE_HANDS:
+                    return 30;
+                case UnoNumber.NUMBER:
+                    return 40;
+                case UnoNumber.WILD:
+                case UnoNumber.WILD_DOWNPOUR_DRAW_4:
+                case UnoNumber.WILD_DRAW_4:
+                case UnoNumber.WILD_HITFIRE:
+                    return 50;
+            }
+        }
+
+        int GetPointsByColor(byte player, byte color)
+        {
+            int points = 0;
+            for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
+            {
+                points += GetPoints(n) * Players[player].cards[color, n];
+            }
+            return points;
+        }
+
+        int GetPointsByPlayer(byte player)
+        {
+            int points = 0;
             Card[] cards = PlayersCards(player);
             foreach (Card c in cards)
-                switch (c.number)
-                {
-                    default:
-                        point += c.number;
-                        break;
-                    case UnoNumber.SKIP:
-                    case UnoNumber.REVERSE:
-                    case UnoNumber.DRAW_2:
-                    case UnoNumber.BLANK:
-                    case UnoNumber.WILD_DOWNPOUR_DRAW_1:
-                    case UnoNumber.WILD_DOWNPOUR_DRAW_2:
-                        point += 20;
-                        break;
-                    case UnoNumber.DISCARD_ALL:
-                    case UnoNumber.TRADE_HANDS:
-                        point += 30;
-                        break;
-                    case UnoNumber.NUMBER:
-                        point += 40;
-                        break;
-                    case UnoNumber.WILD:
-                    case UnoNumber.WILD_DOWNPOUR_DRAW_4:
-                    case UnoNumber.WILD_DRAW_4:
-                        point += 50;
-                        break;
-                }
-            return point;
+                points += GetPoints(c.number);
+            return points;
         }
 
         int GetQuantityByColor(byte player, byte color) {
@@ -1355,9 +1371,21 @@ play:
         }
 
         int GetQuantityByNumber(byte player, byte number) {
-            int quantity = 0;
-            for (byte q = 0; q <= UnoColor.MAX_VALUE; q++)
-                quantity += Players[player].cards[q, number];
+            int q = 0, quantity = 0;
+            for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+            {
+                if (Players[player].cards[c, number] > 0)
+                {
+                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    {
+                        q += Players[player].cards[c, n];
+                    }
+                    if (q > quantity)
+                    {
+                        quantity = q;
+                    }
+                }
+            }
             return quantity;
         }
 
