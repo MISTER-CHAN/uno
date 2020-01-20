@@ -644,6 +644,10 @@ deny:
 
 		private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
 			int index = (int) ((CheckBox) sender).Tag;
+            if (mnuAppearance.Checked)
+            {
+                chkPlayer[index].Top = chkPlayer[index].Checked ? 0 : UnoSize.HEIGHT / 8;
+            }
             if (!form.mnuPairs.Checked && !form.mnuDaWah.Checked && ((CheckBox)sender).Checked)
                 for (int c = 0; c < chkPlayer.ToArray().Length; c++)
                     if (c != index) chkPlayer[c].Checked = false;
@@ -2303,11 +2307,29 @@ play:   		Sort();
             if (width <= this.width)
             {
                 pnlPlayer.Left = this.width / 2 - width / 2;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = UnoSize.WIDTH * i;
+                if (mnuAppearance.Checked)
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
+                }
+                else
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Left = UnoSize.WIDTH * i;
+                }
             }
             else if (width > this.width * 2 && mnuScrollBar.Checked)
             {
-                for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = UnoSize.WIDTH * i;
+                if (mnuAppearance.Checked)
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
+                }
+                else
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Left = UnoSize.WIDTH * i;
+                }
                 hPlayer.Maximum = width - this.width;
                 hPlayer.Visible = true;
                 if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
@@ -2318,7 +2340,18 @@ play:   		Sort();
             else
             {
                 pnlPlayer.Left = 0;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
+                if (mnuAppearance.Checked)
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    {
+                        chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
+                }
             }
             if (!form.Visible && chkPlayer.Count > 0)
             {
