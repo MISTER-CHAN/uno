@@ -128,7 +128,7 @@ namespace Uno {
             mnuBlankDraw.Enabled = mnuRygbBlank.Checked;
         }
 
-        private void mnuBot_Click(object sender, EventArgs e)
+        private void MnuBot_Click(object sender, EventArgs e)
         {
             mnuBeginner.Checked = false;
             mnuMaster.Checked = false;

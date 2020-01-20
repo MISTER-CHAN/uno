@@ -335,14 +335,14 @@
             this.mnuBeginner.Name = "mnuBeginner";
             this.mnuBeginner.Size = new System.Drawing.Size(180, 22);
             this.mnuBeginner.Text = "新手";
-            this.mnuBeginner.Click += new System.EventHandler(this.mnuBot_Click);
+            this.mnuBeginner.Click += new System.EventHandler(this.MnuBot_Click);
             // 
             // mnuMaster
             // 
             this.mnuMaster.Name = "mnuMaster";
             this.mnuMaster.Size = new System.Drawing.Size(180, 22);
             this.mnuMaster.Text = "賭神";
-            this.mnuMaster.Click += new System.EventHandler(this.mnuBot_Click);
+            this.mnuMaster.Click += new System.EventHandler(this.MnuBot_Click);
             // 
             // mnuCards
             // 

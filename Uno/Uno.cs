@@ -91,8 +91,8 @@ namespace Uno
             {
                 UnoNumber.WILD_HITFIRE, UnoNumber.WILD_DRAW_4,
                 UnoNumber.WILD_DOWNPOUR_DRAW_4, UnoNumber.WILD_DOWNPOUR_DRAW_2, UnoNumber.WILD_DOWNPOUR_DRAW_1,
-                UnoNumber.WILD, UnoNumber.DISCARD_ALL, UnoNumber.NUMBER, UnoNumber.DRAW_2, UnoNumber.SKIP, UnoNumber.REVERSE,
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, UnoNumber.BLANK, UnoNumber.TRADE_HANDS
+                UnoNumber.WILD, UnoNumber.BLANK, UnoNumber.DISCARD_ALL, UnoNumber.NUMBER, UnoNumber.DRAW_2, UnoNumber.SKIP, UnoNumber.REVERSE,
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, UnoNumber.TRADE_HANDS
             },
             playlist = new byte[UnoNumber.MAX_VALUE] {
             UnoNumber.DISCARD_ALL,
@@ -2317,7 +2317,7 @@ play:   		Sort();
                 pnlPlayer.Left = 0;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++) chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
             }
-            if (!form.Visible)
+            if (!form.Visible && chkPlayer.Count > 0)
             {
                 chkPlayer[0].Focus();
             }
@@ -2571,16 +2571,53 @@ play:   		Sort();
                 }
                 else
                 {
-                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
-                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                    if (MovingCard.playing)
+                    {
+                        byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
+                        for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
                         {
                             byte n = mvcList[b];
+                            if (Pile.cards[UnoColor.BLACK, n] > 0)
+                            {
+                                rndCard.color = UnoColor.BLACK; rndCard.number = n;
+                                goto end_rnd_card;
+                            }
+                        }
+                        if (Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
+                        {
+                            rndCard.color = UnoColor.MAGENTA; rndCard.number = UnoNumber.BLANK;
+                            goto end_rnd_card;
+                        }
+                        for (byte c = 0; c < UnoColor.BLACK; c++)
+                        {
+                            if (Pile.cards[c, backNumber] > 0)
+                            {
+                                rndCard.color = c; rndCard.number = backNumber;
+                                goto end_rnd_card;
+                            }
+                        }
+                        for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                        {
+                            byte n = mvcList[b];
+                            if (Pile.cards[backColor, n] > 0)
+                            {
+                                rndCard.color = backColor; rndCard.number = n;
+                                goto end_rnd_card;
+                            }
+                        }
+                    }
+                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                    {
+                        byte n = mvcList[b];
+                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                        {
                             if (Pile.cards[c, n] > 0)
                             {
                                 rndCard.color = c; rndCard.number = n;
                                 goto end_rnd_card;
                             }
                         }
+                    }
                 }
 end_rnd_card:
 				Pile.cards[rndCard.color, rndCard.number]--;
