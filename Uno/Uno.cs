@@ -1034,7 +1034,6 @@ deny:
 
         private void Uno_Click(object sender, EventArgs e) {
             MovingCard.quickly = true;
-            Action(0, Membership.GeneratePassword(20, 20));
         }
 
         private void Uno_FormClosing(object sender, FormClosingEventArgs e)
