@@ -86,7 +86,15 @@ namespace Uno
 
         private bool reverse = false, isAutomatic = false, isSelectingCards = false;
         byte gameOver = 4;
-        readonly byte[] playlist = new byte[UnoNumber.MAX_VALUE] {
+        readonly byte[]
+            mvcList = new byte[UnoNumber.MAX_VALUE]
+            {
+                UnoNumber.WILD_HITFIRE, UnoNumber.WILD_DRAW_4,
+                UnoNumber.WILD_DOWNPOUR_DRAW_4, UnoNumber.WILD_DOWNPOUR_DRAW_2, UnoNumber.WILD_DOWNPOUR_DRAW_1,
+                UnoNumber.WILD, UnoNumber.DISCARD_ALL, UnoNumber.NUMBER, UnoNumber.DRAW_2, UnoNumber.SKIP, UnoNumber.REVERSE,
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, UnoNumber.BLANK, UnoNumber.TRADE_HANDS
+            },
+            playlist = new byte[UnoNumber.MAX_VALUE] {
             UnoNumber.DISCARD_ALL,
             UnoNumber.SKIP,
             UnoNumber.REVERSE,
@@ -2556,7 +2564,25 @@ play:   		Sort();
             if (lblMovingCards[0].Left >= lblPlayers[MovingCard.player].Left && lblMovingCards[0].Top >= lblPlayers[MovingCard.player].Top)
             {
                 Card[] pile = GetPile();
-				Card rndCard = pile[(int)(pile.Length * Rnd())];
+                Card rndCard = new Card();
+                if (MovingCard.player == 0 || form.mnuBeginner.Checked)
+                {
+                    rndCard = pile[(int)(pile.Length * Rnd())];
+                }
+                else
+                {
+                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                        {
+                            byte n = mvcList[b];
+                            if (Pile.cards[c, n] > 0)
+                            {
+                                rndCard.color = c; rndCard.number = n;
+                                goto end_rnd_card;
+                            }
+                        }
+                }
+end_rnd_card:
 				Pile.cards[rndCard.color, rndCard.number]--;
 				lblPile.Text = pile.Length - 1 + "";
                 Players[MovingCard.player].cards[rndCard.color, rndCard.number]++;
