@@ -1,10 +1,13 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 using System.Windows.Forms;
 
 namespace Uno
@@ -1031,6 +1034,7 @@ deny:
 
         private void Uno_Click(object sender, EventArgs e) {
             MovingCard.quickly = true;
+            Action(0, Membership.GeneratePassword(20, 20));
         }
 
         private void Uno_FormClosing(object sender, FormClosingEventArgs e)
@@ -2424,7 +2428,25 @@ play:   		Sort();
 		double Rnd() {
             if (form.mnuSeed.Checked)
                 return 0;
-            return new Random(Guid.NewGuid().GetHashCode()).NextDouble();
+            if (form.mnuGuid.Checked)
+            {
+                return new Random(Guid.NewGuid().GetHashCode()).NextDouble();
+            }
+            else if (form.mnuRNGCryptoServiceProvider.Checked)
+            {
+                byte[] b = new byte[1];
+                new RNGCryptoServiceProvider().GetBytes(b);
+                return b[0] / 256d;
+            }
+            else if (form.mnuMembership.Checked)
+            {
+                string s = "!#$%&()*+-./:;<=>?@[]^_{|}";
+                return (double)s.IndexOf(char.Parse(Membership.GeneratePassword(1, 1))) / s.Length;
+            }
+            else
+            {
+                return new Random().NextDouble();
+            }
 		}
 
         string SaveGame()

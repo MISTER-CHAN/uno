@@ -236,6 +236,15 @@ namespace Uno {
             Close();
         }
 
+        private void MnuRandom_Click(object sender, EventArgs e)
+        {
+            mnuRandom.Checked = false;
+            mnuGuid.Checked = false;
+            mnuRNGCryptoServiceProvider.Checked = false;
+            mnuMembership.Checked = false;
+            ((ToolStripMenuItem)sender).Checked = true;
+        }
+
         private void MnuSaveRules_Click(object sender, EventArgs e)
         {
             Interaction.SaveSetting("UNO", "GAME", "RULES", "KKKKKKKKK" + SaveRules());
