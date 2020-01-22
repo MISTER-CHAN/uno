@@ -946,7 +946,8 @@ deny:
                 lblPlayers[i] = new Label();
 				Controls.Add(lblPlayers[i]);
                 lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
+                if (i > 0)
+                    lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
                 lblPlayers[i].Tag = i;
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
@@ -2081,7 +2082,19 @@ play:   		Sort();
                 MovingCard.player = player; MovingCard.progress = 0;
                 if (player == 0 && !isAutomatic)
                 {
-                    if (int.Parse(lblCounts[0].Text) - cards.Count > 0 || form.mnuOneLoser.Checked)
+                    bool b = int.Parse(lblCounts[0].Text) - cards.Count > 0;
+                    if (!b)
+                    {
+                        if (form.mnuOneLoser.Checked)
+                        {
+                            byte ons = 0;
+                            foreach (Label l in lblPlayers)
+                                if (l.Visible)
+                                    ons++;
+                            b = ons > 2;
+                        }
+                    }
+                    if (b)
                     {
                         if (mnuRadioBox.Checked)
                         {
@@ -2178,14 +2191,14 @@ play:   		Sort();
 			return cards.ToArray();
 		}
 
-		void PlayersTurn(byte player, bool turn = true, int dbp = 0) {
+		void PlayersTurn(byte player, bool turn = true, int dbp = 0, bool delay = true) {
             if (int.Parse(lblCounts[player].Text) <= dbp * 7)
             {
                 dbp = (int.Parse(lblCounts[player].Text) - 1) / 7;
             }
             if (turn)
             {
-                if (timTurn.Tag.ToString().Split(char.Parse(","))[0] == "4")
+                if (delay && timTurn.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
                     timTurn.Tag = player + "," + dbp;
                     timTurn.Enabled = true;
@@ -2718,7 +2731,7 @@ draw:
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
                         else
-                            PlayersTurn(MovingCard.player);
+                            PlayersTurn(MovingCard.player, true, 0, MovingCard.player > 0);
                     }
                     else if (MovingCard.dbp > 0)
                     {
