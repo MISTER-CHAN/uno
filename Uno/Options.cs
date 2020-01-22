@@ -66,6 +66,7 @@ namespace Uno {
             mnuBlackBlank.Checked = false;
             mnuWildDownpourDraw.Checked = false;
             mnuDaWah.Checked = false;
+            mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = true;
             mnuStackDraw.Checked = true;
@@ -151,6 +152,36 @@ namespace Uno {
 
         private void MnuDurable_Click(object sender, EventArgs e)
         {
+            txtDealt.Text = "56";
+            txtDecks.Text = "5";
+            mnuRygbBlank.Checked = true;
+            mnuMagentaBlank.Checked = true;
+            mnuBlackBlank.Checked = true;
+            mnuWildDownpourDraw.Checked = true;
+            mnuDaWah.Checked = true;
+            mnuWildHitfire.Checked = true;
+            mnuDos.Checked = true;
+            mnuPairs.Checked = true;
+            mnuStackDraw.Checked = true;
+            mnuPlayOrDrawAll.Checked = false;
+            mnuDrawTilCanPlay.Checked = true;
+            mnuDrawAllAndPlay.Checked = false;
+            mnuDrawAndPlay.Checked = true;
+            mnuChallenges.Checked = false;
+            mnuDoubleDraw.Checked = true;
+            mnuDrawBeforePlaying.Checked = true;
+            mnuDrawTwoBeforePlaying.Checked = true;
+            mnuJumpin.Checked = false;
+            mnuSevenZero.Checked = false;
+            mnuSkipPlayers.Checked = false;
+            mnuSkipTimes.Checked = true;
+            mnuOneWinner.Checked = true;
+            mnuOneLoser.Checked = false;
+            mnuUno.Checked = false;
+        }
+
+        private void MnuGoWild_Click(object sender, EventArgs e)
+        {
             txtDealt.Text = "35";
             txtDecks.Text = "3";
             mnuRygbBlank.Checked = true;
@@ -158,6 +189,7 @@ namespace Uno {
             mnuBlackBlank.Checked = true;
             mnuWildDownpourDraw.Checked = true;
             mnuDaWah.Checked = true;
+            mnuWildHitfire.Checked = false;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
             mnuStackDraw.Checked = true;
@@ -167,8 +199,8 @@ namespace Uno {
             mnuDrawAndPlay.Checked = true;
             mnuChallenges.Checked = false;
             mnuDoubleDraw.Checked = false;
-            mnuDrawBeforePlaying.Checked = false;
-            mnuDrawTwoBeforePlaying.Checked = true;
+            mnuDrawBeforePlaying.Checked = true;
+            mnuDrawTwoBeforePlaying.Checked = false;
             mnuJumpin.Checked = false;
             mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
@@ -266,6 +298,7 @@ namespace Uno {
             mnuBlackBlank.Checked = false;
             mnuWildDownpourDraw.Checked = false;
             mnuDaWah.Checked = false;
+            mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = false;
             mnuStackDraw.Checked = false;

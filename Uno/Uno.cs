@@ -72,13 +72,13 @@ namespace Uno
 
         public class UnoNumberName
         {
-            public const string SKIP = "Ø";
-            public const string REVERSE = "^v";
+            public const string SKIP = "⊘";
+            public const string REVERSE = "⇅";
             public const string DRAW_2 = "+2";
             public const string DISCARD_ALL = "×";
             public const string TRADE_HANDS = "<>";
             public const string NUMBER = "#";
-            public const string WILD = "::";
+            public const string WILD = "∷";
             public const string WILD_DOWNPOUR_DRAW_1 = "!1";
             public const string WILD_DOWNPOUR_DRAW_2 = "!2";
             public const string WILD_DOWNPOUR_DRAW_4 = "!4";
@@ -160,8 +160,7 @@ namespace Uno
                 chkPlayer[length].MouseWheel += new MouseEventHandler(ChkPlayer_MouseWheel);
                 chkPlayer[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 chkPlayer[length].Tag = length;
-                if (mnuAppearance.Checked)
-                    chkPlayer[length].TextChanged += Card_TextChanged;
+                chkPlayer[length].TextChanged += Card_TextChanged;
 				chkPlayer[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
@@ -169,16 +168,17 @@ namespace Uno
         private void Card_TextChanged(object sender, EventArgs e)
         {
             Control control = (Control)sender;
-            byte b = GetNumberId(control.Text);
-            if (!(b < 10 || UnoNumber.SKIP <= b && b <= UnoNumber.DRAW_2 || b == UnoNumber.BLANK || b == UnoNumber.WILD || b == UnoNumber.WILD_DRAW_4))
-                return;
-            Image image = new Bitmap(180, 270);
-            Graphics graphics = Graphics.FromImage(image);
-            graphics.DrawImage(imgUno, new Rectangle(0, 0, 180, 270), b * 180, GetColorId(control.BackColor) * 270, 180, 270, GraphicsUnit.Pixel);
-            control.BackgroundImage = image;
-            control.Font = new Font(control.Font.FontFamily, 1);
-            graphics.Flush();
-            graphics.Dispose();
+            if (mnuAppearance.Checked)
+            {
+                byte b = GetNumberId(control.Text);
+                Image image = new Bitmap(120, 160);
+                Graphics graphics = Graphics.FromImage(image);
+                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), b * 120, GetColorId(control.BackColor) * 160, 120, 160, GraphicsUnit.Pixel);
+                control.BackgroundImage = image;
+                control.Font = new Font(control.Font.FontFamily, 1);
+                graphics.Flush();
+                graphics.Dispose();
+            }
         }
 
         void AddDraw(int count)
@@ -200,15 +200,13 @@ namespace Uno
                 label[length].BackgroundImageLayout = ImageLayout.Stretch;
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
-                label[length].Font = new Font("MS Gothic", 42);
                 label[length].ForeColor = Color.White;
                 label[length].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                 label[length].MouseEnter += new EventHandler(Label_MouseEnter);
                 label[length].MouseLeave += new EventHandler(Label_MouseLeave);
                 label[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 label[length].Text = UnoNumberName.NULL;
-                if (mnuAppearance.Checked)
-                    label[length].TextChanged += Card_TextChanged;
+                label[length].TextChanged += Card_TextChanged;
                 label[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}

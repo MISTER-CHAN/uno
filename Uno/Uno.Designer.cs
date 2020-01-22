@@ -201,6 +201,8 @@
             // 
             // mnuAppearance
             // 
+            this.mnuAppearance.Checked = true;
+            this.mnuAppearance.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAppearance.Name = "mnuAppearance";
             this.mnuAppearance.Size = new System.Drawing.Size(180, 22);
             this.mnuAppearance.Text = "外观 (&A)";
@@ -457,7 +459,6 @@
             // 
             // pnlPlayer
             // 
-            this.pnlPlayer.Font = new System.Drawing.Font("MS Gothic", 42F);
             this.pnlPlayer.Location = new System.Drawing.Point(0, 214);
             this.pnlPlayer.Name = "pnlPlayer";
             this.pnlPlayer.Size = new System.Drawing.Size(90, 132);
