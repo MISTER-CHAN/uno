@@ -940,14 +940,14 @@ deny:
             timUno.Interval = interval;
             if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
-			for (byte i = 0; i < 4; i++) {
+            lblPile.BackgroundImageLayout = ImageLayout.Stretch;
+            lblPile.BackgroundImage = Properties.Resources.uno_pile;
+            for (byte i = 0; i < 4; i++) {
                 lblPlayers[i] = new Label();
 				Controls.Add(lblPlayers[i]);
-                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
-                lblPlayers[i].BackColor = Color.Black;
-                lblPlayers[i].ForeColor = Color.White;
+                lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
+                lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
                 lblPlayers[i].Tag = i;
-                lblPlayers[i].Text = "UNO";
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
                 lblPlayers[i].Tag = i;
@@ -957,7 +957,6 @@ deny:
                 lblCounts[i] = new Label();
 				Controls.Add(lblCounts[i]);
                 lblCounts[i].AutoSize = true;
-                lblCounts[i].Font = new Font("微軟正黑體 Light", lblCounts[i].Font.Size);
 				lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
 				lblCounts[i].Tag = i;
 				lblCounts[i].Text = "0";
@@ -1031,6 +1030,8 @@ deny:
             for (byte p = 0; p < 4; p++)
                 Players[p] = new Cards();
             AddLabel(lblMovingCards);
+            lblMovingCards[0].BackgroundImageLayout = ImageLayout.Stretch;
+            lblMovingCards[0].BackgroundImage = Properties.Resources.uno_back;
             lblMovingCards[0].BringToFront();
 		}
 
