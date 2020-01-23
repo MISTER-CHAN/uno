@@ -84,7 +84,7 @@ namespace Uno
             public const string WILD_DOWNPOUR_DRAW_4 = "!4";
             public const string WILD_DRAW_4 = "+4";
             public const string WILD_HITFIRE = "+?";
-            public const string NULL = "   ";
+            public const string NULL = "";
         }
 
         private bool reverse = false, isAutomatic = false, isSelectingCards = false;
@@ -146,6 +146,8 @@ namespace Uno
 				pnlPlayer.Controls.Add(chkPlayer[length]);
 				chkPlayer[length].AutoSize = false;
 				chkPlayer[length].Appearance = Appearance.Button;
+                chkPlayer[length].BackColor = Color.White;
+                chkPlayer[length].BackColorChanged += Card_BackColorChanged;
                 chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
 				chkPlayer[length].BringToFront();
 				chkPlayer[length].CheckedChanged += new EventHandler(ChkPlayer_CheckedChanged);
@@ -165,6 +167,12 @@ namespace Uno
             }
 		}
 
+        private void Card_BackColorChanged(object sender, EventArgs e)
+        {
+            Control c = (Control)sender;
+            c.ForeColor = c.BackColor;
+        }
+
         private void Card_TextChanged(object sender, EventArgs e)
         {
             Control control = (Control)sender;
@@ -175,7 +183,14 @@ namespace Uno
                 Graphics graphics = Graphics.FromImage(image);
                 graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), b * 120, GetColorId(control.BackColor) * 160, 120, 160, GraphicsUnit.Pixel);
                 control.BackgroundImage = image;
-                control.Font = new Font(control.Font.FontFamily, 1);
+                if (control.Text != form.txtBlankText.Text)
+                {
+                    control.Font = new Font(control.Font.FontFamily, 1);
+                }
+                else
+                {
+                    control.Font = new Font("MS Gothic", 42);
+                }
                 graphics.Flush();
                 graphics.Dispose();
             }
@@ -196,7 +211,8 @@ namespace Uno
 				label.Add(new Label());
                 controls.Add(label[length]);
                 label[length].AutoSize = false;
-                label[length].BackColor = Color.Black;
+                label[length].BackColor = Color.White;
+                label[length].BackColorChanged += Card_BackColorChanged;
                 label[length].BackgroundImageLayout = ImageLayout.Stretch;
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
@@ -909,6 +925,7 @@ deny:
                     }
                 }
                 MovingCard.player = player; MovingCard.progress = 0; MovingCard.quickly = false;
+                lblMovingCards[0].BackColor = Color.White;
                 lblMovingCards[0].BringToFront();
                 timPileToPlayers.Enabled = true;
             }
@@ -975,6 +992,7 @@ deny:
             lblCards.Add(new Label());
 			Controls.Add(lblCards[0]);
             lblCards[0].Visible = false;
+            lblCards[0].BackColor = Color.White;
             ResizeForm();
             int decks = int.Parse(form.txtDecks.Text);
 			for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
@@ -2851,18 +2869,26 @@ arrived:
             if (ons == 2 && lblPlayers[MovingCard.player].Visible)
             {
                 foreach (Label l in lblCards)
+                {
+                    if (l.Text == UnoNumberName.NULL)
+                        continue;
                     if (l.Text == UnoNumberName.REVERSE || l.Text == form.txtBlankText.Text && form.mnuBlankReverse.Checked)
                     {
                         reversed = true;
                         break;
                     }
+                }
             }
             else
                 foreach (Label l in lblCards)
+                {
+                    if (l.Text == UnoNumberName.NULL)
+                        continue;
                     if (l.Text == UnoNumberName.REVERSE || l.Text == form.txtBlankText.Text && form.mnuBlankReverse.Checked)
                     {
                         reverse = !reverse;
                     }
+                }
             foreach (Label l in lblCards)
             {
                 if (l.Text == UnoNumberName.NULL)
@@ -2906,7 +2932,7 @@ arrived:
                         lblDraw.Text = lblPile.Text;
                         break;
                     default:
-                        if (lblCards[1].Text == form.txtBlankText.Text)
+                        if (l.Text == form.txtBlankText.Text)
                         {
                             if (form.mnuSkipPlayers.Checked)
                                 skip += int.Parse(form.txtBlankSkip.Text);
