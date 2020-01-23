@@ -598,7 +598,7 @@ exit:
                     {
                         if (n == UnoNumber.MAX_VALUE)
                             n = c.number;
-                        else if (c.number != n)
+                        else if (c.number != n && c.color != UnoColor.BLACK)
                             goto number;
                     }
                     else if (c.number != UnoNumber.NUMBER)
@@ -2118,16 +2118,20 @@ play:   		Sort();
                         {
                             FrmColor c = new FrmColor();
                             int colors = 0;
-                            if (cards.Last().color == UnoColor.BLACK)
+                            foreach (Card card in cards)
                             {
-                                foreach (ToolStripMenuItem menu in c.mnuColor.Items)
+                                if (card.color == UnoColor.BLACK)
                                 {
-                                    menu.Enabled = true;
-                                    menu.BackColor = GetColor(byte.Parse(menu.Tag + ""));
+                                    foreach (ToolStripMenuItem menu in c.mnuColor.Items)
+                                    {
+                                        menu.Enabled = true;
+                                        menu.BackColor = GetColor(byte.Parse(menu.Tag + ""));
+                                    }
+                                    colors = 4;
+                                    break;
                                 }
-                                colors = 4;
                             }
-                            else
+                            if (colors <= 0)
                             {
                                 foreach (Card card in cards)
                                     if (!new Regex("^(" + UnoColor.MAGENTA + "|" + UnoColor.BLACK + ")$").IsMatch(card.color + ""))
