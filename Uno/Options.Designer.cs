@@ -33,10 +33,9 @@
             this.mnuQuick = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStandard = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAdvanced = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuGoWild = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDurable = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuLoadRules = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSaveRules = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuImportRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuRule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOns = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPlayer0 = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,7 +109,10 @@
             this.mnuMembership = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuGoWild = new System.Windows.Forms.ToolStripMenuItem();
+            this.sepRules = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuLoadRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSaveRules = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuImportRules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -186,7 +188,8 @@
             this.mnuAdvanced,
             this.mnuGoWild,
             this.mnuDurable,
-            this.mnuLoadRules});
+            this.sepRules,
+            this.mnuRule});
             this.mnuQuick.Name = "mnuQuick";
             this.mnuQuick.Size = new System.Drawing.Size(43, 20);
             this.mnuQuick.Text = "快速";
@@ -206,6 +209,13 @@
             this.mnuAdvanced.Text = "进阶";
             this.mnuAdvanced.Click += new System.EventHandler(this.MnuAdvanced_Click);
             // 
+            // mnuGoWild
+            // 
+            this.mnuGoWild.Name = "mnuGoWild";
+            this.mnuGoWild.Size = new System.Drawing.Size(180, 22);
+            this.mnuGoWild.Text = "歡樂";
+            this.mnuGoWild.Click += new System.EventHandler(this.MnuGoWild_Click);
+            // 
             // mnuDurable
             // 
             this.mnuDurable.Name = "mnuDurable";
@@ -213,29 +223,16 @@
             this.mnuDurable.Text = "持久";
             this.mnuDurable.Click += new System.EventHandler(this.MnuDurable_Click);
             // 
-            // mnuLoadRules
+            // mnuRule
             // 
-            this.mnuLoadRules.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuRule.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuLoadRules,
             this.mnuSaveRules,
             this.mnuImportRules});
-            this.mnuLoadRules.Name = "mnuLoadRules";
-            this.mnuLoadRules.Size = new System.Drawing.Size(180, 22);
-            this.mnuLoadRules.Text = "读取玩法";
-            this.mnuLoadRules.Click += new System.EventHandler(this.MnuLoadRules_Click);
-            // 
-            // mnuSaveRules
-            // 
-            this.mnuSaveRules.Name = "mnuSaveRules";
-            this.mnuSaveRules.Size = new System.Drawing.Size(180, 22);
-            this.mnuSaveRules.Text = "储存";
-            this.mnuSaveRules.Click += new System.EventHandler(this.MnuSaveRules_Click);
-            // 
-            // mnuImportRules
-            // 
-            this.mnuImportRules.Name = "mnuImportRules";
-            this.mnuImportRules.Size = new System.Drawing.Size(180, 22);
-            this.mnuImportRules.Text = "导入...";
-            this.mnuImportRules.Click += new System.EventHandler(this.MnuImportRules_Click);
+            this.mnuRule.Name = "mnuRule";
+            this.mnuRule.Size = new System.Drawing.Size(180, 22);
+            this.mnuRule.Text = "讀取玩法";
+            this.mnuRule.Click += new System.EventHandler(this.MnuLoadRules_Click);
             // 
             // mnuPlayer
             // 
@@ -867,12 +864,31 @@
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
             // 
-            // mnuGoWild
+            // sepRules
             // 
-            this.mnuGoWild.Name = "mnuGoWild";
-            this.mnuGoWild.Size = new System.Drawing.Size(180, 22);
-            this.mnuGoWild.Text = "歡樂";
-            this.mnuGoWild.Click += new System.EventHandler(this.MnuGoWild_Click);
+            this.sepRules.Name = "sepRules";
+            this.sepRules.Size = new System.Drawing.Size(177, 6);
+            // 
+            // mnuLoadRules
+            // 
+            this.mnuLoadRules.Name = "mnuLoadRules";
+            this.mnuLoadRules.Size = new System.Drawing.Size(180, 22);
+            this.mnuLoadRules.Text = "(空)";
+            this.mnuLoadRules.Click += new System.EventHandler(this.MnuLoadRules_Click);
+            // 
+            // mnuSaveRules
+            // 
+            this.mnuSaveRules.Name = "mnuSaveRules";
+            this.mnuSaveRules.Size = new System.Drawing.Size(180, 22);
+            this.mnuSaveRules.Text = "儲存";
+            this.mnuSaveRules.Click += new System.EventHandler(this.MnuSaveRules_Click);
+            // 
+            // mnuImportRules
+            // 
+            this.mnuImportRules.Name = "mnuImportRules";
+            this.mnuImportRules.Size = new System.Drawing.Size(180, 22);
+            this.mnuImportRules.Text = "導入...";
+            this.mnuImportRules.Click += new System.EventHandler(this.MnuImportRules_Click);
             // 
             // Options
             // 
@@ -956,11 +972,9 @@
         public System.Windows.Forms.ToolStripMenuItem mnuBlank;
         public System.Windows.Forms.ToolStripMenuItem mnuWater;
         public System.Windows.Forms.ToolStripMenuItem mnuSeed;
-        private System.Windows.Forms.ToolStripMenuItem mnuLoadRules;
-        private System.Windows.Forms.ToolStripMenuItem mnuSaveRules;
+        private System.Windows.Forms.ToolStripMenuItem mnuRule;
         private System.Windows.Forms.ToolStripMenuItem mnuLoadGame;
         private System.Windows.Forms.ToolStripMenuItem mnuImportGame;
-        private System.Windows.Forms.ToolStripMenuItem mnuImportRules;
         public System.Windows.Forms.ToolStripMenuItem mnuRygbBlank;
         public System.Windows.Forms.ToolStripMenuItem mnuWildDownpourDraw;
         public System.Windows.Forms.ToolStripMenuItem mnuDaWah;
@@ -984,5 +998,9 @@
         public System.Windows.Forms.ToolStripMenuItem mnuRNGCryptoServiceProvider;
         public System.Windows.Forms.ToolStripMenuItem mnuMembership;
         private System.Windows.Forms.ToolStripMenuItem mnuGoWild;
+        private System.Windows.Forms.ToolStripSeparator sepRules;
+        private System.Windows.Forms.ToolStripMenuItem mnuLoadRules;
+        private System.Windows.Forms.ToolStripMenuItem mnuSaveRules;
+        private System.Windows.Forms.ToolStripMenuItem mnuImportRules;
     }
 }

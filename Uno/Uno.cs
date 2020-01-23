@@ -646,7 +646,7 @@ btn:
                 if (card[c].color == backColor || card[c].color == UnoColor.MAGENTA)
                     goto accept;
             }
-            if (card[0].number == backNumber || backNumber == UnoNumber.NUMBER)
+            if (card[0].number == backNumber || backNumber == UnoNumber.NUMBER && card[0].number <= 10)
                 goto accept;
 			goto deny;
 accept:		
@@ -2792,7 +2792,8 @@ draw:
                 else
                 {
                     if (MovingCard.player == NextPlayer(0, true)) 
-                        if (int.Parse(lblCounts[NextPlayer(0, true)].Text) >= int.Parse(form.txtDealt.Text))
+                        if (int.Parse(lblCounts[NextPlayer(0, true)].Text) >= int.Parse(form.txtDealt.Text)
+                            || form.keys.Length > 0)
                         {
 						    timPileToPlayers.Enabled = false;
                             if (MovingCard.quickly)

@@ -22,39 +22,48 @@ namespace Uno {
             mnuLoadGame.Text = Interaction.GetSetting("UNO", "GAME", "SAVE", "KKKKKKKKK(空)").Split(char.Parse("K"))[8];
             if (mnuLoadGame.Text == "(空)")
                 mnuLoadGame.Enabled = false;
-		}
+            mnuLoadRules.Text = Interaction.GetSetting("UNO", "GAME", "RULES", "KKKKKKKKKKKKKK(空)").Split(char.Parse("K"))[13];
+            if (mnuLoadRules.Text == "(空)")
+                mnuLoadRules.Enabled = false;
+        }
 
         private void LoadGame(string save)
         {
             string[] keys = save.Split(char.Parse("K"));
-            this.keys = keys;
-            txtDecks.Text = keys[9];
-            mnuBeginner.Checked = bool.Parse(keys[10]);
-            mnuMaster.Checked = bool.Parse(keys[11]);
-            mnuRygbBlank.Checked = bool.Parse(keys[12]);
-            mnuMagentaBlank.Checked = bool.Parse(keys[13]);
-            mnuBlackBlank.Checked = bool.Parse(keys[14]);
-            mnuWildDownpourDraw.Checked = bool.Parse(keys[15]);
-            mnuDaWah.Checked = bool.Parse(keys[16]);
-            mnuWildHitfire.Checked = bool.Parse(keys[17]);
-            mnuDos.Checked = bool.Parse(keys[18]);
-            mnuCanShowCards.Checked = bool.Parse(keys[19]);
-            mnuPairs.Checked = bool.Parse(keys[20]);
-            mnuStackDraw.Checked = bool.Parse(keys[21]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[22]);
-            mnuDrawTilCanPlay.Checked = bool.Parse(keys[23]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[24]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[25]);
-            mnuChallenges.Checked = bool.Parse(keys[26]);
-            mnuDoubleDraw.Checked = bool.Parse(keys[27]);
-            mnuDrawBeforePlaying.Checked = bool.Parse(keys[28]);
-            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[29]);
-            mnuSkipPlayers.Checked = bool.Parse(keys[30]);
-            mnuSkipTimes.Checked = bool.Parse(keys[31]);
-            mnuOneWinner.Checked = bool.Parse(keys[32]);
-            mnuOneLoser.Checked = bool.Parse(keys[33]);
-            mnuUno.Checked = bool.Parse(keys[34]);
-            mnuCheat.Checked = bool.Parse(keys[35]);
+            if (save[0] != 'K')
+                this.keys = keys;
+            mnuPlayer0.Checked = bool.Parse(keys[9]);
+            mnuPlayer1.Checked = bool.Parse(keys[10]);
+            mnuPlayer2.Checked = bool.Parse(keys[11]);
+            mnuPlayer3.Checked = bool.Parse(keys[12]);
+            txtDealt.Text = keys[13];
+            txtDecks.Text = keys[14];
+            mnuBeginner.Checked = bool.Parse(keys[15]);
+            mnuMaster.Checked = bool.Parse(keys[16]);
+            mnuRygbBlank.Checked = bool.Parse(keys[17]);
+            mnuMagentaBlank.Checked = bool.Parse(keys[18]);
+            mnuBlackBlank.Checked = bool.Parse(keys[19]);
+            mnuWildDownpourDraw.Checked = bool.Parse(keys[20]);
+            mnuDaWah.Checked = bool.Parse(keys[21]);
+            mnuWildHitfire.Checked = bool.Parse(keys[22]);
+            mnuDos.Checked = bool.Parse(keys[23]);
+            mnuCanShowCards.Checked = bool.Parse(keys[24]);
+            mnuPairs.Checked = bool.Parse(keys[25]);
+            mnuStackDraw.Checked = bool.Parse(keys[26]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[27]);
+            mnuDrawTilCanPlay.Checked = bool.Parse(keys[28]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[29]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[30]);
+            mnuChallenges.Checked = bool.Parse(keys[31]);
+            mnuDoubleDraw.Checked = bool.Parse(keys[32]);
+            mnuDrawBeforePlaying.Checked = bool.Parse(keys[33]);
+            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[34]);
+            mnuSkipPlayers.Checked = bool.Parse(keys[35]);
+            mnuSkipTimes.Checked = bool.Parse(keys[36]);
+            mnuOneWinner.Checked = bool.Parse(keys[37]);
+            mnuOneLoser.Checked = bool.Parse(keys[38]);
+            mnuUno.Checked = bool.Parse(keys[39]);
+            mnuCheat.Checked = bool.Parse(keys[40]);
         }
 
         private void MnuAdvanced_Click(object sender, EventArgs e)
@@ -253,7 +262,6 @@ namespace Uno {
 
         private void MnuLoadRules_Click(object sender, EventArgs e)
         {
-            mnuQuick.HideDropDown();
             LoadGame(Interaction.GetSetting("UNO", "GAME", "RULES"));
         }
 
@@ -280,6 +288,7 @@ namespace Uno {
         private void MnuSaveRules_Click(object sender, EventArgs e)
         {
             Interaction.SaveSetting("UNO", "GAME", "RULES", "KKKKKKKKK" + SaveRules());
+            mnuLoadRules.Text = txtDealt.Text;
         }
 
         private void MnuSkip_Click(object sender, EventArgs e)
@@ -350,33 +359,38 @@ namespace Uno {
         public string SaveRules()
         {
             string s = "";
-            s += txtDecks.Text + "K"; // 9
-            s += mnuBeginner.Checked + "K"; // 10
-            s += mnuMaster.Checked + "K"; // 11
-            s += mnuRygbBlank.Checked + "K"; // 12
-            s += mnuMagentaBlank.Checked + "K"; // 13
-            s += mnuBlackBlank.Checked + "K"; // 14
-            s += mnuWildDownpourDraw.Checked + "K"; // 15
-            s += mnuDaWah.Checked + "K"; // 16
-            s += mnuWildHitfire.Checked + "K"; // 17
-            s += mnuDos.Checked + "K"; // 18
-            s += mnuCanShowCards.Checked + "K"; // 19
-            s += mnuPairs.Checked + "K"; // 20
-            s += mnuStackDraw.Checked + "K"; // 21
-            s += mnuPlayOrDrawAll.Checked + "K"; // 22
-            s += mnuDrawTilCanPlay.Checked + "K"; // 23
-            s += mnuDrawAllAndPlay.Checked + "K"; // 24
-            s += mnuDrawAndPlay.Checked + "K"; // 25
-            s += mnuChallenges.Checked + "K"; // 26
-            s += mnuDoubleDraw.Checked + "K"; // 27
-            s += mnuDrawBeforePlaying.Checked + "K"; // 28
-            s += mnuDrawTwoBeforePlaying.Checked + "K"; // 29
-            s += mnuSkipPlayers.Checked + "K"; // 30
-            s += mnuSkipTimes.Checked + "K"; // 31
-            s += mnuOneWinner.Checked + "K"; // 32
-            s += mnuOneLoser.Checked + "K"; // 33
-            s += mnuUno.Checked; // 34
-            s += mnuCheat.Checked; // 35
+            s += mnuPlayer0.Checked + "K";
+            s += mnuPlayer1.Checked + "K";
+            s += mnuPlayer2.Checked + "K";
+            s += mnuPlayer3.Checked + "K";
+            s += txtDealt.Text + "K";
+            s += txtDecks.Text + "K";
+            s += mnuBeginner.Checked + "K";
+            s += mnuMaster.Checked + "K";
+            s += mnuRygbBlank.Checked + "K";
+            s += mnuMagentaBlank.Checked + "K";
+            s += mnuBlackBlank.Checked + "K";
+            s += mnuWildDownpourDraw.Checked + "K";
+            s += mnuDaWah.Checked + "K";
+            s += mnuWildHitfire.Checked + "K";
+            s += mnuDos.Checked + "K";
+            s += mnuCanShowCards.Checked + "K";
+            s += mnuPairs.Checked + "K";
+            s += mnuStackDraw.Checked + "K";
+            s += mnuPlayOrDrawAll.Checked + "K";
+            s += mnuDrawTilCanPlay.Checked + "K";
+            s += mnuDrawAllAndPlay.Checked + "K";
+            s += mnuDrawAndPlay.Checked + "K";
+            s += mnuChallenges.Checked + "K";
+            s += mnuDoubleDraw.Checked + "K";
+            s += mnuDrawBeforePlaying.Checked + "K";
+            s += mnuDrawTwoBeforePlaying.Checked + "K";
+            s += mnuSkipPlayers.Checked + "K";
+            s += mnuSkipTimes.Checked + "K";
+            s += mnuOneWinner.Checked + "K";
+            s += mnuOneLoser.Checked + "K";
+            s += mnuUno.Checked + "K";
+            s += mnuCheat.Checked;
             return s;
         }
 
