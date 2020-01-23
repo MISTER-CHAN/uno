@@ -429,8 +429,11 @@ namespace Uno
                         {
                             if (Players[player].cards[c, n] > 0)
                             {
-                                number = n;
-                                goto number_color;
+                                if (n == backNumber || c == backColor)
+                                {
+                                    number = n;
+                                    goto number_color;
+                                }
                             }
                         }
                     }
