@@ -2328,7 +2328,7 @@ play:   		Sort();
                 if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
                     Action(player, "玩家" + GetPlayerName(player) + "的回合");
-                    timThinking.Interval = (int)(2000 * Rnd());
+                    timThinking.Interval = (int)(2000 * Rnd()) + 1;
                     timThinking.Tag = player + "," + dbp;
                     timThinking.Enabled = true;
                     return;
