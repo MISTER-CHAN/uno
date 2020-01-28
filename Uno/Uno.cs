@@ -691,7 +691,7 @@ deny:
         {
             if (isSelectingCards)
             {
-                if (0 < e.X && (e.X < UnoSize.WIDTH || UnoSize.HEIGHT * chkPlayer.Count > width && e.X < width / chkPlayer.Count))
+                if (0 < e.X && e.X < pnlPlayer.Width / chkPlayer.Count)
                     return;
                 int w;
                 if (hPlayer.Visible || pnlPlayer.Left > 0)
@@ -2394,17 +2394,19 @@ play:   		Sort();
                             SetUsage(chkPlayer[i]);
                             i++;
                         }
-            pnlPlayer.Width = chkPlayer.ToArray().Length * UnoSize.WIDTH;
             hPlayer.Visible = false;
             int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
             if (width <= this.width)
             {
                 pnlPlayer.Left = this.width / 2 - width / 2;
+                pnlPlayer.Width = width;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
                     chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
             }
             else if (width > this.width * 8 && mnuScrollBar.Checked)
             {
+                pnlPlayer.Left = 0;
+                pnlPlayer.Width = width;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
                     chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
                 hPlayer.Maximum = width - this.width;
@@ -2417,6 +2419,7 @@ play:   		Sort();
             else
             {
                 pnlPlayer.Left = 0;
+                pnlPlayer.Width = this.width;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
                     chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
             }
