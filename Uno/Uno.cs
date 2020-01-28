@@ -648,7 +648,7 @@ deny:
 		}
 
 		private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
-			int index = (int) ((CheckBox) sender).Tag;
+			int index = (int)((CheckBox) sender).Tag;
             if (mnuAppearance.Checked)
             {
                 chkPlayer[index].Top = chkPlayer[index].Checked ? 0 : UnoSize.HEIGHT / 8;
@@ -691,14 +691,12 @@ deny:
         {
             if (isSelectingCards)
             {
-                if (e.X >= 0 && e.X < UnoSize.WIDTH || e.Y < chkPlayer[0].Top || e.Y >= chkPlayer[0].Top + chkPlayer[0].Height)
-                    return;
                 int w;
                 if (hPlayer.Visible || pnlPlayer.Left > 0)
                     w = UnoSize.WIDTH;
                 else
                     w = width / chkPlayer.ToArray().Length;
-                int i = (int)((float)e.X / w) + int.Parse(((CheckBox)sender).Tag + "");
+                int i = (int)Math.Floor((float)e.X / w) + int.Parse(((CheckBox)sender).Tag + "");
                 if (i >= 0 && i < chkPlayer.ToArray().Length)
                     switch (e.Button)
                     {
