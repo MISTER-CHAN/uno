@@ -691,6 +691,8 @@ deny:
         {
             if (isSelectingCards)
             {
+                if (UnoSize.HEIGHT * chkPlayer.Count > width && 0 < e.X && e.X < width / chkPlayer.Count)
+                    return;
                 int w;
                 if (hPlayer.Visible || pnlPlayer.Left > 0)
                     w = UnoSize.WIDTH;
@@ -2393,7 +2395,7 @@ play:   		Sort();
                         }
             pnlPlayer.Width = chkPlayer.ToArray().Length * UnoSize.WIDTH;
             hPlayer.Visible = false;
-            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.ToArray().Length;
+            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
             if (width <= this.width)
             {
                 pnlPlayer.Left = this.width / 2 - width / 2;
