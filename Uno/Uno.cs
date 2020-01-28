@@ -971,7 +971,7 @@ deny:
 				Controls.Add(lblPlayers[i]);
                 lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
                 lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                if (i > 0 && form.mnuCanShowCards.Checked)
+                if (i > 0 && !form.mnuCanShowCards.Checked)
                     lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
                 lblPlayers[i].ForeColor = Color.Black;
                 lblPlayers[i].Tag = i;
