@@ -691,7 +691,7 @@ deny:
         {
             if (isSelectingCards)
             {
-                if (UnoSize.HEIGHT * chkPlayer.Count > width && 0 < e.X && e.X < width / chkPlayer.Count)
+                if (0 < e.X && (e.X < UnoSize.WIDTH || UnoSize.HEIGHT * chkPlayer.Count > width && e.X < width / chkPlayer.Count))
                     return;
                 int w;
                 if (hPlayer.Visible || pnlPlayer.Left > 0)
