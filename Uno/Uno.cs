@@ -87,7 +87,7 @@ namespace Uno
             public const string NULL = "";
         }
 
-        private bool reverse = false, isAutomatic = false, isSelectingCards = false;
+        private bool canPlay = false, reverse = false, isAutomatic = false, isSelectingCards = false;
         byte gameOver = 4;
         readonly byte[]
             mvcList = new byte[UnoNumber.MAX_VALUE]
@@ -542,6 +542,8 @@ exit:
 
 		bool CanPlay(List<Card> card, byte color)
         {
+            if (canPlay)
+                goto accept;
             if (!form.mnuStackDraw.Checked && int.Parse(lblDraw.Text) > 0)
             {
                 goto deny;
@@ -1452,7 +1454,7 @@ play:
 
         string GetUsage(string number)
         {
-            string usage = "任意指定颜色幷且所有家罚抽 %AMOUNT% 张牌.";
+            string usage = "任意指定颜色幷且所有玩家罚抽 %AMOUNT% 张牌.";
             string[] usages = {"禁止下家出牌.", "反转出牌顺序.", "下家罚抽 %AMOUNT% 张牌."};
             if (number == form.txtBlankText.Text)
                 return (int.Parse(form.txtBlankSkip.Text) > 0 ? usages[0] : "") + " " + (form.mnuBlankReverse.Checked ? usages[1] : "") + " " + (int.Parse(form.txtBlankDraw.Text) > 0 ? usages[2].Replace("%AMOUNT%", form.txtBlankDraw.Text) : "");
@@ -1731,9 +1733,10 @@ gameOver:
             string cmd = Interaction.InputBox(">", "Chat");
             int count = 0;
             cmd = cmd.Trim();
-            for (; cmd.IndexOf("  ") > -1; )
+            while (cmd.IndexOf("  ") > -1)
                 cmd = cmd.Replace("  ", " ");
-            if (cmd == "") return;
+            if (cmd == "")
+                return;
             if (cmd.Substring(0, 1) == "/")
             {
                 if (form.mnuCheat.Checked)
@@ -1742,9 +1745,16 @@ gameOver:
                     switch (data[0].ToLower())
                     {
                         case "/auto":
-                            isAutomatic = !isAutomatic;
-                            pnlCtrl.Visible = false;
-                            mnuSaveGame.Enabled = false;
+                            if (data.Length == 1)
+                                isAutomatic = !isAutomatic;
+                            else
+                                isAutomatic = bool.Parse(data[1]);
+                            if (pnlCtrl.Visible)
+                            {
+                                pnlCtrl.Visible = false;
+                                mnuSaveGame.Enabled = false;
+                                Play(0);
+                            }
                             Action(0, "已切換託管");
                             break;
                         case "/clear":
@@ -1826,26 +1836,33 @@ gameOver:
                         case "/help":
                         case "/?":
                             string page = "1";
-                            if (data.Length > 1) page = data[1];
-                            string help = 
-                                "/clear [byte player] [byte color] [byte number]\n" +
-                                "/currard <byte color> [byte number]\n" +
-                                "/decks <int decks>\n" +
-                                "/draw [byte player] <int draw>\n" +
-                                "/give <byte player> <byte color> <byte number> [int count]\n" +
-                                "/help [int page]\n" +
-                                "/load [string data]\n" +
-                                "/me <string action>\n" +
-                                "/pause [options | pause | quit | restart]\n" +
-                                "/reverse [bool reverse]\n" +
-                                "/save\n" +
-                                "/say <string message>\n" +
-                                "/skip [[byte player] <int skip>]\n" +
-                                "/time true | false | pause | <int gametime> | <int h>:<int m>:<int s>\n" +
-                                "/tips\n" +
-                                "/uno [bool isUno]\n" +
-                                "/? [int page]";
-                            MessageBox.Show("=== 显示指令列表第 " + page + " 页, 共 1 页 ===\n" + (page == "1" ? help : ""), "帮助", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            if (data.Length > 1)
+                                page = data[1];
+                            string help = page switch
+                            { 
+                                "1" => "/auto [bool isAutomatic]\n" +
+                                    "/clear [byte player] [byte color] [byte number]\n" +
+                                    "/currard <byte color> [byte number]\n" +
+                                    "/decks <int decks>\n" +
+                                    "/draw [byte player] <int draw>\n" +
+                                    "/give <byte player> <byte color> <byte number> [int count]\n" +
+                                    "/help [int page]\n" +
+                                    "/load [string data]\n" +
+                                    "/me <string action>\n" +
+                                    "/play <bool canPlay>\n" +
+                                    "/play <byte color> <card card_0> <card card_1> ...\n" +
+                                    "/pause [options | pause | quit | restart]\n" +
+                                    "/reverse [bool reverse]\n" +
+                                    "/save\n" +
+                                    "/say <string message>\n" +
+                                    "/skip [[byte player] <int skip>]\n" +
+                                    "/time true | false | pause | <int gametime> | <int h>:<int m>:<int s>\n" +
+                                    "/tips\n" +
+                                    "/uno [bool isUno]\n" +
+                                    "/? [int page]",
+                                _ => ""
+                            };
+                            MessageBox.Show("=== 显示指令列表第 " + page + " 页, 共 1 页 ===\n" + help, "帮助", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             break;
                         case "/load":
                             string[] keys;
@@ -1856,7 +1873,29 @@ gameOver:
                             LoadGame(keys);
                             break;
                         case "/me":
-                            if (data.Length > 1) Action(0, "* 你 " + cmd.Substring(cmd.IndexOf(" ") + 1));
+                            if (data.Length > 1)
+                                Action(0, "* 你 " + cmd.Substring(cmd.IndexOf(" ") + 1));
+                            break;
+                        case "/play":
+                            if (data.Length > 1)
+                            {
+                                if (data[1] == "false" || data[1] == "true")
+                                {
+                                    canPlay = bool.Parse(data[1]);
+                                    Action(0, "已切換強制出牌");
+                                }
+                                else if (pnlCtrl.Visible)
+                                {
+                                    bool b = canPlay;
+                                    canPlay = true;
+                                    MovingCard.color = byte.Parse(data[1]);
+                                    List<Card> c = new List<Card>();
+                                    for (int i = 2; i < data.Length; i += 2)
+                                        c.Add(new Card { color = byte.Parse(data[i]), number = byte.Parse(data[i + 1]) });
+                                    Play(0, c.ToArray());
+                                    canPlay = b;
+                                }
+                            }
                             break;
                         case "/pause":
                             if (data.Length == 1)
@@ -2030,10 +2069,16 @@ gameOver:
             return lblPlayers[next].Visible ? next : NextPlayer(next, reverse);
 		}
 
-        void Play(byte player)
+        void Play(byte player, Card[] playingCards = null)
         {
 			List<Card> cards = new List<Card>();
-			if (player == 0 && !isAutomatic) {
+            if (playingCards != null)
+            {
+                foreach (Card c in playingCards)
+                    cards.Add(c);
+            }
+			else if (player == 0 && !isAutomatic)
+            {
                 List<Card> discardAll = new List<Card>(), number = new List<Card>();
                 foreach (CheckBox c in chkPlayer)
                 {
@@ -2077,7 +2122,7 @@ gameOver:
 play:   		Sort();
                 btnPlay.Visible = false;
             }
-            else if (player == 0 && isAutomatic)
+            else if (player == 0)
             {
                 Card[] ais = Ai(player);
                 foreach (Card card in ais)
@@ -2101,7 +2146,7 @@ play:   		Sort();
             if (cards.Count > 0)
             {
                 MovingCard.player = player; MovingCard.progress = 0;
-                if (player == 0 && !isAutomatic)
+                if (player == 0 && !isAutomatic && playingCards == null)
                 {
                     bool b = int.Parse(lblCounts[0].Text) - cards.Count > 0;
                     if (!b)
@@ -2355,29 +2400,13 @@ play:   		Sort();
             if (width <= this.width)
             {
                 pnlPlayer.Left = this.width / 2 - width / 2;
-                if (mnuAppearance.Checked)
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
-                }
-                else
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                        chkPlayer[i].Left = UnoSize.WIDTH * i;
-                }
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Left = UnoSize.WIDTH * i;
             }
             else if (width > this.width * 8 && mnuScrollBar.Checked)
             {
-                if (mnuAppearance.Checked)
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
-                }
-                else
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                        chkPlayer[i].Left = UnoSize.WIDTH * i;
-                }
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Left = UnoSize.WIDTH * i;
                 hPlayer.Maximum = width - this.width;
                 hPlayer.Visible = true;
                 if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
@@ -2388,18 +2417,8 @@ play:   		Sort();
             else
             {
                 pnlPlayer.Left = 0;
-                if (mnuAppearance.Checked)
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    {
-                        chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, chkPlayer[i].Checked ? 0 : UnoSize.HEIGHT / 8);
-                    }
-                }
-                else
-                {
-                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                        chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
-                }
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
             }
             if (!form.Visible && chkPlayer.Count > 0)
             {
