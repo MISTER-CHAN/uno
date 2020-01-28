@@ -515,7 +515,7 @@ exit:
             pnlCtrl.Visible = false;
             Action(0, "检举失败! +2");
             AddDraw(2);
-            if (!form.mnuDrawTilCanPlay.Checked) MovingCard.drew = false;
+            MovingCard.drew = false;
             timChallenge.Enabled = true;
         }
 
@@ -1329,7 +1329,19 @@ play:
             };
         }
 
-		bool IsNumeric(string s) {
+        string GetPlayerName(byte id)
+        {
+            return id switch
+            {
+                0 => "南",
+                1 => "西",
+                2 => "北",
+                3 => "東",
+                _ => "中"
+            };
+        }
+
+        bool IsNumeric(string s) {
 			return new Regex(@"^[+-]?\d+[.\d]*$").IsMatch(s);
 		}
 
@@ -2211,7 +2223,7 @@ play:   		Sort();
             }
             if (turn)
             {
-                if (delay && timTurn.Tag.ToString().Split(char.Parse(","))[0] == "4")
+                if (delay && timTurn.Tag.ToString().Split(char.Parse(","))[0] == "4" && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
                     timTurn.Tag = player + "," + dbp;
                     timTurn.Enabled = true;
@@ -2267,7 +2279,18 @@ play:   		Sort();
                 }
             }
             else if (turn)
+            {
+                if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
+                {
+                    Action(player, "玩家 " + GetPlayerName(player) + " 的回合");
+                    timThinking.Interval = (int)(2000 * Rnd());
+                    timThinking.Tag = player + "," + dbp;
+                    timThinking.Enabled = true;
+                    return;
+                }
+                timThinking.Tag = "4,";
                 Play(player);
+            }
         }
 
         private void ShowCards()
@@ -2343,7 +2366,7 @@ play:   		Sort();
                         chkPlayer[i].Left = UnoSize.WIDTH * i;
                 }
             }
-            else if (width > this.width * 2 && mnuScrollBar.Checked)
+            else if (width > this.width * 8 && mnuScrollBar.Checked)
             {
                 if (mnuAppearance.Checked)
                 {
@@ -2635,7 +2658,7 @@ play:   		Sort();
             else MovingCard.progress++;
 		}
 
-		private void TimPileToPlayers_Tick(object sender, EventArgs e) {
+        private void TimPileToPlayers_Tick(object sender, EventArgs e) {
             if (MovingCard.quickly)
                 lblMovingCards[0].Location = lblPlayers[MovingCard.player].Location;
             else
@@ -2729,7 +2752,7 @@ draw:
                         {
                             GameOver();
                         }
-                        if (!form.mnuDrawTilCanPlay.Checked && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
+                        if (MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                             MovingCard.drew = !MovingCard.unoDraw;
                         if (MovingCard.player == 0 && MovingCard.quickly)
                             Sort();
@@ -2738,7 +2761,7 @@ draw:
                             MovingCard.unoDraw = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
-                        else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawAllAndPlay.Checked && drawAll)
+                        else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawTilCanPlay.Checked && drawAll)
                         {
                             MovingCard.drew = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
@@ -2956,8 +2979,7 @@ arrived:
 				rdoUno.Checked = false;
                 MovingCard.unoDraw = true;
 			}
-            if (!form.mnuDrawTilCanPlay.Checked)
-                MovingCard.drew = false;
+            MovingCard.drew = false;
             if (MovingCard.unoDraw)
                 timUno.Enabled = true;
             else if (reversed)
@@ -2970,7 +2992,14 @@ arrived:
             }
             else
                 PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, GetDbp());
-		}
+        }
+
+        private void TimThinking_Tick(object sender, EventArgs e)
+        {
+            timThinking.Enabled = false;
+            string[] tag = timThinking.Tag.ToString().Split(char.Parse(","));
+            PlayersTurn(byte.Parse(tag[0]), true, int.Parse(tag[1]));
+        }
 
         private void TimTurn_Tick(object sender, EventArgs e)
         {

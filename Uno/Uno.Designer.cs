@@ -67,6 +67,7 @@
             this.pnlPlayer = new System.Windows.Forms.Panel();
             this.timWatch = new System.Windows.Forms.Timer(this.components);
             this.pnlMovingCards = new System.Windows.Forms.Panel();
+            this.timThinking = new System.Windows.Forms.Timer(this.components);
             this.mnuGame.SuspendLayout();
             this.pnlCtrl.SuspendLayout();
             this.SuspendLayout();
@@ -478,6 +479,12 @@
             this.pnlMovingCards.Size = new System.Drawing.Size(64, 99);
             this.pnlMovingCards.TabIndex = 12;
             // 
+            // timThinking
+            // 
+            this.timThinking.Interval = 1000;
+            this.timThinking.Tag = "4";
+            this.timThinking.Tick += new System.EventHandler(this.TimThinking_Tick);
+            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
@@ -558,6 +565,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuSaveGame;
         private System.Windows.Forms.Panel pnlMovingCards;
         private System.Windows.Forms.ToolStripMenuItem mnuAppearance;
+        private System.Windows.Forms.Timer timThinking;
     }
 }
 
