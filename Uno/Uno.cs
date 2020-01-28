@@ -297,25 +297,7 @@ namespace Uno
             }
             else if (quantityColor >= quantityNumber)
             {
-                if (!form.mnuPairs.Checked)
-                {
-                    int fq = int.MaxValue;
-                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
-                    {
-                        byte n = playlist[b];
-                        if (Players[player].cards[backColor, n] > 0)
-                        {
-                            int q = GetColorQuantityByNumber(player, n);
-                            if (0 < q && q < fq)
-                            {
-                                fq = q;
-                                bestCard.color = backColor;
-                                bestCard.number = n;
-                            }
-                        }
-                    }
-                }
-                else if (int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
+                if (!form.mnuPairs.Checked || int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
                 {
                     int mq = 0;
                     for (byte b = 0; b <= UnoNumber.BLANK; b++)
