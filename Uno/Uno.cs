@@ -698,7 +698,7 @@ deny:
                     w = UnoSize.WIDTH;
                 else
                     w = width / chkPlayer.ToArray().Length;
-                int i = (int)Math.Floor((double)e.X / w) + int.Parse(((CheckBox)sender).Tag + "");
+                int i = (int)((float)e.X / w) + int.Parse(((CheckBox)sender).Tag + "");
                 if (i >= 0 && i < chkPlayer.ToArray().Length)
                     switch (e.Button)
                     {
@@ -1138,13 +1138,13 @@ play:
                         }
                     }
                 }
-                string msg = (gameOver == 0 ? "你" : "Player" + gameOver) + " 赢了!\n" +
+                string msg = (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "赢了!\n" +
                     "\n" +
                     (form.mnuWatch.Checked ? "游戏时长\t" + lblWatch.Text + "\n" +
                     "\n" : "") +
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
-                    msg += "\n" + (p == 0 ? "你" : "Player" + p) + "\t" + GetPointsByPlayer(p);
+                    msg += "\n" + (p == 0 ? "你" : "玩家" + GetPlayerName(p)) + "\t" + GetPointsByPlayer(p);
                 if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
             else
@@ -1196,7 +1196,7 @@ play:
                         }
                     }
                 }
-                if (MessageBox.Show((gameOver == 0 ? "你" : "Player" + gameOver) + " 输了!\n" +
+                if (MessageBox.Show((gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n" +
                     (form.mnuWatch.Checked ? "\n" +
                     "游戏时长\t" + lblWatch.Text : ""), "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
@@ -1509,7 +1509,7 @@ play:
                             }
                             cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
                             i++;
-                            if (i % Math.Floor((double)width / UnoSize.WIDTH) == 0)
+                            if (i % (int)((float)width / UnoSize.WIDTH) == 0)
                             {
                                 cards += "\n";
                             }
@@ -1541,7 +1541,7 @@ play:
                             }
                             cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
                             i++;
-                            if (i % Math.Floor((double)width / UnoSize.WIDTH) == 0)
+                            if (i % (int)((float)width / UnoSize.WIDTH) == 0)
                             {
                                 cards += "\n";
                             }
@@ -1780,7 +1780,7 @@ gameOver:
                                 for (byte number = fromNumber; number <= toNumber; number++)
                                     Players[player].cards[color, number] = 0;
                             if (player == 0) Sort();
-                            Action(0, "已淸除 Player" + player + " 的手牌");
+                            Action(0, "已淸除玩家" + GetPlayerName(player) + "的手牌");
                             lblCounts[player].Text = PlayersCards(player).Length + "";
                             break;
                         case "/currard":
@@ -1831,7 +1831,7 @@ gameOver:
                             if (data[1] == "0")
                                 Sort();
                             lblCounts[int.Parse(data[1])].Text = PlayersCards(byte.Parse(data[1])).Length + "";
-                            Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予 Player" + data[1]);
+                            Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予玩家" + GetPlayerName(byte.Parse(data[1])));
                             break;
                         case "/help":
                         case "/?":
@@ -1948,7 +1948,7 @@ gameOver:
                                     break;
                                 default:
                                     skips[byte.Parse(data[1])] = int.Parse(data[2]);
-                                    Action(0, "跳过 Player" + data[1] + " " + data[2] + " 次");
+                                    Action(0, "跳过玩家" + GetPlayerName(byte.Parse(data[1])) + " " + data[2] + " 次");
                                     break;
                             }
                             break;
@@ -2223,11 +2223,11 @@ play:   		Sort();
                 {
                     for (int c = 1; c < lblMovingCards.Count; c++)
                     {
-                        lblMovingCards[c].Location = new Point(UnoSize.WIDTH * ((c - 1) % (swpcw / 2)),
-                            UnoSize.HEIGHT * (int)Math.Floor((decimal)(c - 1) / swpcw * 2));
+                        lblMovingCards[c].Location = new Point(UnoSize.WIDTH * (int)((c - 1f) % (swpcw / 2f)),
+                            UnoSize.HEIGHT * (int)((c - 1f) / swpcw * 2f));
                     }
-                    pnlMovingCards.Size = new Size(UnoSize.WIDTH * swpcw / 2,
-                        UnoSize.HEIGHT * (int)Math.Floor((decimal)(lblMovingCards.Count - 1) / swpcw * 2));
+                    pnlMovingCards.Size = new Size(UnoSize.WIDTH * (int)(swpcw / 2f),
+                        UnoSize.HEIGHT * (int)((lblMovingCards.Count - 1f) / swpcw * 2f));
                 }
                 else
                 {
@@ -2327,7 +2327,7 @@ play:   		Sort();
             {
                 if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
-                    Action(player, "玩家 " + GetPlayerName(player) + " 的回合");
+                    Action(player, "玩家" + GetPlayerName(player) + "的回合");
                     timThinking.Interval = (int)(2000 * Rnd());
                     timThinking.Tag = player + "," + dbp;
                     timThinking.Enabled = true;
@@ -2372,12 +2372,12 @@ play:   		Sort();
 
         void Sort() {
 			RemoveChkPlayer();
+			AddChkPlayer(PlayersCards(0).Length);
 			int i = 0;
             if (mnuByColor.Checked)
 			    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
                     for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
                         for (int c = 1; c <= Players[0].cards[color, number]; c++) {
-				            AddChkPlayer();
 				            chkPlayer[i].BackColor = GetColor(color);
                             chkPlayer[i].Text = GetNumber(number);
                             SetUsage(chkPlayer[i]);
@@ -2388,7 +2388,6 @@ play:   		Sort();
                     for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
                         for (int c = 1; c <= Players[0].cards[color, number]; c++)
                         {
-                            AddChkPlayer();
                             chkPlayer[i].BackColor = GetColor(color);
                             chkPlayer[i].Text = GetNumber(number);
                             SetUsage(chkPlayer[i]);
@@ -2396,17 +2395,17 @@ play:   		Sort();
                         }
             pnlPlayer.Width = chkPlayer.ToArray().Length * UnoSize.WIDTH;
             hPlayer.Visible = false;
-            int width = UnoSize.WIDTH * chkPlayer.ToArray().Length;
+            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.ToArray().Length;
             if (width <= this.width)
             {
                 pnlPlayer.Left = this.width / 2 - width / 2;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Left = UnoSize.WIDTH * i;
+                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
             }
             else if (width > this.width * 8 && mnuScrollBar.Checked)
             {
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Left = UnoSize.WIDTH * i;
+                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
                 hPlayer.Maximum = width - this.width;
                 hPlayer.Visible = true;
                 if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
@@ -2418,7 +2417,7 @@ play:   		Sort();
             {
                 pnlPlayer.Left = 0;
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Left = this.width / chkPlayer.ToArray().Length * i;
+                    chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
             }
             if (!form.Visible && chkPlayer.Count > 0)
             {
@@ -2625,7 +2624,7 @@ play:   		Sort();
                 timPileToCenter.Enabled = false;
                 lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                 MovingCard.playing = true;
-                reverse = Math.Floor(2 * Rnd()) == 0;
+                reverse = (int)(2f * Rnd()) == 0;
                 if (form.keys.Length == 0)
                 {
                     byte nextPlayer = NextPlayer((byte)(4 * Rnd()));
@@ -3036,7 +3035,7 @@ arrived:
         private void TimWatch_Tick(object sender, EventArgs e)
         {
             gametime++;
-            double h = Math.Floor(gametime / 3600.0), m = Math.Floor(gametime / 60.0);
+            int h = (int)(gametime / 3600f), m = (int)(gametime / 60f);
             lblWatch.Text = h + "°" + (m - h * 60) + "′" + (gametime - m * 60) + "″";
         }
 
