@@ -235,7 +235,7 @@ namespace Uno
             {
                 goto exit;
             }
-            int mostQuantity, quantity, quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
+            int quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
             if (backNumber == UnoNumber.NUMBER)
             {
                 for (byte b = 10; b >= 0 && b < byte.MaxValue; b--)
@@ -299,39 +299,43 @@ namespace Uno
             {
                 if (!form.mnuPairs.Checked)
                 {
+                    int fq = int.MaxValue;
                     for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
                         byte n = playlist[b];
                         if (Players[player].cards[backColor, n] > 0)
                         {
-                            bestCard.color = backColor;
-                            bestCard.number = n;
-                            break;
+                            int q = GetColorQuantityByNumber(player, n);
+                            if (0 < q && q < fq)
+                            {
+                                fq = q;
+                                bestCard.color = backColor;
+                                bestCard.number = n;
+                            }
                         }
                     }
                 }
                 else if (int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
                 {
-                    mostQuantity = 0;
+                    int mq = 0;
                     for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
                         byte n = playlist[b];
-                        if (Players[player].cards[backColor, n] <= 0)
+                        if (Players[player].cards[backColor, n] > 0)
                         {
-                            continue;
-                        }
-                        quantity = GetColorQuantityByNumber(player, n);
-                        if (quantity > mostQuantity)
-                        {
-                            mostQuantity = quantity;
-                            bestCard.color = backColor;
-                            bestCard.number = n;
+                            int q = GetColorQuantityByNumber(player, n);
+                            if (q > mq)
+                            {
+                                mq = q;
+                                bestCard.color = backColor;
+                                bestCard.number = n;
+                            }
                         }
                     }
                 }
                 else
                 {
-                    int fewestQuantity = 5;
+                    int fq = int.MaxValue;
                     for (byte b = 0; b <= UnoNumber.BLANK; b++)
                     {
                         byte n = playlist[b];
@@ -339,10 +343,10 @@ namespace Uno
                         {
                             continue;
                         }
-                         quantity = GetColorQuantityByNumber(player, n);
-                        if (0 < quantity && quantity < fewestQuantity)
+                        int q = GetColorQuantityByNumber(player, n);
+                        if (0 < q && q < fq)
                         {
-                            fewestQuantity = quantity;
+                            fq = q;
                             bestCard.color = backColor;
                             bestCard.number = n;
                         }
@@ -965,9 +969,11 @@ deny:
             for (byte i = 0; i < 4; i++) {
                 lblPlayers[i] = new Label();
 				Controls.Add(lblPlayers[i]);
+                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
                 lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                if (i > 0)
+                if (i > 0 && form.mnuCanShowCards.Checked)
                     lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
+                lblPlayers[i].ForeColor = Color.Black;
                 lblPlayers[i].Tag = i;
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
