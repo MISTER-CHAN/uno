@@ -888,6 +888,7 @@ deny:
 
         void DownpourDraw(byte player, int draw)
         {
+            Downpour.player = player;
             byte ons = 0;
             for (byte p = 0; p <= 3; p++)
                 if (lblPlayers[p].Visible && p != player)
@@ -2277,7 +2278,7 @@ play:   		Sort();
                 timTurn.Tag = "4,";
                 if (Downpour.count > 0)
                 {
-                    DownpourDraw(Downpour.player, Downpour.count);
+                    DownpourDraw(player, Downpour.count);
                     Downpour.count = 0;
                     return;
                 }
@@ -3004,7 +3005,6 @@ arrived:
                 PlayersTurn(MovingCard.player, true, GetDbp());
             else if (downpour > 0)
             {
-                Downpour.player = MovingCard.player;
                 Downpour.count = downpour;
                 PlayersTurn(MovingCard.player, true, GetDbp());
             }
