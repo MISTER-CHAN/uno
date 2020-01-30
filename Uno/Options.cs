@@ -19,12 +19,24 @@ namespace Uno {
 			InitializeComponent();
             mnuOptions.Font = new Font(mnuOptions.Font.FontFamily, mnuOptions.Font.Size * 2);
             Size = new Size(mnuQuit.Width * 8, mnuOptions.Height);
-            mnuLoadGame.Text = Interaction.GetSetting("UNO", "GAME", "SAVE", "KKKKKKKKK(空)").Split(char.Parse("K"))[8];
-            if (mnuLoadGame.Text == "(空)")
-                mnuLoadGame.Enabled = false;
-            mnuLoadRules.Text = Interaction.GetSetting("UNO", "GAME", "RULES", "KKKKKKKKKKKKKK(空)").Split(char.Parse("K"))[13];
-            if (mnuLoadRules.Text == "(空)")
-                mnuLoadRules.Enabled = false;
+            string s = Interaction.GetSetting("UNO", "GAME", "SAVE", "");
+            if (s != "")
+            {
+                mnuLoadGame.Text = s.Substring(s.LastIndexOf('K') + 1);
+                mnuLoadGame.Enabled = true;
+            }
+            s = Interaction.GetSetting("UNO", "GAME", "AUTO", "");
+            if (s != "")
+            {
+                mnuLoadAutosavedGame.Text = "(自動) " + s.Substring(s.LastIndexOf('K') + 1);
+                mnuLoadAutosavedGame.Enabled = true;
+            }
+            s = Interaction.GetSetting("UNO", "RULES", "SAVE", "");
+            if (s != "")
+            {
+                mnuLoadRules.Text = s.Substring(s.LastIndexOf('K') + 1);
+                mnuLoadRules.Enabled = true;
+            }
         }
 
         private void LoadGame(string save)
@@ -49,9 +61,9 @@ namespace Uno {
             mnuDos.Checked = bool.Parse(keys[23]);
             mnuCanShowCards.Checked = bool.Parse(keys[24]);
             mnuPairs.Checked = bool.Parse(keys[25]);
-            mnuStackDraw.Checked = bool.Parse(keys[26]);
+            mnuStacking.Checked = bool.Parse(keys[26]);
             mnuPlayOrDrawAll.Checked = bool.Parse(keys[27]);
-            mnuDrawTilCanPlay.Checked = bool.Parse(keys[28]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[28]);
             mnuDrawAllAndPlay.Checked = bool.Parse(keys[29]);
             mnuDrawAndPlay.Checked = bool.Parse(keys[30]);
             mnuChallenges.Checked = bool.Parse(keys[31]);
@@ -78,9 +90,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = true;
-            mnuStackDraw.Checked = true;
+            mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
-            mnuDrawTilCanPlay.Checked = true;
+            mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = true;
             mnuDrawAndPlay.Checked = true;
             mnuDoubleDraw.Checked = false;
@@ -171,9 +183,9 @@ namespace Uno {
             mnuWildHitfire.Checked = true;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
-            mnuStackDraw.Checked = true;
+            mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
-            mnuDrawTilCanPlay.Checked = true;
+            mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = false;
             mnuDrawAndPlay.Checked = true;
             mnuChallenges.Checked = false;
@@ -201,9 +213,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
-            mnuStackDraw.Checked = true;
+            mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
-            mnuDrawTilCanPlay.Checked = true;
+            mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = true;
             mnuDrawAndPlay.Checked = true;
             mnuChallenges.Checked = false;
@@ -252,17 +264,23 @@ namespace Uno {
                 }
         }
 
+        private void MnuLoadAutosavedGame_Click(object sender, EventArgs e)
+        {
+            mnuLoad.Enabled = false;
+            LoadGame(Interaction.GetSetting("UNO", "GAME", "AUTO"));
+            MnuStart_Click(mnuStart, new EventArgs());
+        }
+
         private void MnuLoadGame_Click(object sender, EventArgs e)
         {
             mnuLoad.Enabled = false;
-            txtDealt.Text = "1";
             LoadGame(Interaction.GetSetting("UNO", "GAME", "SAVE"));
             MnuStart_Click(mnuStart, new EventArgs());
         }
 
         private void MnuLoadRules_Click(object sender, EventArgs e)
         {
-            LoadGame(Interaction.GetSetting("UNO", "GAME", "RULES"));
+            LoadGame(Interaction.GetSetting("UNO", "RULES", "SAVE"));
         }
 
         private void MnuNew_Click(object sender, EventArgs e)
@@ -287,8 +305,9 @@ namespace Uno {
 
         private void MnuSaveRules_Click(object sender, EventArgs e)
         {
-            Interaction.SaveSetting("UNO", "GAME", "RULES", "KKKKKKKKK" + SaveRules());
-            mnuLoadRules.Text = txtDealt.Text;
+            Interaction.SaveSetting("UNO", "RULES", "SAVE", "KKKKKKKKK" + SaveRules());
+            mnuLoadRules.Text = DateAndTime.Now.ToString();
+            mnuLoadRules.Enabled = true;
         }
 
         private void MnuSkip_Click(object sender, EventArgs e)
@@ -310,9 +329,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = false;
-            mnuStackDraw.Checked = false;
+            mnuStacking.Checked = false;
             mnuPlayOrDrawAll.Checked = false;
-            mnuDrawTilCanPlay.Checked = false;
+            mnuDrawToMatch.Checked = false;
             mnuDrawAllAndPlay.Checked = false;
             mnuDrawAndPlay.Checked = true;
             mnuDoubleDraw.Checked = false;
@@ -376,9 +395,9 @@ namespace Uno {
             s += mnuDos.Checked + "K";
             s += mnuCanShowCards.Checked + "K";
             s += mnuPairs.Checked + "K";
-            s += mnuStackDraw.Checked + "K";
+            s += mnuStacking.Checked + "K";
             s += mnuPlayOrDrawAll.Checked + "K";
-            s += mnuDrawTilCanPlay.Checked + "K";
+            s += mnuDrawToMatch.Checked + "K";
             s += mnuDrawAllAndPlay.Checked + "K";
             s += mnuDrawAndPlay.Checked + "K";
             s += mnuChallenges.Checked + "K";
@@ -390,7 +409,8 @@ namespace Uno {
             s += mnuOneWinner.Checked + "K";
             s += mnuOneLoser.Checked + "K";
             s += mnuUno.Checked + "K";
-            s += mnuCheat.Checked;
+            s += mnuCheat.Checked + "K";
+            s += DateAndTime.Now.ToString();
             return s;
         }
 

@@ -231,7 +231,7 @@ namespace Uno
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
             Card bestCard = new Card();
             List<Card> cards = new List<Card>();
-            if (!form.mnuStackDraw.Checked && int.Parse(lblDraw.Text) > 0)
+            if (!form.mnuStacking.Checked && int.Parse(lblDraw.Text) > 0)
             {
                 goto exit;
             }
@@ -544,7 +544,7 @@ exit:
         {
             if (canPlay)
                 goto accept;
-            if (!form.mnuStackDraw.Checked && int.Parse(lblDraw.Text) > 0)
+            if (!form.mnuStacking.Checked && int.Parse(lblDraw.Text) > 0)
             {
                 goto deny;
             }
@@ -904,7 +904,7 @@ deny:
         void Draw(byte player)
         {
             CheckPile();
-            if ((!MovingCard.drew || form.mnuDrawTilCanPlay.Checked) && int.Parse(lblPile.Text) > 0)
+            if ((!MovingCard.drew || form.mnuDrawToMatch.Checked) && int.Parse(lblPile.Text) > 0)
             {
                 Action(player, "摸牌");
                 if (player == 0)
@@ -2312,8 +2312,6 @@ play:   		Sort();
             } 
             else if (player == 0 && !isAutomatic && (skip <= 0 || skips[0] <= 0))
             {
-                pnlCtrl.Visible = turn;
-                mnuSaveGame.Enabled = turn;
                 if (turn)
                 {
                     MovingCard.dbp = 0;
@@ -2323,6 +2321,10 @@ play:   		Sort();
                     if (!form.Visible)
                         chkPlayer[0].Focus();
                 }
+                pnlCtrl.Visible = turn;
+                mnuSaveGame.Enabled = turn;
+                if (form.mnuAutoSave.Checked)
+                    Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
             }
             else if (turn)
             {
@@ -2783,7 +2785,7 @@ draw:
                             MovingCard.unoDraw = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
-                        else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawTilCanPlay.Checked && drawAll)
+                        else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawToMatch.Checked && drawAll)
                         {
                             MovingCard.drew = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
