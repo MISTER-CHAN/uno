@@ -116,8 +116,7 @@ namespace Uno
         readonly Cards Pile = new Cards();
         readonly Cards[] Players = new Cards[4];
         readonly Image imgUno;
-        private readonly int distance = 20;
-        private int gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
+        private int distance = 20, gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
@@ -937,16 +936,7 @@ deny:
             this.form = form;
             imgUno = Properties.Resources.uno;
             lblPile.Top = mnuGame.Height;
-            distance = form.animation;
-            int interval = form.animation * 50;
-            if (interval <= 0)
-            {
-                distance = 1;
-                interval = 1;
-            }
-            timTurn.Interval = interval;
-            timChallenge.Interval = interval;
-            timUno.Interval = interval;
+            SetInterval(form.animation);
             if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
             if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
             lblPile.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1939,9 +1929,17 @@ gameOver:
                             switch (data.Length)
                             {
                                 case 1:
-                                    PlayersTurn(0, false);
-                                    PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, GetDbp());
-                                    Action(0, "跳过");
+                                    if (pnlCtrl.Visible)
+                                    {
+                                        PlayersTurn(0, false);
+                                        PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, GetDbp());
+                                        Action(0, "跳过");
+                                    }
+                                    else
+                                    {
+                                        SetInterval(0);
+                                        Action(0, "跳过動畫");
+                                    }
                                     break;
                                 case 2:
                                     skip = int.Parse(data[1]);
@@ -2320,6 +2318,8 @@ play:   		Sort();
                     rdoUno.Checked = false;
                     if (!form.Visible)
                         chkPlayer[0].Focus();
+                    if (distance == 1 && form.animation > 0)
+                        SetInterval(form.animation);
                 }
                 pnlCtrl.Visible = turn;
                 mnuSaveGame.Enabled = turn;
@@ -2331,7 +2331,7 @@ play:   		Sort();
                 if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
                     Action(player, "玩家" + GetPlayerName(player) + "的回合");
-                    timThinking.Interval = (int)(2000 * Rnd()) + 1;
+                    timThinking.Interval = (int)(distance * 100 * Rnd()) + 1;
                     timThinking.Tag = player + "," + dbp;
                     timThinking.Enabled = true;
                     return;
@@ -2591,6 +2591,20 @@ play:   		Sort();
             s += gametime + "K"; // 8
             s += form.SaveRules();
             return s;
+        }
+
+        private void SetInterval(int distance)
+        {
+            this.distance = distance;
+            int interval = distance * 50;
+            if (interval <= 0)
+            {
+                this.distance = 1;
+                interval = 1;
+            }
+            timTurn.Interval = interval;
+            timChallenge.Interval = interval;
+            timUno.Interval = interval;
         }
 
         private void SetUsage(Control card)
