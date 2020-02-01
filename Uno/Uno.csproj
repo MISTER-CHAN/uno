@@ -133,9 +133,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\uno.png" />
     <None Include="Resources\uno_pile.png" />
     <None Include="Resources\uno_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\uno.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
