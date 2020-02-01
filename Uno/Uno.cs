@@ -489,7 +489,7 @@ exit:
                 if (cards.Count <= 0)
                 {
                     bestCard = GetBestCard();
-                    if (bestCard != new Card())
+                    if (bestCard != null)
                     {
                         for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
                             for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
@@ -1085,6 +1085,32 @@ deny:
             if (MovingCard.playing)
             {
                 byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
+                if (backNumber == UnoNumber.WILD_DRAW_4 && !form.mnuPlayOrDrawAll.Checked)
+                {
+                    if (Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
+                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
+                    else
+                        return null;
+                }
+                if (backNumber == UnoNumber.DRAW_2 && !form.mnuPlayOrDrawAll.Checked)
+                {
+                    if (Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
+                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
+                    else
+                    {
+                        for (byte b = UnoColor.RED; b <= UnoColor.BLUE; b++)
+                            if (Pile.cards[b, UnoNumber.DRAW_2] > 0)
+                                return new Card().FromCard(b, UnoNumber.DRAW_2);
+                        return null;
+                    }
+                }
+                if (backNumber == UnoNumber.WILD_HITFIRE && !form.mnuPlayOrDrawAll.Checked)
+                {
+                    if (Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] > 0)
+                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
+                    else
+                        return null;
+                }
                 for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
                 {
                     byte n = mvcList[b];
@@ -1124,7 +1150,7 @@ deny:
                     }
                 }
             }
-            return new Card();
+            return null;
         }
 
 		Color GetColor(byte id) {
@@ -2617,6 +2643,8 @@ gameOver:
                 else
                 {
                     rndCard = GetBestCard();
+                    if (rndCard == null)
+                        rndCard = pile[(int)(pile.Length * Rnd())];
                     if (MovingCard.player == 0 && !isAutomatic)
                         areCheating[0] = false;
                 }
