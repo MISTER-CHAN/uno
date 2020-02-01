@@ -13,10 +13,14 @@ using System.Windows.Forms;
 namespace Uno
 {
     public partial class Uno : Form {
-		public class Card {
+        public class Card {
             public byte color = UnoColor.MAX_VALUE;
             public byte number = UnoNumber.MAX_VALUE;
-		}
+            public Card FromCard(byte color, byte number)
+            {
+                return new Card() { color = color, number = number };
+            }
+        }
 
 		public class Cards {
 			public int[,] cards = new int[UnoColor.MAX_VALUE + 1, UnoNumber.MAX_VALUE + 1];
@@ -116,6 +120,7 @@ namespace Uno
         };
         readonly Cards Pile = new Cards();
         readonly Cards[] Players = new Cards[4];
+        Control sourceControl;
         readonly Image imgUno;
         private int distance = 20, gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
@@ -150,51 +155,24 @@ namespace Uno
                 chkPlayer[length].BackColorChanged += Card_BackColorChanged;
                 chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
 				chkPlayer[length].BringToFront();
-				chkPlayer[length].CheckedChanged += new EventHandler(ChkPlayer_CheckedChanged);
-                chkPlayer[length].Enter += new EventHandler(ChkPlayer_Enter);
+				chkPlayer[length].CheckedChanged += ChkPlayer_CheckedChanged;
+                if (form.mnuHacker.Checked || form.mnuCheat.Checked)
+                    chkPlayer[length].ContextMenuStrip = mnuCheating;
+                chkPlayer[length].Enter += ChkPlayer_Enter;
                 chkPlayer[length].FlatStyle = FlatStyle.Flat;
                 chkPlayer[length].ForeColor = Color.White;
-                chkPlayer[length].KeyDown += new KeyEventHandler(Control_KeyDown);
-                chkPlayer[length].MouseDown += new MouseEventHandler(ChkPlayer_MouseDown);
-                chkPlayer[length].MouseLeave += new EventHandler(ChkPlayer_MouseLeave);
-                chkPlayer[length].MouseMove += new MouseEventHandler(ChkPlayer_MouseMove);
-                chkPlayer[length].MouseUp += new MouseEventHandler(ChkPlayer_MouseUp);
-                chkPlayer[length].MouseWheel += new MouseEventHandler(ChkPlayer_MouseWheel);
+                chkPlayer[length].KeyDown += Control_KeyDown;
+                chkPlayer[length].MouseDown += ChkPlayer_MouseDown;
+                chkPlayer[length].MouseLeave += ChkPlayer_MouseLeave;
+                chkPlayer[length].MouseMove += ChkPlayer_MouseMove;
+                chkPlayer[length].MouseUp += ChkPlayer_MouseUp;
+                chkPlayer[length].MouseWheel += ChkPlayer_MouseWheel;
                 chkPlayer[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 chkPlayer[length].Tag = length;
                 chkPlayer[length].TextChanged += Card_TextChanged;
 				chkPlayer[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
-
-        private void Card_BackColorChanged(object sender, EventArgs e)
-        {
-            Control c = (Control)sender;
-            c.ForeColor = c.BackColor;
-        }
-
-        private void Card_TextChanged(object sender, EventArgs e)
-        {
-            Control control = (Control)sender;
-            if (mnuAppearance.Checked)
-            {
-                byte b = GetNumberId(control.Text);
-                Image image = new Bitmap(120, 160);
-                Graphics graphics = Graphics.FromImage(image);
-                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), b * 120, GetColorId(control.BackColor) * 160, 120, 160, GraphicsUnit.Pixel);
-                control.BackgroundImage = image;
-                if (control.Text != form.txtBlankText.Text)
-                {
-                    control.Font = new Font(control.Font.FontFamily, 1);
-                }
-                else
-                {
-                    control.Font = new Font("MS Gothic", 42);
-                }
-                graphics.Flush();
-                graphics.Dispose();
-            }
-        }
 
         void AddDraw(int count)
         {
@@ -218,8 +196,7 @@ namespace Uno
                 label[length].BringToFront();
                 label[length].ForeColor = Color.White;
                 label[length].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
-                label[length].MouseEnter += new EventHandler(Label_MouseEnter);
-                label[length].MouseLeave += new EventHandler(Label_MouseLeave);
+                label[length].MouseLeave += Label_MouseLeave;
                 label[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 label[length].Text = UnoNumberName.NULL;
                 label[length].TextChanged += Card_TextChanged;
@@ -507,14 +484,23 @@ number_color:
                     cards.Add(bestCard);
             }
 exit:
+            if (form.mnuHacker.Checked)
+            {
+                if (cards.Count <= 0)
+                {
+                    bestCard = GetBestCard();
+                    if (bestCard != new Card())
+                    {
+                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                            for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
+                                if (Players[player].cards[c, n] > 0)
+                                    Players[player].cards[c, n]--;
+                        Players[player].cards[bestCard.color, bestCard.number]++;
+                        return Ai(player);
+                    }
+                }
+            }
             return cards.ToArray();
-		}
-
-		private void BtnDraw_Click(object sender, EventArgs e) {
-			Draw(0);
-		}
-
-		private void BtnPlay_Click(object sender, EventArgs e) {
 		}
 
 		bool CanPlay(List<Card> card, byte color)
@@ -622,9 +608,77 @@ accept:
 deny:
             Action(0, "你不能这样出牌");
             return false;
-		}
+        }
 
-		private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
+        private void Card_BackColorChanged(object sender, EventArgs e)
+        {
+            Control c = (Control)sender;
+            c.ForeColor = c.BackColor;
+            Card_TextChanged(sender, e);
+        }
+
+        private void Card_TextChanged(object sender, EventArgs e)
+        {
+            Control control = (Control)sender;
+            if (mnuAppearance.Checked)
+            {
+                byte b = GetNumberId(control.Text);
+                Image image = new Bitmap(120, 160);
+                Graphics graphics = Graphics.FromImage(image);
+                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), b * 120, GetColorId(control.BackColor) * 160, 120, 160, GraphicsUnit.Pixel);
+                control.BackgroundImage = image;
+                if (control.Text != form.txtBlankText.Text)
+                {
+                    control.Font = new Font(control.Font.FontFamily, 1);
+                }
+                else
+                {
+                    control.Font = new Font("MS Gothic", 42);
+                }
+                graphics.Flush();
+                graphics.Dispose();
+            }
+        }
+
+        void CheckPile()
+        {
+            if (int.Parse(lblPile.Text) <= 0)
+            {
+                bool btc = timPileToCenter.Enabled, btp = timPileToPlayers.Enabled;
+                if (btc) timPileToCenter.Enabled = false;
+                if (btp) timPileToPlayers.Enabled = false;
+                if (MessageBox.Show("牌已用尽, 使用废牌堆的牌?", "牌已用尽", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                {
+                    RefillPile();
+                    if (lblPile.Text == "0")
+                    {
+                        DialogResult result = MessageBox.Show("废牌堆无牌!", "牌已用尽", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
+                        switch (result)
+                        {
+                            default:
+                                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+                                Application.Exit();
+                                break;
+                            case DialogResult.Retry:
+                                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+                                Application.Restart();
+                                break;
+                            case DialogResult.Ignore:
+                                lblDraw.Text = "0";
+                                MovingCard.dbp = 0;
+                                MovingCard.downpour = -1;
+                                break;
+                        }
+                    }
+                    timPileToCenter.Enabled = btc;
+                    timPileToPlayers.Enabled = btp;
+                }
+                else
+                    Close();
+            }
+        }
+
+        private void ChkPlayer_CheckedChanged(object sender, EventArgs e) {
 			int index = (int)((CheckBox) sender).Tag;
             if (mnuAppearance.Checked)
             {
@@ -1022,6 +1076,53 @@ deny:
             Application.Restart();
         }
 
+        Card GetBestCard()
+        {
+            if (MovingCard.playing)
+            {
+                byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
+                for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                {
+                    byte n = mvcList[b];
+                    if (Pile.cards[UnoColor.BLACK, n] > 0)
+                    {
+                        return new Card().FromCard(UnoColor.BLACK, n);
+                    }
+                }
+                if (Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
+                {
+                    return new Card().FromCard(UnoColor.MAGENTA, UnoNumber.BLANK);
+                }
+                for (byte c = 0; c < UnoColor.BLACK; c++)
+                {
+                    if (Pile.cards[c, backNumber] > 0)
+                    {
+                        return new Card().FromCard(c, backNumber);
+                    }
+                }
+                for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                {
+                    byte n = mvcList[b];
+                    if (Pile.cards[backColor, n] > 0)
+                    {
+                        return new Card().FromCard(backColor, n);
+                    }
+                }
+            }
+            for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+            {
+                byte n = mvcList[b];
+                for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                {
+                    if (Pile.cards[c, n] > 0)
+                    {
+                        return new Card().FromCard(c, n);
+                    }
+                }
+            }
+            return new Card();
+        }
+
 		Color GetColor(byte id) {
             return id switch
             {
@@ -1371,48 +1472,6 @@ deny:
             }
         }
 
-        void CheckPile()
-        {
-            if (int.Parse(lblPile.Text) <= 0)
-            {
-                bool btc = timPileToCenter.Enabled, btp = timPileToPlayers.Enabled;
-                if (btc) timPileToCenter.Enabled = false;
-                if (btp) timPileToPlayers.Enabled = false;
-                if (MessageBox.Show("牌已用尽, 使用废牌堆的牌?", "牌已用尽", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-                {
-                    RefillPile();
-                    if (lblPile.Text == "0")
-                    {
-                        DialogResult result = MessageBox.Show("废牌堆无牌!", "牌已用尽", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
-                        switch (result)
-                        {
-                            default:
-                                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
-                                Application.Exit();
-                                break;
-                            case DialogResult.Retry:
-                                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
-                                Application.Restart();
-                                break;
-                            case DialogResult.Ignore:
-                                lblDraw.Text = "0";
-                                MovingCard.dbp = 0;
-                                MovingCard.downpour = -1;
-                                break;
-                        }
-                    }
-                    timPileToCenter.Enabled = btc;
-                    timPileToPlayers.Enabled = btp;
-                }
-                else
-                    Close();
-            }
-        }
-
-        private void Label_MouseEnter(object sender, EventArgs e)
-        {
-        }
-
         void Label_MouseLeave(object sender, EventArgs e)
         {
             toolTip.Hide(this);
@@ -1553,7 +1612,7 @@ gameOver:
             string cmd = Interaction.InputBox(">", "Chat");
             int count = 0;
             cmd = cmd.Trim();
-            while (cmd.IndexOf("  ") > -1)
+            while (cmd.Contains("  "))
                 cmd = cmd.Replace("  ", " ");
             if (cmd == "")
                 return;
@@ -1829,7 +1888,35 @@ gameOver:
 
         private void MnuCheat_Click(object sender, EventArgs e)
         {
-            areCheating[0] = true;
+            Control control = mnuCheating.SourceControl;
+            if (control != null)
+                sourceControl = control;
+            if (control.BackColor == Color.White)
+            {
+                areCheating[0] = true;
+            }
+            else
+            {
+                mnuCheating.Show();
+                mnuColor.Visible = true;
+                mnuNumber.Visible = true;
+                mnuCheat.ShowDropDown();
+            }
+        }
+
+        private void MnuCheating_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            mnuColor.Visible = false;
+            mnuNumber.Visible = false;
+        }
+
+        private void MnuColor_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            Control control = sourceControl;
+            Players[0].cards[GetColorId(control.BackColor), GetNumberId(control.Text)]--;
+            Players[0].cards[(byte)menu.Tag, GetNumberId(control.Text)]++;
+            control.BackColor = GetColor((byte)menu.Tag);
         }
 
         private void MnuContent_Click(object sender, EventArgs e)
@@ -1852,6 +1939,15 @@ gameOver:
                 "喊 UNO!\tNumpad-\n" +
                 "聊天\tT\n" +
                 "指令\t/\n", "按键说明", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void MnuNumber_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menu = (ToolStripMenuItem)sender;
+            Control control = sourceControl;
+            Players[0].cards[GetColorId(control.BackColor), GetNumberId(control.Text)]--;
+            Players[0].cards[GetColorId(control.BackColor), (byte)menu.Tag]++;
+            control.Text = GetNumber((byte)menu.Tag);
         }
 
         private void MnuNew_Click(object sender, EventArgs e)
@@ -2507,65 +2603,18 @@ gameOver:
             if (lblMovingCards[0].Left >= lblPlayers[MovingCard.player].Left && lblMovingCards[0].Top >= lblPlayers[MovingCard.player].Top)
             {
                 Card[] pile = GetPile();
-                Card rndCard = new Card();
+                Card rndCard;
                 if (!areCheating[MovingCard.player])
                 {
                     rndCard = pile[(int)(pile.Length * Rnd())];
                 }
                 else
                 {
+                    rndCard = GetBestCard();
                     if (MovingCard.player == 0)
                         areCheating[0] = false;
-                    if (MovingCard.playing)
-                    {
-                        byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
-                        for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
-                        {
-                            byte n = mvcList[b];
-                            if (Pile.cards[UnoColor.BLACK, n] > 0)
-                            {
-                                rndCard.color = UnoColor.BLACK; rndCard.number = n;
-                                goto end_rnd_card;
-                            }
-                        }
-                        if (Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
-                        {
-                            rndCard.color = UnoColor.MAGENTA; rndCard.number = UnoNumber.BLANK;
-                            goto end_rnd_card;
-                        }
-                        for (byte c = 0; c < UnoColor.BLACK; c++)
-                        {
-                            if (Pile.cards[c, backNumber] > 0)
-                            {
-                                rndCard.color = c; rndCard.number = backNumber;
-                                goto end_rnd_card;
-                            }
-                        }
-                        for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
-                        {
-                            byte n = mvcList[b];
-                            if (Pile.cards[backColor, n] > 0)
-                            {
-                                rndCard.color = backColor; rndCard.number = n;
-                                goto end_rnd_card;
-                            }
-                        }
-                    }
-                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
-                    {
-                        byte n = mvcList[b];
-                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
-                        {
-                            if (Pile.cards[c, n] > 0)
-                            {
-                                rndCard.color = c; rndCard.number = n;
-                                goto end_rnd_card;
-                            }
-                        }
-                    }
                 }
-end_rnd_card:
-				Pile.cards[rndCard.color, rndCard.number]--;
+                Pile.cards[rndCard.color, rndCard.number]--;
 				lblPile.Text = pile.Length - 1 + "";
                 Players[MovingCard.player].cards[rndCard.color, rndCard.number]++;
                 lblCounts[MovingCard.player].Text = PlayersCards(MovingCard.player).Length + "";
@@ -2917,13 +2966,37 @@ arrived:
             lblCards[0].BackColor = Color.White;
             ResizeForm();
             SetInterval(form.animation);
-            if (form.mnuMaster.Checked)
+            if (form.mnuPro.Checked || form.mnuHacker.Checked)
             {
                 for (int i = 1; i < 4; i++)
                     areCheating[i] = true;
             }
-            if (form.mnuMaster.Checked || form.mnuCheat.Checked)
+            if (form.mnuPro.Checked || form.mnuHacker.Checked || form.mnuCheat.Checked)
                 lblPile.ContextMenuStrip = mnuCheating;
+            if (form.mnuHacker.Checked || form.mnuCheat.Checked)
+            {
+                for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                {
+                    ToolStripMenuItem menu = new ToolStripMenuItem
+                    {
+                        Tag = c,
+                        Text = GetColorName(c)
+                    };
+                    menu.Click += MnuColor_Click;
+                    mnuColor.DropDownItems.Add(menu);
+                    
+                }
+                for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
+                {
+                    ToolStripMenuItem menu = new ToolStripMenuItem
+                    {
+                        Tag = n,
+                        Text = GetNumberName(n)
+                    };
+                    menu.Click += MnuNumber_Click;
+                    mnuNumber.DropDownItems.Add(menu);
+                }
+            }
             int decks = int.Parse(form.txtDecks.Text);
             for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
             {

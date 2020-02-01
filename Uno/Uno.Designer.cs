@@ -61,13 +61,15 @@
             this.pnlMovingCards = new System.Windows.Forms.Panel();
             this.timThinking = new System.Windows.Forms.Timer(this.components);
             this.rdoUno = new System.Windows.Forms.RadioButton();
+            this.mnuColor = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNumber = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblPile
             // 
-            this.lblPile.BackColor = System.Drawing.Color.Black;
+            this.lblPile.BackColor = System.Drawing.Color.White;
             this.lblPile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPile.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPile.ForeColor = System.Drawing.Color.White;
@@ -86,9 +88,13 @@
             this.mnuCheat});
             this.mnuCheating.Name = "mnuCheating";
             this.mnuCheating.Size = new System.Drawing.Size(181, 48);
+            this.mnuCheating.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MnuCheating_Closed);
             // 
             // mnuCheat
             // 
+            this.mnuCheat.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuColor,
+            this.mnuNumber});
             this.mnuCheat.Name = "mnuCheat";
             this.mnuCheat.Size = new System.Drawing.Size(180, 22);
             this.mnuCheat.Text = "出千";
@@ -387,6 +393,20 @@
             this.rdoUno.Visible = false;
             this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
+            // mnuColor
+            // 
+            this.mnuColor.Name = "mnuColor";
+            this.mnuColor.Size = new System.Drawing.Size(180, 22);
+            this.mnuColor.Text = "顏色";
+            this.mnuColor.Visible = false;
+            // 
+            // mnuNumber
+            // 
+            this.mnuNumber.Name = "mnuNumber";
+            this.mnuNumber.Size = new System.Drawing.Size(180, 22);
+            this.mnuNumber.Text = "數字";
+            this.mnuNumber.Visible = false;
+            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
@@ -461,6 +481,8 @@
         private System.Windows.Forms.RadioButton rdoUno;
         private System.Windows.Forms.ContextMenuStrip mnuCheating;
         private System.Windows.Forms.ToolStripMenuItem mnuCheat;
+        private System.Windows.Forms.ToolStripMenuItem mnuColor;
+        private System.Windows.Forms.ToolStripMenuItem mnuNumber;
     }
 }
 

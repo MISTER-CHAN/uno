@@ -51,9 +51,10 @@
             this.txtDealt = new System.Windows.Forms.ToolStripTextBox();
             this.mnuDecks = new System.Windows.Forms.ToolStripMenuItem();
             this.txtDecks = new System.Windows.Forms.ToolStripTextBox();
-            this.mnuBot = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDifficulty = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBeginner = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMaster = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPro = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHacker = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCards = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRygbBlank = new System.Windows.Forms.ToolStripMenuItem();
@@ -280,7 +281,7 @@
             this.mnuOns,
             this.mnuDealt,
             this.mnuDecks,
-            this.mnuBot});
+            this.mnuDifficulty});
             this.mnuPlayer.Name = "mnuPlayer";
             this.mnuPlayer.Size = new System.Drawing.Size(43, 20);
             this.mnuPlayer.Text = "玩家";
@@ -294,7 +295,7 @@
             this.mnuPlayer2,
             this.mnuPlayer3});
             this.mnuOns.Name = "mnuOns";
-            this.mnuOns.Size = new System.Drawing.Size(170, 22);
+            this.mnuOns.Size = new System.Drawing.Size(180, 22);
             this.mnuOns.Text = "玩家";
             // 
             // mnuPlayer0
@@ -338,7 +339,7 @@
             this.mnuDealt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDealt});
             this.mnuDealt.Name = "mnuDealt";
-            this.mnuDealt.Size = new System.Drawing.Size(170, 22);
+            this.mnuDealt.Size = new System.Drawing.Size(180, 22);
             this.mnuDealt.Text = "每玩家牌数（张）";
             // 
             // txtDealt
@@ -353,7 +354,7 @@
             this.mnuDecks.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDecks});
             this.mnuDecks.Name = "mnuDecks";
-            this.mnuDecks.Size = new System.Drawing.Size(170, 22);
+            this.mnuDecks.Size = new System.Drawing.Size(180, 22);
             this.mnuDecks.Text = "总牌数（副）";
             // 
             // txtDecks
@@ -363,30 +364,38 @@
             this.txtDecks.Text = "1";
             this.txtDecks.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // mnuBot
+            // mnuDifficulty
             // 
-            this.mnuBot.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDifficulty.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBeginner,
-            this.mnuMaster});
-            this.mnuBot.Name = "mnuBot";
-            this.mnuBot.Size = new System.Drawing.Size(170, 22);
-            this.mnuBot.Text = "機器人水平";
+            this.mnuPro,
+            this.mnuHacker});
+            this.mnuDifficulty.Name = "mnuDifficulty";
+            this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
+            this.mnuDifficulty.Text = "機器人水平";
             // 
             // mnuBeginner
             // 
             this.mnuBeginner.Checked = true;
             this.mnuBeginner.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuBeginner.Name = "mnuBeginner";
-            this.mnuBeginner.Size = new System.Drawing.Size(98, 22);
+            this.mnuBeginner.Size = new System.Drawing.Size(180, 22);
             this.mnuBeginner.Text = "新手";
-            this.mnuBeginner.Click += new System.EventHandler(this.MnuBot_Click);
+            this.mnuBeginner.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
-            // mnuMaster
+            // mnuPro
             // 
-            this.mnuMaster.Name = "mnuMaster";
-            this.mnuMaster.Size = new System.Drawing.Size(98, 22);
-            this.mnuMaster.Text = "賭神";
-            this.mnuMaster.Click += new System.EventHandler(this.MnuBot_Click);
+            this.mnuPro.Name = "mnuPro";
+            this.mnuPro.Size = new System.Drawing.Size(180, 22);
+            this.mnuPro.Text = "賭神";
+            this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
+            // 
+            // mnuHacker
+            // 
+            this.mnuHacker.Name = "mnuHacker";
+            this.mnuHacker.Size = new System.Drawing.Size(180, 22);
+            this.mnuHacker.Text = "神仙";
+            this.mnuHacker.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // mnuCards
             // 
@@ -776,7 +785,7 @@
             this.mnuWatch.Checked = true;
             this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuWatch.Name = "mnuWatch";
-            this.mnuWatch.Size = new System.Drawing.Size(180, 22);
+            this.mnuWatch.Size = new System.Drawing.Size(158, 22);
             this.mnuWatch.Text = "计时";
             this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -785,20 +794,20 @@
             this.mnuAutoSave.Checked = true;
             this.mnuAutoSave.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAutoSave.Name = "mnuAutoSave";
-            this.mnuAutoSave.Size = new System.Drawing.Size(180, 22);
+            this.mnuAutoSave.Size = new System.Drawing.Size(158, 22);
             this.mnuAutoSave.Text = "自動存檔";
             // 
             // mnuCheat
             // 
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheat.Size = new System.Drawing.Size(158, 22);
             this.mnuCheat.Text = "允许作弊";
             this.mnuCheat.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuSeed
             // 
             this.mnuSeed.Name = "mnuSeed";
-            this.mnuSeed.Size = new System.Drawing.Size(180, 22);
+            this.mnuSeed.Size = new System.Drawing.Size(158, 22);
             this.mnuSeed.Text = "不洗牌";
             this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -811,7 +820,7 @@
             this.mnuAnim15,
             this.mnuAnim20});
             this.mnuAnimation.Name = "mnuAnimation";
-            this.mnuAnimation.Size = new System.Drawing.Size(180, 22);
+            this.mnuAnimation.Size = new System.Drawing.Size(158, 22);
             this.mnuAnimation.Text = "动画长度";
             // 
             // mnuAnim0
@@ -861,7 +870,7 @@
             this.mnuThinking.Checked = true;
             this.mnuThinking.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuThinking.Name = "mnuThinking";
-            this.mnuThinking.Size = new System.Drawing.Size(180, 22);
+            this.mnuThinking.Size = new System.Drawing.Size(158, 22);
             this.mnuThinking.Text = "思考中的機器人";
             this.mnuThinking.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -873,7 +882,7 @@
             this.mnuRNGCryptoServiceProvider,
             this.mnuMembership});
             this.mnuRnd.Name = "mnuRnd";
-            this.mnuRnd.Size = new System.Drawing.Size(180, 22);
+            this.mnuRnd.Size = new System.Drawing.Size(158, 22);
             this.mnuRnd.Text = "洗牌人";
             // 
             // mnuRandom
@@ -1020,9 +1029,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuAnim15;
         public System.Windows.Forms.ToolStripMenuItem mnuStacking;
         public System.Windows.Forms.ToolStripMenuItem mnuUno;
-        private System.Windows.Forms.ToolStripMenuItem mnuBot;
+        private System.Windows.Forms.ToolStripMenuItem mnuDifficulty;
         public System.Windows.Forms.ToolStripMenuItem mnuBeginner;
-        public System.Windows.Forms.ToolStripMenuItem mnuMaster;
+        public System.Windows.Forms.ToolStripMenuItem mnuPro;
         private System.Windows.Forms.ToolStripMenuItem mnuRnd;
         public System.Windows.Forms.ToolStripMenuItem mnuRandom;
         public System.Windows.Forms.ToolStripMenuItem mnuGuid;
@@ -1036,5 +1045,6 @@
         public System.Windows.Forms.ToolStripMenuItem mnuThinking;
         private System.Windows.Forms.ToolStripMenuItem mnuLoadAutosavedGame;
         public System.Windows.Forms.ToolStripMenuItem mnuAutoSave;
+        public System.Windows.Forms.ToolStripMenuItem mnuHacker;
     }
 }

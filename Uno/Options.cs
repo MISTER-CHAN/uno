@@ -51,7 +51,7 @@ namespace Uno {
             txtDealt.Text = keys[13];
             txtDecks.Text = keys[14];
             mnuBeginner.Checked = bool.Parse(keys[15]);
-            mnuMaster.Checked = bool.Parse(keys[16]);
+            mnuPro.Checked = bool.Parse(keys[16]);
             mnuRygbBlank.Checked = bool.Parse(keys[17]);
             mnuMagentaBlank.Checked = bool.Parse(keys[18]);
             mnuBlackBlank.Checked = bool.Parse(keys[19]);
@@ -150,13 +150,6 @@ namespace Uno {
             mnuBlankDraw.Enabled = mnuRygbBlank.Checked;
         }
 
-        private void MnuBot_Click(object sender, EventArgs e)
-        {
-            mnuBeginner.Checked = false;
-            mnuMaster.Checked = false;
-            ((ToolStripMenuItem)sender).Checked = true;
-        }
-
         private void MnuCustom_Click(object sender, EventArgs e)
         {
             mnuNew.Visible = false;
@@ -169,6 +162,14 @@ namespace Uno {
             mnuCards.Visible = true;
             mnuRules.Visible = true;
             mnuBack.Visible = true;
+        }
+
+        private void MnuDifficulty_Click(object sender, EventArgs e)
+        {
+            mnuBeginner.Checked = false;
+            mnuPro.Checked = false;
+            mnuHacker.Checked = false;
+            ((ToolStripMenuItem)sender).Checked = true;
         }
 
         private void MnuDurable_Click(object sender, EventArgs e)
@@ -355,6 +356,7 @@ namespace Uno {
                 MnuCustom_Click(mnuCustom, new EventArgs());
                 mnuStart.Text = "继续";
                 mnuOns.Enabled = false;
+                mnuDifficulty.Enabled = false;
                 mnuCheat.Enabled = false;
                 mnuAnimation.Enabled = false;
                 mnuBack.Enabled = false;
@@ -385,7 +387,7 @@ namespace Uno {
             s += txtDealt.Text + "K";
             s += txtDecks.Text + "K";
             s += mnuBeginner.Checked + "K";
-            s += mnuMaster.Checked + "K";
+            s += mnuPro.Checked + "K";
             s += mnuRygbBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
