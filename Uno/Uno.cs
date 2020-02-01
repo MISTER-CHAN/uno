@@ -210,7 +210,7 @@ namespace Uno
             List<Card> cards = new List<Card>();
             if (!form.mnuStacking.Checked && int.Parse(lblDraw.Text) > 0)
             {
-                goto exit;
+                return cards.ToArray();
             }
             int quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
             if (backNumber == UnoNumber.NUMBER)
@@ -494,7 +494,11 @@ exit:
                         for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
                             for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
                                 if (Players[player].cards[c, n] > 0)
+                                {
                                     Players[player].cards[c, n]--;
+                                    goto deleted;
+                                }
+deleted:
                         Players[player].cards[bestCard.color, bestCard.number]++;
                         return Ai(player);
                     }
@@ -1628,6 +1632,8 @@ gameOver:
                                 isAutomatic = !isAutomatic;
                             else
                                 isAutomatic = bool.Parse(data[1]);
+                            if (isAutomatic && (form.mnuPro.Checked || form.mnuHacker.Checked))
+                                areCheating[0] = true;
                             if (isPlayer0sTurn)
                             {
                                 isPlayer0sTurn = false;
@@ -2611,7 +2617,7 @@ gameOver:
                 else
                 {
                     rndCard = GetBestCard();
-                    if (MovingCard.player == 0)
+                    if (MovingCard.player == 0 && !isAutomatic)
                         areCheating[0] = false;
                 }
                 Pile.cards[rndCard.color, rndCard.number]--;
