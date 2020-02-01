@@ -27,6 +27,8 @@
             this.lblPile = new System.Windows.Forms.Label();
             this.mnuCheating = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuColor = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNumber = new System.Windows.Forms.ToolStripMenuItem();
             this.timPileToPlayers = new System.Windows.Forms.Timer(this.components);
             this.mnuGame = new System.Windows.Forms.MenuStrip();
             this.itmGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,8 +63,6 @@
             this.pnlMovingCards = new System.Windows.Forms.Panel();
             this.timThinking = new System.Windows.Forms.Timer(this.components);
             this.rdoUno = new System.Windows.Forms.RadioButton();
-            this.mnuColor = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuNumber = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +87,7 @@
             this.mnuCheating.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuCheat});
             this.mnuCheating.Name = "mnuCheating";
-            this.mnuCheating.Size = new System.Drawing.Size(181, 48);
+            this.mnuCheating.Size = new System.Drawing.Size(101, 26);
             this.mnuCheating.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MnuCheating_Closed);
             // 
             // mnuCheat
@@ -96,9 +96,23 @@
             this.mnuColor,
             this.mnuNumber});
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheat.Size = new System.Drawing.Size(100, 22);
             this.mnuCheat.Text = "出千";
             this.mnuCheat.Click += new System.EventHandler(this.MnuCheat_Click);
+            // 
+            // mnuColor
+            // 
+            this.mnuColor.Name = "mnuColor";
+            this.mnuColor.Size = new System.Drawing.Size(100, 22);
+            this.mnuColor.Text = "顏色";
+            this.mnuColor.Visible = false;
+            // 
+            // mnuNumber
+            // 
+            this.mnuNumber.Name = "mnuNumber";
+            this.mnuNumber.Size = new System.Drawing.Size(100, 22);
+            this.mnuNumber.Text = "數字";
+            this.mnuNumber.Visible = false;
             // 
             // timPileToPlayers
             // 
@@ -377,7 +391,6 @@
             // 
             this.rdoUno.Appearance = System.Windows.Forms.Appearance.Button;
             this.rdoUno.AutoSize = true;
-            this.rdoUno.Checked = true;
             this.rdoUno.FlatAppearance.BorderSize = 0;
             this.rdoUno.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.rdoUno.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -386,26 +399,11 @@
             this.rdoUno.Name = "rdoUno";
             this.rdoUno.Size = new System.Drawing.Size(87, 44);
             this.rdoUno.TabIndex = 13;
-            this.rdoUno.TabStop = true;
             this.rdoUno.Text = "UNO";
             this.rdoUno.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.rdoUno.UseVisualStyleBackColor = true;
             this.rdoUno.Visible = false;
             this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            // 
-            // mnuColor
-            // 
-            this.mnuColor.Name = "mnuColor";
-            this.mnuColor.Size = new System.Drawing.Size(180, 22);
-            this.mnuColor.Text = "顏色";
-            this.mnuColor.Visible = false;
-            // 
-            // mnuNumber
-            // 
-            this.mnuNumber.Name = "mnuNumber";
-            this.mnuNumber.Size = new System.Drawing.Size(180, 22);
-            this.mnuNumber.Text = "數字";
-            this.mnuNumber.Visible = false;
             // 
             // Uno
             // 
