@@ -87,7 +87,8 @@ namespace Uno
             public const string NULL = "";
         }
 
-        private bool canPlay = false, reverse = false, isAutomatic = false, isSelectingCards = false;
+        private bool canPlay = false, reverse = false, isAutomatic = false, isPlayer0sTurn = false, isSelectingCards = false;
+        private readonly bool[] areCheating = { false, false, false, false };
         byte gameOver = 4;
         readonly byte[]
             mvcList = new byte[UnoNumber.MAX_VALUE]
@@ -509,35 +510,12 @@ exit:
             return cards.ToArray();
 		}
 
-        private void BtnChallenge_Click(object sender, EventArgs e)
-        {
-            pnlCtrl.Visible = false;
-            Action(0, "检举失败! +2");
-            AddDraw(2);
-            MovingCard.drew = false;
-            timChallenge.Enabled = true;
-        }
-
 		private void BtnDraw_Click(object sender, EventArgs e) {
 			Draw(0);
 		}
 
 		private void BtnPlay_Click(object sender, EventArgs e) {
-			Play(0);
 		}
-
-		private void BtnPlay_MouseDown(object sender, MouseEventArgs e) {
-            if (mnuRightClick.Checked && e.Button == MouseButtons.Right)
-            {
-                btnPlay.BackColor = btnPlay.BackColor.Name switch
-                {
-                    "Red" => Color.Yellow,
-                    "Yellow" => Color.Lime,
-                    "Lime" => Color.Blue,
-                    _ => Color.Red,
-                };
-            }
-        }
 
 		bool CanPlay(List<Card> card, byte color)
         {
@@ -655,12 +633,6 @@ deny:
             if (!form.mnuPairs.Checked && !form.mnuDaWah.Checked && ((CheckBox)sender).Checked)
                 for (int c = 0; c < chkPlayer.ToArray().Length; c++)
                     if (c != index) chkPlayer[c].Checked = false;
-			if (mnuRightClick.Checked) if (chkPlayer[index].Checked && !new Regex("^Magenta|Black$").IsMatch(chkPlayer[index].BackColor.Name)) btnPlay.BackColor = chkPlayer[index].BackColor;
-			for (int c = 0; c < chkPlayer.ToArray().Length; c++) if (chkPlayer[c].Checked) {
-				btnPlay.Visible = true;
-				return;
-			}
-			btnPlay.Visible = false;
 		}
 
         void ChkPlayer_Enter(object sender, EventArgs e)
@@ -716,10 +688,10 @@ deny:
         private void ChkPlayer_MouseUp(object sender, MouseEventArgs e)
         {
             isSelectingCards = false;
-            if (e.Y < 0 && pnlCtrl.Visible)
+            if (e.Y < 0 && isPlayer0sTurn)
             {
                 ((CheckBox)sender).Checked = true;
-                BtnPlay_Click(sender, new EventArgs());
+                Play(0);
             }
         }
 
@@ -764,7 +736,7 @@ deny:
 
         void Control_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!pnlCtrl.Visible)
+            if (!isPlayer0sTurn)
             {
                 MovingCard.quickly = true;
                 return;
@@ -775,12 +747,12 @@ deny:
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    if (btnPlay.Visible)
-                        BtnPlay_Click(btnPlay, new EventArgs());
+                    if (isPlayer0sTurn)
+                        Play(0);
                     return;
                 case Keys.Add:
-                    if (btnDraw.Visible)
-                        BtnDraw_Click(btnDraw, new EventArgs());
+                    if (isPlayer0sTurn)
+                        Draw(0);
                     return;
                 case Keys.Subtract:
                     rdoUno.Checked = true;
@@ -794,11 +766,6 @@ deny:
                 case Keys.T:
                 case Keys.OemQuestion:
                     MnuChat_Click(mnuChat, new EventArgs());
-                    return;
-                case Keys.Decimal:
-                    if (mnuRadioBox.Checked)
-                        return;
-                    BtnPlay_MouseDown(btnPlay, new MouseEventArgs(MouseButtons.Right, 1, 0, 0, 0));
                     return;
                 case Keys.NumPad0:
                 case Keys.NumPad1:
@@ -908,7 +875,7 @@ deny:
                 Action(player, "摸牌");
                 if (player == 0)
                 {
-                    pnlCtrl.Visible = false;
+                    isPlayer0sTurn = false;
                     if (form.mnuUno.Checked && rdoUno.Checked)
                     {
                         AddDraw(2);
@@ -927,148 +894,6 @@ deny:
                 PlayersTurn(player, false);
                 PlayersTurn(NextPlayer(player), true, GetDbp());
 			}
-		}
-
-		public Uno(Options form) 
-        {
-            InitializeComponent();
-            height = Height - mnuGame.Height;
-            this.form = form;
-            imgUno = Properties.Resources.uno;
-            lblPile.Top = mnuGame.Height;
-            SetInterval(form.animation);
-            if (mnuRightClick.Checked) btnPlay.BackColor = Color.Red;
-            if (form.mnuJumpin.Checked) btnJumpin.Visible = true;
-            lblPile.BackgroundImageLayout = ImageLayout.Stretch;
-            lblPile.BackgroundImage = Properties.Resources.uno_pile;
-            for (byte i = 0; i < 4; i++) {
-                lblPlayers[i] = new Label();
-				Controls.Add(lblPlayers[i]);
-                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
-                lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                if (i > 0 && !form.mnuCanShowCards.Checked)
-                    lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
-                lblPlayers[i].ForeColor = Color.Black;
-                lblPlayers[i].Tag = i;
-                lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
-                lblPlayers[i].Tag = i;
-				if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
-                lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                lblPlayers[i].Click += new EventHandler(LblPlayers_Click);
-                lblCounts[i] = new Label();
-				Controls.Add(lblCounts[i]);
-                lblCounts[i].AutoSize = true;
-				lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
-				lblCounts[i].Tag = i;
-				lblCounts[i].Text = "0";
-                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
-                lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-				lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
-            }
-            lblPlayers[0].BackColor = Color.Transparent;
-            lblPlayers[0].Text = "";
-            for (int o = 0; o < lblPlayers.Length; o++)
-            {
-                lblPlayers[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
-                lblCounts[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
-            }
-            lblCards.Add(new Label());
-			Controls.Add(lblCards[0]);
-            lblCards[0].Visible = false;
-            lblCards[0].BackColor = Color.White;
-            ResizeForm();
-            int decks = int.Parse(form.txtDecks.Text);
-			for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
-            {
-				Pile.cards[c, 0] = decks;
-                for (byte n = 1; n <= 9; n++)
-                    Pile.cards[c, n] = 2 * decks;
-                if (form.mnuDos.Checked)
-                {
-                    Pile.cards[c, 10] = 2 * decks;
-                    Pile.cards[c, UnoNumber.NUMBER] = 2 * decks;
-                }
-                for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
-                    Pile.cards[c, n] = 2 * decks;
-                if (form.mnuDaWah.Checked)
-                {
-                    Pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
-                    // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks;
-                }
-                if (form.mnuRygbBlank.Checked)
-                {
-                    Pile.cards[c, UnoNumber.BLANK] = 1 * decks;
-                }
-			}
-            if (form.mnuDos.Checked)
-            {
-                Pile.cards[UnoColor.BLACK, 2] = 4 * decks;
-            }
-            if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
-            {
-                Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks;
-            }
-            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
-            {
-                Pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks;
-            }
-            Pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks;
-            if (form.mnuWildDownpourDraw.Checked)
-            {
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks;
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks;
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks;
-            }
-            Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks;
-            if (form.mnuDaWah.Checked)
-            {
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks;
-            }
-            if (form.mnuWildHitfire.Checked)
-            {
-                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] = 2 * decks;
-            }
-			lblPile.Text = GetPile().Length + "";
-            for (byte p = 0; p < 4; p++)
-                Players[p] = new Cards();
-            AddLabel(lblMovingCards);
-            lblMovingCards[0].BackgroundImageLayout = ImageLayout.Stretch;
-            lblMovingCards[0].BackgroundImage = Properties.Resources.uno_back;
-            lblMovingCards[0].BringToFront();
-		}
-
-        private void Uno_Click(object sender, EventArgs e) {
-            MovingCard.quickly = true;
-        }
-
-        private void Uno_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (MessageBox.Show("退出游戏?", "退出", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
-            {
-                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
-                Application.Exit();
-            }
-            else e.Cancel = true;
-        }
-
-		private void Uno_Load(object sender, EventArgs e) {
-            for (byte p = 0; p < 4; p++)
-                if (lblPlayers[p].Visible)
-                {
-                    MovingCard.player = p;
-                    goto play;
-                }
-            FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
-            Application.Exit();
-            return;
-play:
-            lblMovingCards[0].BringToFront();
-            timPileToPlayers.Enabled = true;
-		}
-
-		private void Uno_Resize(object sender, EventArgs e) {
-			ResizeForm();
 		}
 
         private void GameOver()
@@ -1484,6 +1309,12 @@ play:
 
         private void LblPile_Click(object sender, EventArgs e)
         {
+            if (isPlayer0sTurn)
+                Draw(0);
+        }
+
+        private void LblPile_DoubleClick(object sender, EventArgs e)
+        {
             if (form.mnuCanShowCards.Checked)
             {
                 int i = 0;
@@ -1508,8 +1339,6 @@ play:
                     }
                 Action(0, cards);
             }
-            else if (btnDraw.Visible)
-                BtnDraw_Click(sender, e);
         }
 
         private void LblPlayers_Click(object sender, EventArgs e)
@@ -1740,9 +1569,9 @@ gameOver:
                                 isAutomatic = !isAutomatic;
                             else
                                 isAutomatic = bool.Parse(data[1]);
-                            if (pnlCtrl.Visible)
+                            if (isPlayer0sTurn)
                             {
-                                pnlCtrl.Visible = false;
+                                isPlayer0sTurn = false;
                                 mnuSaveGame.Enabled = false;
                                 Play(0);
                             }
@@ -1875,7 +1704,7 @@ gameOver:
                                     canPlay = bool.Parse(data[1]);
                                     Action(0, "已切換強制出牌");
                                 }
-                                else if (pnlCtrl.Visible)
+                                else if (isPlayer0sTurn)
                                 {
                                     bool b = canPlay;
                                     canPlay = true;
@@ -1929,7 +1758,7 @@ gameOver:
                             switch (data.Length)
                             {
                                 case 1:
-                                    if (pnlCtrl.Visible)
+                                    if (isPlayer0sTurn)
                                     {
                                         PlayersTurn(0, false);
                                         PlayersTurn(MovingCard.player = NextPlayer(MovingCard.player), true, GetDbp());
@@ -1998,11 +1827,9 @@ gameOver:
             else Action(0, "<你> " + cmd);
         }
 
-        private void MnuColor_Click(object sender, EventArgs e)
+        private void MnuCheat_Click(object sender, EventArgs e)
         {
-            mnuRadioBox.Checked = false;
-            mnuRightClick.Checked = false;
-            ((ToolStripMenuItem)sender).Checked = true;
+            areCheating[0] = true;
         }
 
         private void MnuContent_Click(object sender, EventArgs e)
@@ -2105,21 +1932,12 @@ gameOver:
                 discardAll.AddRange(cards);
                 cards = discardAll;
                 cards.AddRange(number);
-                if (mnuRadioBox.Checked)
-                {
-                    if (!CanPlay(cards, cards.First().color)) return;
-                }
-                else if (!CanPlay(cards, GetColorId(btnPlay.BackColor))) return;
+                if (!CanPlay(cards, cards.First().color))
+                    return;
 				for (int c = 0; c < cards.ToArray().Length; c++) {
 					Players[0].cards[cards[c].color, cards[c].number]--;
 				}
-				for (int c = 0; c < chkPlayer.ToArray().Length; c++) if (chkPlayer[c].Checked) {
-					btnPlay.Visible = true;
-					goto play;
-				}
-				btnPlay.Visible = false;
-play:   		Sort();
-                btnPlay.Visible = false;
+                Sort();
             }
             else if (player == 0)
             {
@@ -2161,49 +1979,44 @@ play:   		Sort();
                     }
                     if (b)
                     {
-                        if (mnuRadioBox.Checked)
+                        FrmColor c = new FrmColor();
+                        int colors = 0;
+                        foreach (Card card in cards)
                         {
-                            FrmColor c = new FrmColor();
-                            int colors = 0;
-                            foreach (Card card in cards)
+                            if (card.color == UnoColor.BLACK)
                             {
-                                if (card.color == UnoColor.BLACK)
+                                foreach (ToolStripMenuItem menu in c.mnuColor.Items)
                                 {
-                                    foreach (ToolStripMenuItem menu in c.mnuColor.Items)
-                                    {
-                                        menu.Enabled = true;
-                                        menu.BackColor = GetColor(byte.Parse(menu.Tag + ""));
-                                    }
-                                    colors = 4;
-                                    break;
+                                    menu.Enabled = true;
+                                    menu.BackColor = GetColor(byte.Parse(menu.Tag + ""));
                                 }
-                            }
-                            if (colors <= 0)
-                            {
-                                foreach (Card card in cards)
-                                    if (!new Regex("^(" + UnoColor.MAGENTA + "|" + UnoColor.BLACK + ")$").IsMatch(card.color + ""))
-                                    {
-                                        c.mnuColor.Items[card.color].Enabled = true;
-                                        c.mnuColor.Items[card.color].BackColor = GetColor(card.color);
-                                    }
-                                foreach (ToolStripMenuItem menu in c.mnuColor.Items) if (menu.Enabled) colors++;
-                            }
-                            if (colors > 1)
-                            {
-                                c.ShowDialog();
-                                MovingCard.color = byte.Parse(c.Tag + "");
-                            }
-                            else if (cards[0].color != UnoColor.MAGENTA)
-                            {
-                                MovingCard.color = cards.First().color;
-                            }
-                            else
-                            {
-                                MovingCard.color = GetColorId(BackColor);
+                                colors = 4;
+                                break;
                             }
                         }
+                        if (colors <= 0)
+                        {
+                            foreach (Card card in cards)
+                                if (!new Regex("^(" + UnoColor.MAGENTA + "|" + UnoColor.BLACK + ")$").IsMatch(card.color + ""))
+                                {
+                                    c.mnuColor.Items[card.color].Enabled = true;
+                                    c.mnuColor.Items[card.color].BackColor = GetColor(card.color);
+                                }
+                            foreach (ToolStripMenuItem menu in c.mnuColor.Items) if (menu.Enabled) colors++;
+                        }
+                        if (colors > 1)
+                        {
+                            c.ShowDialog();
+                            MovingCard.color = byte.Parse(c.Tag + "");
+                        }
+                        else if (cards[0].color != UnoColor.MAGENTA)
+                        {
+                            MovingCard.color = cards.First().color;
+                        }
                         else
-                            MovingCard.color = GetColorId(btnPlay.BackColor);
+                        {
+                            MovingCard.color = GetColorId(BackColor);
+                        }
                     }
                     else
                     {
@@ -2314,14 +2127,14 @@ play:   		Sort();
                 {
                     MovingCard.dbp = 0;
                     Action(0, "你的回合");
-                    btnChallenge.Visible = form.mnuChallenges.Checked && lblCards[1].Text == UnoNumberName.WILD_DRAW_4 && int.Parse(lblDraw.Text) >= 4;
                     rdoUno.Checked = false;
                     if (!form.Visible)
                         chkPlayer[0].Focus();
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
                 }
-                pnlCtrl.Visible = turn;
+                isPlayer0sTurn = turn;
+                rdoUno.Visible = turn;
                 mnuSaveGame.Enabled = turn;
                 if (form.mnuAutoSave.Checked)
                     Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
@@ -2510,17 +2323,8 @@ play:   		Sort();
                 lblCounts[i].Location = new Point(lblPlayers[i].Left + lblPlayers[i].Width / 2 - lblCounts[i].Width / 2, lblPlayers[i].Top - lblCounts[i].Height);
             lblCounts[2].Top = lblPlayers[2].Top + UnoSize.HEIGHT;
             lblWatch.Left = width - lblWatch.Width;
-			pnlCtrl.Location = new Point(0, lblPlayers[0].Top - pnlCtrl.Height);
-            btnPlay.Width = width / 5;
-            btnDraw.Left = width / 5;
-            btnDraw.Width = width / 5;
-            btnChallenge.Left = width / 5 * 2;
-            btnChallenge.Width = width / 5;
-            rdoUno.Left = width / 5 * 4;
-            rdoUno.Width = width / 5;
-            pnlCtrl.Width = width;
-			lblCounts[0].Top = pnlCtrl.Top - lblCounts[0].Height;
-            pnlPlayer.Top = pnlCtrl.Top + pnlCtrl.Height;
+            rdoUno.Location = new Point(width - rdoUno.Width, lblCounts[0].Top);
+            pnlPlayer.Top = rdoUno.Top + rdoUno.Height;
             hPlayer.Top = pnlPlayer.Top;
             hPlayer.Width = width;
             swpcw = width / UnoSize.WIDTH;
@@ -2603,7 +2407,6 @@ play:   		Sort();
                 interval = 1;
             }
             timTurn.Interval = interval;
-            timChallenge.Interval = interval;
             timUno.Interval = interval;
         }
 
@@ -2705,12 +2508,14 @@ play:   		Sort();
             {
                 Card[] pile = GetPile();
                 Card rndCard = new Card();
-                if (MovingCard.player == 0 || form.mnuBeginner.Checked)
+                if (!areCheating[MovingCard.player])
                 {
                     rndCard = pile[(int)(pile.Length * Rnd())];
                 }
                 else
                 {
+                    if (MovingCard.player == 0)
+                        areCheating[0] = false;
                     if (MovingCard.playing)
                     {
                         byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
@@ -2865,8 +2670,6 @@ draw:
 
         private void TimChallenge_Tick(object sender, EventArgs e)
         {
-            timChallenge.Enabled = false;
-            Draw(0);
         }
 
         private void TimPlayersToCenter_Tick(object sender, EventArgs e)
@@ -3065,5 +2868,158 @@ arrived:
             else
                 toolTip.ToolTipTitle = "";
         }
-	}
+
+        public Uno(Options form)
+        {
+            InitializeComponent();
+            height = Height - mnuGame.Height;
+            this.form = form;
+            imgUno = Properties.Resources.uno;
+            lblPile.Top = mnuGame.Height;
+            lblPile.BackgroundImageLayout = ImageLayout.Stretch;
+            lblPile.BackgroundImage = Properties.Resources.uno_pile;
+            for (byte i = 0; i < 4; i++)
+            {
+                lblPlayers[i] = new Label();
+                Controls.Add(lblPlayers[i]);
+                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
+                lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
+                if (i > 0 && !form.mnuCanShowCards.Checked)
+                    lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
+                lblPlayers[i].ForeColor = Color.Black;
+                lblPlayers[i].Tag = i;
+                lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
+                lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
+                lblPlayers[i].Tag = i;
+                if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
+                lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblPlayers[i].Click += new EventHandler(LblPlayers_Click);
+                lblCounts[i] = new Label();
+                Controls.Add(lblCounts[i]);
+                lblCounts[i].AutoSize = true;
+                lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
+                lblCounts[i].Tag = i;
+                lblCounts[i].Text = "0";
+                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
+                lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
+            }
+            lblPlayers[0].BackColor = Color.Transparent;
+            lblPlayers[0].Text = "";
+            for (int o = 0; o < lblPlayers.Length; o++)
+            {
+                lblPlayers[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
+                lblCounts[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
+            }
+            lblCards.Add(new Label());
+            Controls.Add(lblCards[0]);
+            lblCards[0].Visible = false;
+            lblCards[0].BackColor = Color.White;
+            ResizeForm();
+            SetInterval(form.animation);
+            if (form.mnuMaster.Checked)
+            {
+                for (int i = 1; i < 4; i++)
+                    areCheating[i] = true;
+            }
+            if (form.mnuMaster.Checked || form.mnuCheat.Checked)
+                lblPile.ContextMenuStrip = mnuCheating;
+            int decks = int.Parse(form.txtDecks.Text);
+            for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
+            {
+                Pile.cards[c, 0] = decks;
+                for (byte n = 1; n <= 9; n++)
+                    Pile.cards[c, n] = 2 * decks;
+                if (form.mnuDos.Checked)
+                {
+                    Pile.cards[c, 10] = 2 * decks;
+                    Pile.cards[c, UnoNumber.NUMBER] = 2 * decks;
+                }
+                for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
+                    Pile.cards[c, n] = 2 * decks;
+                if (form.mnuDaWah.Checked)
+                {
+                    Pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
+                    // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks;
+                }
+                if (form.mnuRygbBlank.Checked)
+                {
+                    Pile.cards[c, UnoNumber.BLANK] = 1 * decks;
+                }
+            }
+            if (form.mnuDos.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, 2] = 4 * decks;
+            }
+            if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
+            {
+                Pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks;
+            }
+            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks;
+            }
+            Pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks;
+            if (form.mnuWildDownpourDraw.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks;
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks;
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks;
+            }
+            Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks;
+            if (form.mnuDaWah.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks;
+            }
+            if (form.mnuWildHitfire.Checked)
+            {
+                Pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] = 2 * decks;
+            }
+            lblPile.Text = GetPile().Length + "";
+            for (byte p = 0; p < 4; p++)
+                Players[p] = new Cards();
+            AddLabel(lblMovingCards);
+            lblMovingCards[0].BackgroundImageLayout = ImageLayout.Stretch;
+            lblMovingCards[0].BackgroundImage = Properties.Resources.uno_back;
+            lblMovingCards[0].BringToFront();
+        }
+
+        private void Uno_Click(object sender, EventArgs e)
+        {
+            MovingCard.quickly = true;
+            if (isPlayer0sTurn && MovingCard.drew && !form.mnuDrawToMatch.Checked)
+                Draw(0);
+        }
+
+        private void Uno_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("退出游戏?", "退出", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+            {
+                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+                Application.Exit();
+            }
+            else e.Cancel = true;
+        }
+
+        private void Uno_Load(object sender, EventArgs e)
+        {
+            for (byte p = 0; p < 4; p++)
+                if (lblPlayers[p].Visible)
+                {
+                    MovingCard.player = p;
+                    goto play;
+                }
+            FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+            Application.Exit();
+            return;
+        play:
+            lblMovingCards[0].BringToFront();
+            timPileToPlayers.Enabled = true;
+        }
+
+        private void Uno_Resize(object sender, EventArgs e)
+        {
+            ResizeForm();
+        }
+    }
 }

@@ -25,6 +25,8 @@
 		private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.lblPile = new System.Windows.Forms.Label();
+            this.mnuCheating = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.timPileToPlayers = new System.Windows.Forms.Timer(this.components);
             this.mnuGame = new System.Windows.Forms.MenuStrip();
             this.itmGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,9 +37,6 @@
             this.mnuByNumber = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScrollBar = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolTip = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuColor = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRadioBox = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRightClick = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAppearance = new System.Windows.Forms.ToolStripMenuItem();
             this.separatorCx = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveGame = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,12 +46,6 @@
             this.mnuContent = new System.Windows.Forms.ToolStripMenuItem();
             this.separatorHa = new System.Windows.Forms.ToolStripSeparator();
             this.itmAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlCtrl = new System.Windows.Forms.Panel();
-            this.btnJumpin = new System.Windows.Forms.Button();
-            this.rdoUno = new System.Windows.Forms.RadioButton();
-            this.btnChallenge = new System.Windows.Forms.Button();
-            this.btnDraw = new System.Windows.Forms.Button();
-            this.btnPlay = new System.Windows.Forms.Button();
             this.timPlayersToCenter = new System.Windows.Forms.Timer(this.components);
             this.timPileToCenter = new System.Windows.Forms.Timer(this.components);
             this.lblDrawMark = new System.Windows.Forms.Label();
@@ -60,7 +53,6 @@
             this.lblAction = new System.Windows.Forms.Label();
             this.timTurn = new System.Windows.Forms.Timer(this.components);
             this.timUno = new System.Windows.Forms.Timer(this.components);
-            this.timChallenge = new System.Windows.Forms.Timer(this.components);
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.lblWatch = new System.Windows.Forms.Label();
             this.hPlayer = new System.Windows.Forms.HScrollBar();
@@ -68,8 +60,9 @@
             this.timWatch = new System.Windows.Forms.Timer(this.components);
             this.pnlMovingCards = new System.Windows.Forms.Panel();
             this.timThinking = new System.Windows.Forms.Timer(this.components);
+            this.rdoUno = new System.Windows.Forms.RadioButton();
+            this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
-            this.pnlCtrl.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblPile
@@ -85,6 +78,21 @@
             this.lblPile.TabIndex = 0;
             this.lblPile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblPile.Click += new System.EventHandler(this.LblPile_Click);
+            this.lblPile.DoubleClick += new System.EventHandler(this.LblPile_DoubleClick);
+            // 
+            // mnuCheating
+            // 
+            this.mnuCheating.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuCheat});
+            this.mnuCheating.Name = "mnuCheating";
+            this.mnuCheating.Size = new System.Drawing.Size(181, 48);
+            // 
+            // mnuCheat
+            // 
+            this.mnuCheat.Name = "mnuCheat";
+            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheat.Text = "出千";
+            this.mnuCheat.Click += new System.EventHandler(this.MnuCheat_Click);
             // 
             // timPileToPlayers
             // 
@@ -111,7 +119,6 @@
             this.mnuRank,
             this.mnuScrollBar,
             this.mnuToolTip,
-            this.mnuColor,
             this.mnuAppearance,
             this.separatorCx,
             this.mnuSaveGame,
@@ -174,31 +181,6 @@
             this.mnuToolTip.Size = new System.Drawing.Size(167, 22);
             this.mnuToolTip.Text = "显示工具提示 (&T)";
             this.mnuToolTip.Click += new System.EventHandler(this.MnuToolTip_Click);
-            // 
-            // mnuColor
-            // 
-            this.mnuColor.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuRadioBox,
-            this.mnuRightClick});
-            this.mnuColor.Name = "mnuColor";
-            this.mnuColor.Size = new System.Drawing.Size(167, 22);
-            this.mnuColor.Text = "变色 (&C)";
-            // 
-            // mnuRadioBox
-            // 
-            this.mnuRadioBox.Checked = true;
-            this.mnuRadioBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuRadioBox.Name = "mnuRadioBox";
-            this.mnuRadioBox.Size = new System.Drawing.Size(136, 22);
-            this.mnuRadioBox.Text = "使用单选框";
-            this.mnuRadioBox.Click += new System.EventHandler(this.MnuColor_Click);
-            // 
-            // mnuRightClick
-            // 
-            this.mnuRightClick.Name = "mnuRightClick";
-            this.mnuRightClick.Size = new System.Drawing.Size(136, 22);
-            this.mnuRightClick.Text = "右击 [出牌]";
-            this.mnuRightClick.Click += new System.EventHandler(this.MnuColor_Click);
             // 
             // mnuAppearance
             // 
@@ -266,101 +248,6 @@
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
-            // pnlCtrl
-            // 
-            this.pnlCtrl.Controls.Add(this.btnJumpin);
-            this.pnlCtrl.Controls.Add(this.rdoUno);
-            this.pnlCtrl.Controls.Add(this.btnChallenge);
-            this.pnlCtrl.Controls.Add(this.btnDraw);
-            this.pnlCtrl.Controls.Add(this.btnPlay);
-            this.pnlCtrl.Location = new System.Drawing.Point(0, 168);
-            this.pnlCtrl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pnlCtrl.Name = "pnlCtrl";
-            this.pnlCtrl.Size = new System.Drawing.Size(399, 39);
-            this.pnlCtrl.TabIndex = 4;
-            this.pnlCtrl.Visible = false;
-            // 
-            // btnJumpin
-            // 
-            this.btnJumpin.FlatAppearance.BorderSize = 0;
-            this.btnJumpin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnJumpin.Location = new System.Drawing.Point(253, 0);
-            this.btnJumpin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnJumpin.Name = "btnJumpin";
-            this.btnJumpin.Size = new System.Drawing.Size(76, 39);
-            this.btnJumpin.TabIndex = 4;
-            this.btnJumpin.Text = "点断";
-            this.btnJumpin.UseVisualStyleBackColor = true;
-            this.btnJumpin.Visible = false;
-            this.btnJumpin.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            this.btnJumpin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
-            // 
-            // rdoUno
-            // 
-            this.rdoUno.Appearance = System.Windows.Forms.Appearance.Button;
-            this.rdoUno.FlatAppearance.BorderSize = 0;
-            this.rdoUno.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rdoUno.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rdoUno.Location = new System.Drawing.Point(337, 0);
-            this.rdoUno.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.rdoUno.Name = "rdoUno";
-            this.rdoUno.Size = new System.Drawing.Size(62, 39);
-            this.rdoUno.TabIndex = 3;
-            this.rdoUno.TabStop = true;
-            this.rdoUno.Text = "UNO";
-            this.rdoUno.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.rdoUno.UseVisualStyleBackColor = true;
-            this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            this.rdoUno.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
-            // 
-            // btnChallenge
-            // 
-            this.btnChallenge.FlatAppearance.BorderSize = 0;
-            this.btnChallenge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnChallenge.Location = new System.Drawing.Point(169, 0);
-            this.btnChallenge.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnChallenge.Name = "btnChallenge";
-            this.btnChallenge.Size = new System.Drawing.Size(76, 39);
-            this.btnChallenge.TabIndex = 2;
-            this.btnChallenge.Text = "检举";
-            this.btnChallenge.UseVisualStyleBackColor = true;
-            this.btnChallenge.Visible = false;
-            this.btnChallenge.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            this.btnChallenge.Click += new System.EventHandler(this.BtnChallenge_Click);
-            this.btnChallenge.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
-            // 
-            // btnDraw
-            // 
-            this.btnDraw.FlatAppearance.BorderSize = 0;
-            this.btnDraw.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDraw.Location = new System.Drawing.Point(84, 0);
-            this.btnDraw.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnDraw.Name = "btnDraw";
-            this.btnDraw.Size = new System.Drawing.Size(77, 39);
-            this.btnDraw.TabIndex = 1;
-            this.btnDraw.Text = "摸牌";
-            this.btnDraw.UseVisualStyleBackColor = true;
-            this.btnDraw.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            this.btnDraw.Click += new System.EventHandler(this.BtnDraw_Click);
-            this.btnDraw.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
-            // 
-            // btnPlay
-            // 
-            this.btnPlay.FlatAppearance.BorderSize = 0;
-            this.btnPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPlay.Location = new System.Drawing.Point(0, 0);
-            this.btnPlay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(76, 39);
-            this.btnPlay.TabIndex = 0;
-            this.btnPlay.Text = "出牌";
-            this.btnPlay.UseVisualStyleBackColor = false;
-            this.btnPlay.Visible = false;
-            this.btnPlay.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
-            this.btnPlay.Click += new System.EventHandler(this.BtnPlay_Click);
-            this.btnPlay.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
-            this.btnPlay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BtnPlay_MouseDown);
-            // 
             // timPlayersToCenter
             // 
             this.timPlayersToCenter.Interval = 10;
@@ -418,11 +305,6 @@
             // 
             this.timUno.Interval = 1000;
             this.timUno.Tick += new System.EventHandler(this.TimUno_Tick);
-            // 
-            // timChallenge
-            // 
-            this.timChallenge.Interval = 1000;
-            this.timChallenge.Tick += new System.EventHandler(this.TimChallenge_Tick);
             // 
             // toolTip
             // 
@@ -485,11 +367,32 @@
             this.timThinking.Tag = "4";
             this.timThinking.Tick += new System.EventHandler(this.TimThinking_Tick);
             // 
+            // rdoUno
+            // 
+            this.rdoUno.Appearance = System.Windows.Forms.Appearance.Button;
+            this.rdoUno.AutoSize = true;
+            this.rdoUno.Checked = true;
+            this.rdoUno.FlatAppearance.BorderSize = 0;
+            this.rdoUno.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rdoUno.Font = new System.Drawing.Font("微軟正黑體 Light", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoUno.Location = new System.Drawing.Point(0, 167);
+            this.rdoUno.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.rdoUno.Name = "rdoUno";
+            this.rdoUno.Size = new System.Drawing.Size(87, 44);
+            this.rdoUno.TabIndex = 13;
+            this.rdoUno.TabStop = true;
+            this.rdoUno.Text = "UNO";
+            this.rdoUno.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.rdoUno.UseVisualStyleBackColor = true;
+            this.rdoUno.Visible = false;
+            this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(890, 658);
+            this.Controls.Add(this.rdoUno);
             this.Controls.Add(this.pnlMovingCards);
             this.Controls.Add(this.lblWatch);
             this.Controls.Add(this.hPlayer);
@@ -497,7 +400,6 @@
             this.Controls.Add(this.lblAction);
             this.Controls.Add(this.lblDraw);
             this.Controls.Add(this.lblDrawMark);
-            this.Controls.Add(this.pnlCtrl);
             this.Controls.Add(this.mnuGame);
             this.Controls.Add(this.lblPile);
             this.Font = new System.Drawing.Font("微軟正黑體", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -512,9 +414,9 @@
             this.Click += new System.EventHandler(this.Uno_Click);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Control_KeyDown);
             this.Resize += new System.EventHandler(this.Uno_Resize);
+            this.mnuCheating.ResumeLayout(false);
             this.mnuGame.ResumeLayout(false);
             this.mnuGame.PerformLayout();
-            this.pnlCtrl.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -527,11 +429,6 @@
 		private System.Windows.Forms.MenuStrip mnuGame;
 		private System.Windows.Forms.ToolStripMenuItem itmGame;
 		private System.Windows.Forms.ToolStripMenuItem itmQuit;
-		private System.Windows.Forms.Panel pnlCtrl;
-		private System.Windows.Forms.Button btnPlay;
-		private System.Windows.Forms.Button btnChallenge;
-		private System.Windows.Forms.Button btnDraw;
-		private System.Windows.Forms.RadioButton rdoUno;
 		private System.Windows.Forms.Timer timPlayersToCenter;
 		private System.Windows.Forms.ToolStripMenuItem itmHelp;
 		private System.Windows.Forms.ToolStripMenuItem itmAbout;
@@ -541,18 +438,13 @@
         private System.Windows.Forms.Label lblAction;
         private System.Windows.Forms.Timer timTurn;
         private System.Windows.Forms.Timer timUno;
-        private System.Windows.Forms.Timer timChallenge;
         private System.Windows.Forms.ToolTip toolTip;
-        private System.Windows.Forms.Button btnJumpin;
         private System.Windows.Forms.HScrollBar hPlayer;
         private System.Windows.Forms.Panel pnlPlayer;
         private System.Windows.Forms.ToolStripMenuItem mnuChat;
         private System.Windows.Forms.ToolStripMenuItem mnuRank;
         public System.Windows.Forms.ToolStripMenuItem mnuByColor;
         public System.Windows.Forms.ToolStripMenuItem mnuByNumber;
-        private System.Windows.Forms.ToolStripMenuItem mnuColor;
-        public System.Windows.Forms.ToolStripMenuItem mnuRadioBox;
-        public System.Windows.Forms.ToolStripMenuItem mnuRightClick;
         private System.Windows.Forms.ToolStripMenuItem mnuNew;
         private System.Windows.Forms.ToolStripSeparator separatorNc;
         private System.Windows.Forms.ToolStripSeparator separatorCx;
@@ -566,6 +458,9 @@
         private System.Windows.Forms.Panel pnlMovingCards;
         private System.Windows.Forms.ToolStripMenuItem mnuAppearance;
         private System.Windows.Forms.Timer timThinking;
+        private System.Windows.Forms.RadioButton rdoUno;
+        private System.Windows.Forms.ContextMenuStrip mnuCheating;
+        private System.Windows.Forms.ToolStripMenuItem mnuCheat;
     }
 }
 
