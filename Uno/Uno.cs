@@ -1670,7 +1670,16 @@ gameOver:
             }
             if (s != "")
             {
-                if (MessageBox.Show("你可以嘗試出:\n" + s + "\n轉" + GetColorName(MovingCard.color) + "色\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                string color = "";
+                foreach (Card c in cards)
+                {
+                    if (c.color == UnoColor.BLACK || c.color != cards[0].color)
+                    {
+                        color = "\n轉" + GetColorName(MovingCard.color) + "色";
+                        break;
+                    }
+                }
+                if (MessageBox.Show("你可以嘗試出:\n" + s + color + "\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     foreach (CheckBox chk in chkPlayer)
                     {
@@ -2155,7 +2164,7 @@ gameOver:
                         if (colors <= 0)
                         {
                             foreach (Card card in cards)
-                                if (!new Regex("^(" + UnoColor.MAGENTA + "|" + UnoColor.BLACK + ")$").IsMatch(card.color + ""))
+                                if (card.color != UnoColor.MAGENTA && card.color != UnoColor.BLACK)
                                 {
                                     c.mnuColor.Items[card.color].Enabled = true;
                                     c.mnuColor.Items[card.color].BackColor = GetColor(card.color);
