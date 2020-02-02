@@ -1430,8 +1430,12 @@ deny:
 
         private void ItmAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("作者\n" +
-                "MISTER_CHAN", "关于", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(
+                "作者\n" +
+                "MISTER_CHAN\n\n" +
+                "版本\n" +
+                Application.ProductVersion
+                , "关于", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
 		private void ItmQuit_Click(object sender, EventArgs e) {
@@ -1640,7 +1644,7 @@ gameOver:
         private void MnuAuto_Click(object sender, EventArgs e)
         {
             isAutomatic = !isAutomatic;
-            mnuAuto.Text = (isAutomatic ? "☑" : "") + "託管 (&A)";
+            mnuAuto.Text = (isAutomatic ? "☑" : "☐") + "託管 (&A)";
             if (isAutomatic && (form.mnuPro.Checked || form.mnuHacker.Checked))
                 areCheating[0] = true;
             if (isPlayer0sTurn)
@@ -1648,6 +1652,38 @@ gameOver:
                 isPlayer0sTurn = false;
                 mnuSaveGame.Enabled = false;
                 Play(0);
+            }
+        }
+
+        private void MnuCanPlay_Click(object sender, EventArgs e)
+        {
+            if (!isPlayer0sTurn)
+            {
+                MessageBox.Show("請在到你出牌時再學習此內容.", "出牌敎程", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            Card[] cards = Ai(0);
+            string s = "";
+            foreach (Card c in cards)
+            {
+                s += "[" + GetColorName(c.color) + GetNumber(c.number) + "]";
+            }
+            if (s != "")
+            {
+                if (MessageBox.Show("你可以嘗試出:\n" + s + "\n轉" + GetColorName(MovingCard.color) + "色\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                {
+                    foreach (CheckBox chk in chkPlayer)
+                    {
+                        chk.Checked = false;
+                        foreach (Card c in cards)
+                            if (GetColorId(chk.BackColor) == c.color && GetNumberId(chk.Text) == c.number) chk.Checked = true;
+                    }
+                    Action(0, "提示");
+                }
+            }
+            else
+            {
+                MessageBox.Show("無可出的牌, 請摸牌!", "出牌敎程", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -1767,7 +1803,6 @@ gameOver:
                                     "/say <string message>\n" +
                                     "/skip [[byte player] <int skip>]\n" +
                                     "/time true | false | pause | <int gametime> | <int h>:<int m>:<int s>\n" +
-                                    "/tips\n" +
                                     "/uno [bool isUno]\n" +
                                     "/? [int page]",
                                 _ => ""
@@ -1891,16 +1926,6 @@ gameOver:
                                     break;
                             }
                             break;
-                        case "/tips":
-                            Card[] cards = Ai(0);
-                            foreach (CheckBox chk in chkPlayer)
-                            {
-                                chk.Checked = false;
-                                foreach (Card c in cards)
-                                    if (GetColorId(chk.BackColor) == c.color && GetNumberId(chk.Text) == c.number) chk.Checked = true;
-                            }
-                            Action(0, "提示");
-                            break;
                         case "/uno":
                             if (data.Length > 1)
                                 rdoUno.Checked = bool.Parse(data[1]);
@@ -1952,7 +1977,13 @@ gameOver:
 
         private void MnuContent_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("[0 ~ 9]\tNumpad0~9\n" +
+            MessageBox.Show("將手中的牌打完卽獲勝.", "遊戲玩法", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void MnuControl_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "[0 ~ 9]\tNumpad0~9\n" +
                 "[" + UnoNumberName.SKIP + "]\tDelete\n" +
                 "[" + UnoNumberName.REVERSE + "]\tEnd\n" +
                 "[" + UnoNumberName.DRAW_2 + "]\tPageDown\n" +
@@ -1964,12 +1995,12 @@ gameOver:
                 "光标移动\t←↑→↓\n" +
                 "选定卡牌\tSpace\n" +
                 "选择颜色\tNumpad0~3\n" +
-                "切換颜色\tNumpad.\n" +
                 "出牌\tEnter\n" +
                 "摸牌\tNumpad+\n" +
                 "喊 UNO!\tNumpad-\n" +
                 "聊天\tT\n" +
-                "指令\t/\n", "按键说明", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "指令\t/\n"
+                , "按键说明", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void MnuNumber_Click(object sender, EventArgs e)

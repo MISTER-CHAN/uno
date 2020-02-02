@@ -44,8 +44,11 @@
             this.mnuSaveGame = new System.Windows.Forms.ToolStripMenuItem();
             this.itmQuit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuChat = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAuto = new System.Windows.Forms.ToolStripMenuItem();
             this.itmHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContent = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCanPlay = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuControl = new System.Windows.Forms.ToolStripMenuItem();
             this.separatorHa = new System.Windows.Forms.ToolStripSeparator();
             this.itmAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.timPlayersToCenter = new System.Windows.Forms.Timer(this.components);
@@ -63,7 +66,6 @@
             this.pnlMovingCards = new System.Windows.Forms.Panel();
             this.timThinking = new System.Windows.Forms.Timer(this.components);
             this.rdoUno = new System.Windows.Forms.RadioButton();
-            this.mnuAuto = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
             this.SuspendLayout();
@@ -125,8 +127,8 @@
             this.mnuGame.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itmGame,
             this.mnuChat,
-            this.itmHelp,
-            this.mnuAuto});
+            this.mnuAuto,
+            this.itmHelp});
             this.mnuGame.Location = new System.Drawing.Point(0, 0);
             this.mnuGame.Name = "mnuGame";
             this.mnuGame.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -240,10 +242,19 @@
             this.mnuChat.Text = "聊天 (&T)";
             this.mnuChat.Click += new System.EventHandler(this.MnuChat_Click);
             // 
+            // mnuAuto
+            // 
+            this.mnuAuto.Name = "mnuAuto";
+            this.mnuAuto.Size = new System.Drawing.Size(74, 21);
+            this.mnuAuto.Text = "☐託管 (&A)";
+            this.mnuAuto.Click += new System.EventHandler(this.MnuAuto_Click);
+            // 
             // itmHelp
             // 
             this.itmHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuContent,
+            this.mnuCanPlay,
+            this.mnuControl,
             this.separatorHa,
             this.itmAbout});
             this.itmHelp.Name = "itmHelp";
@@ -254,19 +265,33 @@
             // 
             this.mnuContent.Name = "mnuContent";
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuContent.Size = new System.Drawing.Size(141, 22);
+            this.mnuContent.Size = new System.Drawing.Size(180, 22);
             this.mnuContent.Text = "目彔 (&C)";
             this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
+            // 
+            // mnuCanPlay
+            // 
+            this.mnuCanPlay.Name = "mnuCanPlay";
+            this.mnuCanPlay.Size = new System.Drawing.Size(180, 22);
+            this.mnuCanPlay.Text = "出牌規則";
+            this.mnuCanPlay.Click += new System.EventHandler(this.MnuCanPlay_Click);
+            // 
+            // mnuControl
+            // 
+            this.mnuControl.Name = "mnuControl";
+            this.mnuControl.Size = new System.Drawing.Size(180, 22);
+            this.mnuControl.Text = "按鍵說明";
+            this.mnuControl.Click += new System.EventHandler(this.MnuControl_Click);
             // 
             // separatorHa
             // 
             this.separatorHa.Name = "separatorHa";
-            this.separatorHa.Size = new System.Drawing.Size(138, 6);
+            this.separatorHa.Size = new System.Drawing.Size(177, 6);
             // 
             // itmAbout
             // 
             this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(141, 22);
+            this.itmAbout.Size = new System.Drawing.Size(180, 22);
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
@@ -407,13 +432,6 @@
             this.rdoUno.Visible = false;
             this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
-            // mnuAuto
-            // 
-            this.mnuAuto.Name = "mnuAuto";
-            this.mnuAuto.Size = new System.Drawing.Size(64, 21);
-            this.mnuAuto.Text = "託管 (&A)";
-            this.mnuAuto.Click += new System.EventHandler(this.MnuAuto_Click);
-            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
@@ -476,7 +494,6 @@
         private System.Windows.Forms.ToolStripSeparator separatorNc;
         private System.Windows.Forms.ToolStripSeparator separatorCx;
         private System.Windows.Forms.ToolStripMenuItem mnuContent;
-        private System.Windows.Forms.ToolStripSeparator separatorHa;
         private System.Windows.Forms.ToolStripMenuItem mnuToolTip;
         private System.Windows.Forms.Timer timWatch;
         private System.Windows.Forms.Label lblWatch;
@@ -491,6 +508,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuColor;
         private System.Windows.Forms.ToolStripMenuItem mnuNumber;
         private System.Windows.Forms.ToolStripMenuItem mnuAuto;
+        private System.Windows.Forms.ToolStripMenuItem mnuCanPlay;
+        private System.Windows.Forms.ToolStripMenuItem mnuControl;
+        private System.Windows.Forms.ToolStripSeparator separatorHa;
     }
 }
 
