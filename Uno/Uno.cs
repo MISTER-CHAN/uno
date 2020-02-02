@@ -2260,12 +2260,12 @@ gameOver:
                         chkPlayer[0].Focus();
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
+                    if (form.mnuAutoSave.Checked)
+                        Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
                 }
                 isPlayer0sTurn = turn;
                 rdoUno.Visible = turn;
                 mnuSaveGame.Enabled = turn;
-                if (form.mnuAutoSave.Checked)
-                    Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
             }
             else if (turn)
             {
@@ -2281,96 +2281,6 @@ gameOver:
                 Play(player);
             }
         }
-
-        private void ShowCards()
-        {
-            for (byte p = 1; p <= 3; p++)
-            {
-                string cards = "";
-                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                    {
-                        string q = Players[p].cards[c, n] + "";
-                        if (q != "0")
-                        {
-                            if (q == "1")
-                            {
-                                q = "";
-                            }
-                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                            if (p == 1 || p == 3)
-                            {
-                                cards += "\n";
-                            }
-                        }
-                    }
-                lblPlayers[p].Text = cards;
-                switch (p)
-                {
-                    case 1: lblPlayers[p].Top = height / 2 - lblPlayers[p].Height / 2; break;
-                    case 2: lblPlayers[p].Left = width / 2 - lblPlayers[p].Width / 2; break;
-                    case 3: lblPlayers[p].Location = new Point(width - lblPlayers[p].Width, height / 2 - lblPlayers[p].Height / 2); break;
-                }
-            }
-        }
-
-        void Sort() {
-			RemoveChkPlayer();
-			AddChkPlayer(PlayersCards(0).Length);
-			int i = 0;
-            if (mnuByColor.Checked)
-			    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                        for (int c = 1; c <= Players[0].cards[color, number]; c++) {
-				            chkPlayer[i].BackColor = GetColor(color);
-                            chkPlayer[i].Text = GetNumber(number);
-                            SetUsage(chkPlayer[i]);
-				            i++;
-			            }
-            else
-                for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                        for (int c = 1; c <= Players[0].cards[color, number]; c++)
-                        {
-                            chkPlayer[i].BackColor = GetColor(color);
-                            chkPlayer[i].Text = GetNumber(number);
-                            SetUsage(chkPlayer[i]);
-                            i++;
-                        }
-            hPlayer.Visible = false;
-            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
-            if (width <= this.width)
-            {
-                pnlPlayer.Left = this.width / 2 - width / 2;
-                pnlPlayer.Width = width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
-            }
-            else if (width > this.width * 8 && mnuScrollBar.Checked)
-            {
-                pnlPlayer.Left = 0;
-                pnlPlayer.Width = width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
-                hPlayer.Maximum = width - this.width;
-                hPlayer.Visible = true;
-                if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
-                {
-                    HPlayer_Scroll(hPlayer, new ScrollEventArgs(new ScrollEventType(), hPlayer.Value));
-                }
-            }
-            else
-            {
-                pnlPlayer.Left = 0;
-                pnlPlayer.Width = this.width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
-            }
-            if (!form.Visible && chkPlayer.Count > 0)
-            {
-                chkPlayer[0].Focus();
-            }
-		}
 
         void RefillPile()
         {
@@ -2548,7 +2458,99 @@ gameOver:
                 "功能\t" + GetUsage(card.Text));
         }
 
-		private void TimPileToCenter_Tick(object sender, EventArgs e) {
+        private void ShowCards()
+        {
+            for (byte p = 1; p <= 3; p++)
+            {
+                string cards = "";
+                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    {
+                        string q = Players[p].cards[c, n] + "";
+                        if (q != "0")
+                        {
+                            if (q == "1")
+                            {
+                                q = "";
+                            }
+                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                            if (p == 1 || p == 3)
+                            {
+                                cards += "\n";
+                            }
+                        }
+                    }
+                lblPlayers[p].Text = cards;
+                switch (p)
+                {
+                    case 1: lblPlayers[p].Top = height / 2 - lblPlayers[p].Height / 2; break;
+                    case 2: lblPlayers[p].Left = width / 2 - lblPlayers[p].Width / 2; break;
+                    case 3: lblPlayers[p].Location = new Point(width - lblPlayers[p].Width, height / 2 - lblPlayers[p].Height / 2); break;
+                }
+            }
+        }
+
+        void Sort()
+        {
+            RemoveChkPlayer();
+            AddChkPlayer(PlayersCards(0).Length);
+            int i = 0;
+            if (mnuByColor.Checked)
+                for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                        for (int c = 1; c <= Players[0].cards[color, number]; c++)
+                        {
+                            chkPlayer[i].BackColor = GetColor(color);
+                            chkPlayer[i].Text = GetNumber(number);
+                            SetUsage(chkPlayer[i]);
+                            i++;
+                        }
+            else
+                for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                        for (int c = 1; c <= Players[0].cards[color, number]; c++)
+                        {
+                            chkPlayer[i].BackColor = GetColor(color);
+                            chkPlayer[i].Text = GetNumber(number);
+                            SetUsage(chkPlayer[i]);
+                            i++;
+                        }
+            hPlayer.Visible = false;
+            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
+            if (width <= this.width)
+            {
+                pnlPlayer.Left = this.width / 2 - width / 2;
+                pnlPlayer.Width = width;
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
+            }
+            else if (width > this.width * 8 && mnuScrollBar.Checked)
+            {
+                pnlPlayer.Left = 0;
+                pnlPlayer.Width = width;
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
+                hPlayer.Maximum = width - this.width;
+                hPlayer.Visible = true;
+                if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
+                {
+                    HPlayer_Scroll(hPlayer, new ScrollEventArgs(new ScrollEventType(), hPlayer.Value));
+                }
+            }
+            else
+            {
+                pnlPlayer.Left = 0;
+                pnlPlayer.Width = this.width;
+                for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                    chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
+            }
+            if (!form.Visible && chkPlayer.Count > 0)
+            {
+                chkPlayer[0].Focus();
+            }
+        }
+
+        private void TimPileToCenter_Tick(object sender, EventArgs e) {
             lblMovingCards[0].Location = new Point(lblCards[0].Left / distance * MovingCard.progress, lblCards[0].Top / distance * MovingCard.progress + mnuGame.Height);
 			if (lblMovingCards[0].Left >= lblCards[0].Left && lblMovingCards[0].Top >= lblCards[0].Top)
             {
@@ -2749,10 +2751,6 @@ draw:
                 MovingCard.progress = 0;
             }
             else MovingCard.progress++;
-		}
-
-        private void TimChallenge_Tick(object sender, EventArgs e)
-        {
         }
 
         private void TimPlayersToCenter_Tick(object sender, EventArgs e)

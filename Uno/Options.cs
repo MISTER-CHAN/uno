@@ -52,6 +52,7 @@ namespace Uno {
             txtDecks.Text = keys[14];
             mnuBeginner.Checked = bool.Parse(keys[15]);
             mnuPro.Checked = bool.Parse(keys[16]);
+            mnuHacker.Checked = bool.Parse(keys[16]);
             mnuRygbBlank.Checked = bool.Parse(keys[17]);
             mnuMagentaBlank.Checked = bool.Parse(keys[18]);
             mnuBlackBlank.Checked = bool.Parse(keys[19]);
@@ -388,6 +389,7 @@ namespace Uno {
             s += txtDecks.Text + "K";
             s += mnuBeginner.Checked + "K";
             s += mnuPro.Checked + "K";
+            s += mnuHacker.Checked + "K";
             s += mnuRygbBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
