@@ -63,6 +63,7 @@
             this.pnlMovingCards = new System.Windows.Forms.Panel();
             this.timThinking = new System.Windows.Forms.Timer(this.components);
             this.rdoUno = new System.Windows.Forms.RadioButton();
+            this.mnuAuto = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
             this.SuspendLayout();
@@ -124,7 +125,8 @@
             this.mnuGame.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.itmGame,
             this.mnuChat,
-            this.itmHelp});
+            this.itmHelp,
+            this.mnuAuto});
             this.mnuGame.Location = new System.Drawing.Point(0, 0);
             this.mnuGame.Name = "mnuGame";
             this.mnuGame.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -405,6 +407,13 @@
             this.rdoUno.Visible = false;
             this.rdoUno.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
+            // mnuAuto
+            // 
+            this.mnuAuto.Name = "mnuAuto";
+            this.mnuAuto.Size = new System.Drawing.Size(64, 21);
+            this.mnuAuto.Text = "託管 (&A)";
+            this.mnuAuto.Click += new System.EventHandler(this.MnuAuto_Click);
+            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
@@ -481,6 +490,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuCheat;
         private System.Windows.Forms.ToolStripMenuItem mnuColor;
         private System.Windows.Forms.ToolStripMenuItem mnuNumber;
+        private System.Windows.Forms.ToolStripMenuItem mnuAuto;
     }
 }
 

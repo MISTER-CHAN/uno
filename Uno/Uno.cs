@@ -1637,6 +1637,20 @@ gameOver:
             ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
         }
 
+        private void MnuAuto_Click(object sender, EventArgs e)
+        {
+            isAutomatic = !isAutomatic;
+            mnuAuto.Text = (isAutomatic ? "☑" : "") + "託管 (&A)";
+            if (isAutomatic && (form.mnuPro.Checked || form.mnuHacker.Checked))
+                areCheating[0] = true;
+            if (isPlayer0sTurn)
+            {
+                isPlayer0sTurn = false;
+                mnuSaveGame.Enabled = false;
+                Play(0);
+            }
+        }
+
         private void MnuChat_Click(object sender, EventArgs e)
         {
             string cmd = Interaction.InputBox(">", "Chat");
@@ -1653,21 +1667,6 @@ gameOver:
                     string[] data = cmd.Split(char.Parse(" "));
                     switch (data[0].ToLower())
                     {
-                        case "/auto":
-                            if (data.Length == 1)
-                                isAutomatic = !isAutomatic;
-                            else
-                                isAutomatic = bool.Parse(data[1]);
-                            if (isAutomatic && (form.mnuPro.Checked || form.mnuHacker.Checked))
-                                areCheating[0] = true;
-                            if (isPlayer0sTurn)
-                            {
-                                isPlayer0sTurn = false;
-                                mnuSaveGame.Enabled = false;
-                                Play(0);
-                            }
-                            Action(0, "已切換託管");
-                            break;
                         case "/clear":
                             byte fromColor = 0, fromNumber = 0, player = 0, toColor = UnoColor.MAX_VALUE, toNumber = UnoNumber.MAX_VALUE;
                             switch (data.Length)
@@ -1751,7 +1750,7 @@ gameOver:
                                 page = data[1];
                             string help = page switch
                             { 
-                                "1" => "/auto [bool isAutomatic]\n" +
+                                "1" => "" +
                                     "/clear [byte player] [byte color] [byte number]\n" +
                                     "/currard <byte color> [byte number]\n" +
                                     "/decks <int decks>\n" +
@@ -2998,6 +2997,11 @@ arrived:
             lblCards[0].BackColor = Color.White;
             ResizeForm();
             SetInterval(form.animation);
+            if (form.mnuPairs.Checked)
+            {
+                mnuByColor.Checked = false;
+                mnuByNumber.Checked = true;
+            }
             if (form.mnuPro.Checked || form.mnuHacker.Checked)
             {
                 for (int i = 1; i < 4; i++)
