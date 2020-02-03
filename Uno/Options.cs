@@ -12,6 +12,7 @@ namespace Uno {
 	public partial class Options : Form {
 
         bool isPlaying = false;
+        public bool isPlayingRecord = false;
         public int animation = 20;
         public string[] keys = {};
 
@@ -36,6 +37,12 @@ namespace Uno {
             {
                 mnuLoadRules.Text = s.Substring(s.LastIndexOf('K') + 1);
                 mnuLoadRules.Enabled = true;
+            }
+            s = Interaction.GetSetting("UNO", "RECORD", "RULES", "");
+            if (s != "")
+            {
+                mnuPlayRecord.Text = "(錄像) " + s.Substring(s.LastIndexOf('K') + 1);
+                mnuPlayRecord.Enabled = true;
             }
         }
 
@@ -288,6 +295,15 @@ namespace Uno {
         private void MnuNew_Click(object sender, EventArgs e)
         {
             MnuStandard_Click(mnuStandard, new EventArgs());
+            MnuStart_Click(mnuStart, new EventArgs());
+        }
+
+        private void MnuPlayRecord_Click(object sender, EventArgs e)
+        {
+            mnuLoad.Enabled = false;
+            isPlayingRecord = true;
+            LoadGame(Interaction.GetSetting("UNO", "RECORD", "RULES"));
+            mnuCanShowCards.Checked = true;
             MnuStart_Click(mnuStart, new EventArgs());
         }
 

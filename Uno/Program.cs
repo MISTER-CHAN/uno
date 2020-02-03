@@ -44,8 +44,8 @@ namespace Uno
                         // 找到这两行了，修改它们
                         newLine = line.Substring(0, line.IndexOf("(\"") + 2)
                             + DateTime.Now.Year + "."
-                            + DateTime.Now.Month.ToString("00") + "."
-                            + DateTime.Now.Day.ToString("00") + "\")]";
+                            + DateTime.Now.Month + "."
+                            + DateTime.Now.Day + "\")]";
                     }
                     else
                     {
