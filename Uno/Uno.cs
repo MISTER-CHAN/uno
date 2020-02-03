@@ -2053,6 +2053,23 @@ gameOver:
                 , "按键说明", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void MnuForward_Click(object sender, EventArgs e)
+        {
+            if (form.animation > 0)
+            {
+                if (1 < distance)
+                {
+                    SetInterval(0);
+                    mnuPlayPause.Text = "⏵播放 (&P)";
+                }
+                else
+                {
+                    SetInterval(form.animation);
+                    mnuPlayPause.Text = "⏸暫停 (&P)";
+                }
+            }
+        }
+
         private void MnuNumber_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menu = (ToolStripMenuItem)sender;
@@ -2068,6 +2085,20 @@ gameOver:
                 return;
             FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
             Application.Restart();
+        }
+
+        private void MnuPlayPause_Click(object sender, EventArgs e)
+        {
+            if (1 < distance && distance < short.MaxValue)
+            {
+                SetInterval(short.MaxValue);
+                mnuPlayPause.Text = "⏵播放 (&P)";
+            }
+            else
+            {
+                SetInterval(form.animation);
+                mnuPlayPause.Text = "⏸暫停 (&P)";
+            }
         }
 
         private void MnuRank_Click(object sender, EventArgs e)
@@ -2088,6 +2119,11 @@ gameOver:
         {
             ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             Sort();
+        }
+
+        private void MnuStop_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void MnuToolTip_Click(object sender, EventArgs e)
@@ -2383,6 +2419,8 @@ gameOver:
                     return;
                 }
                 timThinking.Tag = "4,";
+                if (player == 0)
+                    rdoUno.Checked = false;
                 Play(player);
             }
         }
@@ -3279,8 +3317,12 @@ arrived:
                         Record.players[p].Add(cards.ToArray());
                     }
                 }
-                mnuAuto.Enabled = false;
+                mnuChat.Visible = false;
+                mnuAuto.Visible = false;
+                itmHelp.Visible = false;
                 isAutomatic = true;
+                mnuStop.Visible = true;
+                mnuForward.Visible = true;
             }
         }
 

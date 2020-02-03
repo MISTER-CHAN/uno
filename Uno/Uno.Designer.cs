@@ -51,6 +51,9 @@
             this.mnuControl = new System.Windows.Forms.ToolStripMenuItem();
             this.separatorHa = new System.Windows.Forms.ToolStripSeparator();
             this.itmAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuStop = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPlayPause = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuForward = new System.Windows.Forms.ToolStripMenuItem();
             this.timPlayersToCenter = new System.Windows.Forms.Timer(this.components);
             this.timPileToCenter = new System.Windows.Forms.Timer(this.components);
             this.lblDrawMark = new System.Windows.Forms.Label();
@@ -128,7 +131,10 @@
             this.itmGame,
             this.mnuChat,
             this.mnuAuto,
-            this.itmHelp});
+            this.itmHelp,
+            this.mnuStop,
+            this.mnuPlayPause,
+            this.mnuForward});
             this.mnuGame.Location = new System.Drawing.Point(0, 0);
             this.mnuGame.Name = "mnuGame";
             this.mnuGame.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
@@ -265,35 +271,58 @@
             // 
             this.mnuContent.Name = "mnuContent";
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuContent.Size = new System.Drawing.Size(180, 22);
+            this.mnuContent.Size = new System.Drawing.Size(141, 22);
             this.mnuContent.Text = "目彔 (&C)";
             this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
             // 
             // mnuCanPlay
             // 
             this.mnuCanPlay.Name = "mnuCanPlay";
-            this.mnuCanPlay.Size = new System.Drawing.Size(180, 22);
+            this.mnuCanPlay.Size = new System.Drawing.Size(141, 22);
             this.mnuCanPlay.Text = "出牌規則";
             this.mnuCanPlay.Click += new System.EventHandler(this.MnuCanPlay_Click);
             // 
             // mnuControl
             // 
             this.mnuControl.Name = "mnuControl";
-            this.mnuControl.Size = new System.Drawing.Size(180, 22);
+            this.mnuControl.Size = new System.Drawing.Size(141, 22);
             this.mnuControl.Text = "按鍵說明";
             this.mnuControl.Click += new System.EventHandler(this.MnuControl_Click);
             // 
             // separatorHa
             // 
             this.separatorHa.Name = "separatorHa";
-            this.separatorHa.Size = new System.Drawing.Size(177, 6);
+            this.separatorHa.Size = new System.Drawing.Size(138, 6);
             // 
             // itmAbout
             // 
             this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(180, 22);
+            this.itmAbout.Size = new System.Drawing.Size(141, 22);
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
+            // 
+            // mnuStop
+            // 
+            this.mnuStop.Name = "mnuStop";
+            this.mnuStop.Size = new System.Drawing.Size(71, 21);
+            this.mnuStop.Text = "⏹停止 (&S)";
+            this.mnuStop.Visible = false;
+            this.mnuStop.Click += new System.EventHandler(this.MnuStop_Click);
+            // 
+            // mnuPlayPause
+            // 
+            this.mnuPlayPause.Name = "mnuPlayPause";
+            this.mnuPlayPause.Size = new System.Drawing.Size(72, 21);
+            this.mnuPlayPause.Text = "⏸暫停 (&P)";
+            this.mnuPlayPause.Click += new System.EventHandler(this.MnuPlayPause_Click);
+            // 
+            // mnuForward
+            // 
+            this.mnuForward.Name = "mnuForward";
+            this.mnuForward.Size = new System.Drawing.Size(71, 21);
+            this.mnuForward.Text = "⏩快進 (&F)";
+            this.mnuForward.Visible = false;
+            this.mnuForward.Click += new System.EventHandler(this.MnuForward_Click);
             // 
             // timPlayersToCenter
             // 
@@ -511,6 +540,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuCanPlay;
         private System.Windows.Forms.ToolStripMenuItem mnuControl;
         private System.Windows.Forms.ToolStripSeparator separatorHa;
+        private System.Windows.Forms.ToolStripMenuItem mnuForward;
+        private System.Windows.Forms.ToolStripMenuItem mnuStop;
+        private System.Windows.Forms.ToolStripMenuItem mnuPlayPause;
     }
 }
 
