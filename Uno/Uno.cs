@@ -984,6 +984,8 @@ deny:
                 Interaction.SaveSetting("UNO", "RECORD", "FIRST", Record.firstTurn.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "UNOS", string.Join(",", Record.unos));
                 Interaction.SaveSetting("UNO", "RECORD", "COLORS", string.Join("C", Record.colors));
+                if (form.keys.Length > 0)
+                    Interaction.SaveSetting("UNO", "RECORD", "GAME", string.Join("K", form.keys));
                 string s = "";
                 foreach (Card c in Record.pile)
                     s += c.color + "I" + c.number + "C";
@@ -1675,6 +1677,37 @@ gameOver:
             reverse = bool.Parse(keys[6]);
             lblDraw.Text = keys[7];
             gametime = int.Parse(keys[8]);
+        }
+
+        private void LoadRecord()
+        {
+            Record.reverse = bool.Parse(Interaction.GetSetting("UNO", "RECORD", "REVERSE"));
+            Record.firstTurn = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "FIRST"));
+            Record.unos = new List<bool>(Interaction.GetSetting("UNO", "RECORD", "UNOS").Split(',').Cast<string>().Select(s => bool.Parse(s)));
+            Record.colors = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "COLORS").Split('C').Cast<string>().Select(s => byte.Parse(s)));
+            Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card().FromCard(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
+            string[] ps = Interaction.GetSetting("UNO", "RECORD", "PLAYERS").Split('P');
+            for (byte p = 0; p < 4; p++)
+            {
+                List<string> ts = new List<string>(ps[p].Split('T'));
+                foreach (string t in ts)
+                {
+                    if (t == "")
+                    {
+                        Record.players[p].Add(new Card[0]);
+                        continue;
+                    }
+                    string[] cs = t.Split('C');
+                    List<Card> cards = new List<Card>();
+                    foreach (string c in cs)
+                    {
+                        if (c == "")
+                            continue;
+                        cards.Add(new Card().FromCard(byte.Parse(c.Split('I')[0]), byte.Parse(c.Split('I')[1])));
+                    }
+                    Record.players[p].Add(cards.ToArray());
+                }
+            }
         }
 
         private void MnuAppearance_Click(object sender, EventArgs e)
@@ -2794,10 +2827,10 @@ gameOver:
                 }
                 else
                 {
-                    PlayersTurn(0);
                     try
                     {
                         LoadGame(form.keys);
+
                     }
                     catch
                     {
@@ -2805,6 +2838,7 @@ gameOver:
                         FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
                         Application.Restart();
                     }
+                    PlayersTurn(0);
                 }
                 if (form.mnuWatch.Checked)
                 {
@@ -3025,8 +3059,9 @@ arrived:
                         reverse = !reverse;
                     }
                 }
-            foreach (Label l in lblCards)
+            for (int i = 1; i < lblCards.Count; i++)
             {
+                Label l = lblCards[i];
                 if (l.Text == UnoNumberName.NULL)
                     continue;
                 switch (l.Text)
@@ -3289,34 +3324,7 @@ arrived:
             lblMovingCards[0].BringToFront();
             if (form.isPlayingRecord)
             {
-                form.keys = new string[0];
-                Record.reverse = bool.Parse(Interaction.GetSetting("UNO", "RECORD", "REVERSE"));
-                Record.firstTurn = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "FIRST"));
-                Record.unos = new List<bool>(Interaction.GetSetting("UNO", "RECORD", "UNOS").Split(',').Cast<string>().Select(s => bool.Parse(s)));
-                Record.colors = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "COLORS").Split('C').Cast<string>().Select(s => byte.Parse(s)));
-                Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card().FromCard(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
-                string[] ps = Interaction.GetSetting("UNO", "RECORD", "PLAYERS").Split('P');
-                for (byte p = 0; p < 4; p++)
-                {
-                    List<string> ts = new List<string>(ps[p].Split('T'));
-                    foreach (string t in ts)
-                    {
-                        if (t == "")
-                        {
-                            Record.players[p].Add(new Card[0]);
-                            continue;
-                        }
-                        string[] cs = t.Split('C');
-                        List<Card> cards = new List<Card>();
-                        foreach (string c in cs)
-                        {
-                            if (c == "")
-                                continue;
-                            cards.Add(new Card().FromCard(byte.Parse(c.Split('I')[0]), byte.Parse(c.Split('I')[1])));
-                        }
-                        Record.players[p].Add(cards.ToArray());
-                    }
-                }
+                LoadRecord();
                 mnuChat.Visible = false;
                 mnuAuto.Visible = false;
                 itmHelp.Visible = false;

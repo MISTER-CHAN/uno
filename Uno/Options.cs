@@ -302,7 +302,11 @@ namespace Uno {
         {
             mnuLoad.Enabled = false;
             isPlayingRecord = true;
-            LoadGame(Interaction.GetSetting("UNO", "RECORD", "RULES"));
+            string s = Interaction.GetSetting("UNO", "RECORD", "GAME", "");
+            if (s == "")
+                LoadGame(Interaction.GetSetting("UNO", "RECORD", "RULES"));
+            else
+                LoadGame(s);
             mnuBeginner.Checked = true;
             mnuPro.Checked = false;
             mnuHacker.Checked = false;
