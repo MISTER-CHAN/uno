@@ -986,6 +986,8 @@ deny:
                 Interaction.SaveSetting("UNO", "RECORD", "COLORS", string.Join("C", Record.colors));
                 if (form.keys.Length > 0)
                     Interaction.SaveSetting("UNO", "RECORD", "GAME", string.Join("K", form.keys));
+                else
+                    Interaction.SaveSetting("UNO", "RECORD", "GAME", "");
                 string s = "";
                 foreach (Card c in Record.pile)
                     s += c.color + "I" + c.number + "C";
@@ -2243,8 +2245,10 @@ gameOver:
                 if (player == 0)
                 {
                     if (cards.Count > 0)
+                    {
                         Sort();
-                    rdoUno.Checked = PlayersCards(player).Length == 1;
+                        rdoUno.Checked = PlayersCards(player).Length == 1;
+                    }
                 }
             }
             if (player == 0)
