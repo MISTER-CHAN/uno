@@ -530,6 +530,7 @@ deleted:
             }
             else
                 MovingCard.player = Record.firstGettingCard;
+            MovingCard.quickly = false;
             timPileToPlayers.Enabled = true;
         }
 
@@ -1510,61 +1511,34 @@ deny:
                 Draw(0);
         }
 
-        private void LblPile_DoubleClick(object sender, EventArgs e)
+        private void LblPile_MouseClick(object sender, MouseEventArgs e)
         {
-            if (form.mnuCanShowCards.Checked)
+            if (e.Button == MouseButtons.Right)
             {
-                int i = 0;
-                string cards = "";
-                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                    {
-                        string q = pile.cards[c, n] + "";
-                        if (q != "0")
+                if (form.mnuCanShowCards.Checked || form.mnuFair.Checked)
+                {
+                    int i = 0;
+                    string cards = "";
+                    for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                        for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
                         {
-                            if (q == "1")
+                            string q = pile.cards[c, n] + "";
+                            if (q != "0")
                             {
-                                q = "";
-                            }
-                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                            i++;
-                            if (i % (int)((float)width / UnoSize.WIDTH) == 0)
-                            {
-                                cards += "\n";
+                                if (q == "1")
+                                {
+                                    q = "";
+                                }
+                                cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                                i++;
+                                if (i % (int)((float)width / UnoSize.WIDTH) == 0)
+                                {
+                                    cards += "\n";
+                                }
                             }
                         }
-                    }
-                Action(0, cards);
-            }
-        }
-
-        private void LblPlayers_Click(object sender, EventArgs e)
-        {
-            byte p = (byte)((Label)sender).Tag;
-            lblPlayers[p].AutoSize = form.mnuCanShowCards.Checked;
-            if (form.mnuCanShowCards.Checked)
-            {
-                int i = 0;
-                string cards = "";
-                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                    for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                    {
-                        string q = players[p].cards[c, n] + "";
-                        if (q != "0")
-                        {
-                            if (q == "1")
-                            {
-                                q = "";
-                            }
-                            cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                            i++;
-                            if (i % (int)((float)width / UnoSize.WIDTH) == 0)
-                            {
-                                cards += "\n";
-                            }
-                        }
-                    }
-                Action(p, cards);
+                    Action(0, cards);
+                }
             }
         }
 
@@ -1590,9 +1564,9 @@ deny:
 
         private void LblCounts_TextChanged(object sender, EventArgs e) {
             byte index = (byte)((Label)sender).Tag;
-            if (form.mnuCanShowCards.Checked)
+            if (form.mnuCanShowCards.Checked && index > 0)
             {
-                ShowCards();
+                ShowCards(index);
             }
             if (MovingCard.isPlaying)
             {
@@ -1652,7 +1626,35 @@ gameOver:
                     GameOver();
                 }
             }
-		}
+        }
+
+        private void LblPlayers_MouseDown(object sender, MouseEventArgs e)
+        {
+            byte index = (byte)((Label)sender).Tag;
+            lblPlayers[index].AutoSize = true;
+            lblPlayers[index].BackgroundImage = null;
+            ShowCards(index);
+            switch (index)
+            {
+                case 1: lblPlayers[1].Top = height / 2 - lblPlayers[1].Height / 2; break;
+                case 2: lblPlayers[2].Left = width / 2 - lblPlayers[2].Width / 2; break;
+                case 3: lblPlayers[3].Location = new Point(width - lblPlayers[3].Width, height / 2 - lblPlayers[3].Height / 2); break;
+            }
+        }
+
+        private void LblPlayers_MouseUp(object sender, MouseEventArgs e)
+        {
+            byte index = (byte)((Label)sender).Tag;
+            lblPlayers[index].AutoSize = false;
+            lblPlayers[index].BackgroundImage = Properties.Resources.uno_back;
+            lblPlayers[index].Text = "";
+            switch (index)
+            {
+                case 1: lblPlayers[1].Location = new Point(0, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2); break;
+                case 2: lblPlayers[2].Location = new Point(width / 2 - UnoSize.WIDTH / 2, mnuGame.Height); break;
+                case 3: lblPlayers[3].Location = new Point(width - UnoSize.WIDTH, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2); break;
+            }
+        }
 
         private void LblWatch_Resize(object sender, EventArgs e)
         {
@@ -2638,53 +2640,49 @@ gameOver:
                 "功能\t" + GetUsage(card.Text));
         }
 
-        private void ShowCards()
+        private void ShowCards(byte player)
         {
+            int i = 0;
+            string cards = "";
             if (mnuByColor.Checked)
-                for (byte p = 1; p <= 3; p++)
-                {
-                    string cards = "";
-                    for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                        for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                        {
-                            string q = players[p].cards[c, n] + "";
-                            if (q != "0")
-                            {
-                                if (q == "1")
-                                    q = "";
-                                cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                                if (p == 1 || p == 3)
-                                    cards += "\n";
-                            }
-                        }
-                    lblPlayers[p].Text = cards;
-                }
-            else
-                for (byte p = 1; p <= 3; p++)
-                {
-                    string cards = "";
+                for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
                     for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                        for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                    {
+                        string q = players[player].cards[c, n] + "";
+                        if (q != "0")
                         {
-                            string q = players[p].cards[c, n] + "";
-                            if (q != "0")
-                            {
-                                if (q == "1")
-                                    q = "";
-                                cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                                if (p == 1 || p == 3)
-                                    cards += "\n";
-                            }
+                            if (q == "1")
+                                q = "";
+                            string s = "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                            cards += s;
+                            if (player == 1 || player == 3)
+                                cards += "\n";
+                            i++;
                         }
-                    lblPlayers[p].Text = cards;
-                }
-            for (byte p = 1; p <= 3; p++)
-                switch (p)
-                {
-                    case 1: lblPlayers[p].Top = height / 2 - lblPlayers[p].Height / 2; break;
-                    case 2: lblPlayers[p].Left = width / 2 - lblPlayers[p].Width / 2; break;
-                    case 3: lblPlayers[p].Location = new Point(width - lblPlayers[p].Width, height / 2 - lblPlayers[p].Height / 2); break;
-                }
+                    }
+            else
+                for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                    {
+                        string q = players[player].cards[c, n] + "";
+                        if (q != "0")
+                        {
+                            if (q == "1")
+                                q = "";
+                            string s = "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                            cards += s;
+                            if (player == 1 || player == 3)
+                                cards += "\n";
+                            i++;
+                        }
+                    }
+            switch (player)
+            {
+                case 1: lblPlayers[1].Top = height / 2 - lblPlayers[1].Height / 2; break;
+                case 2: lblPlayers[2].Left = width / 2 - lblPlayers[2].Width / 2; break;
+                case 3: lblPlayers[3].Location = new Point(width - lblPlayers[3].Width, height / 2 - lblPlayers[3].Height / 2); break;
+            }
+            lblPlayers[player].Text = cards;
         }
 
         void Sort()
@@ -3209,7 +3207,11 @@ arrived:
                 lblPlayers[i].Tag = i;
                 if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                lblPlayers[i].Click += new EventHandler(LblPlayers_Click);
+                if (i > 0 && form.mnuFair.Checked)
+                {
+                    lblPlayers[i].MouseDown += LblPlayers_MouseDown;
+                    lblPlayers[i].MouseUp += LblPlayers_MouseUp;
+                }
                 lblCounts[i] = new Label();
                 Controls.Add(lblCounts[i]);
                 lblCounts[i].AutoSize = true;
