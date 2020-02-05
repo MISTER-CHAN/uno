@@ -523,8 +523,13 @@ deleted:
             btnStart.Visible = false;
             lblMovingCards[0].BringToFront();
             mnuChat.Enabled = true;
-            MovingCard.player = (byte)(4f * Rnd());
-            Record.firstGettingCard = MovingCard.player;
+            if (!form.isPlayingRecord)
+            {
+                MovingCard.player = (byte)(4f * Rnd());
+                Record.firstGettingCard = MovingCard.player;
+            }
+            else
+                MovingCard.player = Record.firstGettingCard;
             timPileToPlayers.Enabled = true;
         }
 
@@ -2543,7 +2548,8 @@ gameOver:
             if (MovingCard.isPlaying)
                 Sort();
             lblCards[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, height / 2 - UnoSize.HEIGHT / 2);
-		}
+            btnStart.Location = new Point(width / 2 - btnStart.Width / 2, height / 2 - btnStart.Height / 2);
+        }
 
 		double Rnd() {
             if (form.mnuSeed.Checked)
@@ -3307,7 +3313,6 @@ arrived:
                 mnuStop.Visible = true;
                 mnuForward.Visible = true;
             }
-            btnStart.Location = new Point(width / 2 - btnStart.Width / 2, height / 2 - btnStart.Height / 2); ;
         }
 
         private void Uno_Click(object sender, EventArgs e)
