@@ -493,7 +493,7 @@ number_color:
                     cards.Add(bestCard);
             }
 exit:
-            if (form.mnuHacker.Checked)
+            if (form.mnuPro.Checked)
             {
                 if (cards.Count <= 0 && ((isAutomatic && form.mnuFair.Checked) || player > 0))
                 {
@@ -1734,7 +1734,7 @@ gameOver:
         {
             isAutomatic = !isAutomatic;
             mnuAuto.Text = (isAutomatic ? "☑" : "☐") + "託管 (&A)";
-            areCheating[0] = isAutomatic && (form.mnuPro.Checked || form.mnuHacker.Checked) && form.mnuFair.Checked;
+            areCheating[0] = isAutomatic && form.mnuPro.Checked && form.mnuFair.Checked;
             if (isPlayer0sTurn)
             {
                 isPlayer0sTurn = false;
@@ -3232,7 +3232,7 @@ arrived:
                 mnuByColor.Checked = false;
                 mnuByNumber.Checked = true;
             }
-            if (form.mnuPro.Checked || form.mnuHacker.Checked)
+            if (form.mnuPro.Checked)
             {
                 for (int i = 1; i < 4; i++)
                     areCheating[i] = true;

@@ -59,32 +59,31 @@ namespace Uno {
             txtDecks.Text = keys[14];
             mnuBeginner.Checked = bool.Parse(keys[15]);
             mnuPro.Checked = bool.Parse(keys[16]);
-            mnuHacker.Checked = bool.Parse(keys[17]);
-            mnuRygbBlank.Checked = bool.Parse(keys[18]);
-            mnuMagentaBlank.Checked = bool.Parse(keys[19]);
-            mnuBlackBlank.Checked = bool.Parse(keys[20]);
-            mnuWildDownpourDraw.Checked = bool.Parse(keys[21]);
-            mnuDaWah.Checked = bool.Parse(keys[22]);
-            mnuWildHitfire.Checked = bool.Parse(keys[23]);
-            mnuDos.Checked = bool.Parse(keys[24]);
-            mnuCanShowCards.Checked = bool.Parse(keys[25]);
-            mnuPairs.Checked = bool.Parse(keys[26]);
-            mnuStacking.Checked = bool.Parse(keys[27]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[28]);
-            mnuDrawToMatch.Checked = bool.Parse(keys[29]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[30]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[31]);
-            mnuChallenges.Checked = bool.Parse(keys[32]);
-            mnuDoubleDraw.Checked = bool.Parse(keys[33]);
-            mnuDrawBeforePlaying.Checked = bool.Parse(keys[34]);
-            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[35]);
-            mnuSkipPlayers.Checked = bool.Parse(keys[36]);
-            mnuSkipTimes.Checked = bool.Parse(keys[37]);
-            mnuOneWinner.Checked = bool.Parse(keys[38]);
-            mnuOneLoser.Checked = bool.Parse(keys[39]);
-            mnuUno.Checked = bool.Parse(keys[40]);
-            mnuFair.Checked = bool.Parse(keys[41]);
-            mnuCheat.Checked = bool.Parse(keys[42]);
+            mnuRygbBlank.Checked = bool.Parse(keys[17]);
+            mnuMagentaBlank.Checked = bool.Parse(keys[18]);
+            mnuBlackBlank.Checked = bool.Parse(keys[19]);
+            mnuWildDownpourDraw.Checked = bool.Parse(keys[20]);
+            mnuDaWah.Checked = bool.Parse(keys[21]);
+            mnuWildHitfire.Checked = bool.Parse(keys[22]);
+            mnuDos.Checked = bool.Parse(keys[23]);
+            mnuCanShowCards.Checked = bool.Parse(keys[24]);
+            mnuPairs.Checked = bool.Parse(keys[25]);
+            mnuStacking.Checked = bool.Parse(keys[26]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[27]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[28]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[29]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[30]);
+            mnuChallenges.Checked = bool.Parse(keys[31]);
+            mnuDoubleDraw.Checked = bool.Parse(keys[32]);
+            mnuDrawBeforePlaying.Checked = bool.Parse(keys[33]);
+            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[34]);
+            mnuSkipPlayers.Checked = bool.Parse(keys[35]);
+            mnuSkipTimes.Checked = bool.Parse(keys[36]);
+            mnuOneWinner.Checked = bool.Parse(keys[37]);
+            mnuOneLoser.Checked = bool.Parse(keys[38]);
+            mnuUno.Checked = bool.Parse(keys[39]);
+            mnuFair.Checked = bool.Parse(keys[40]);
+            mnuCheat.Checked = bool.Parse(keys[41]);
         }
 
         private void MnuAdvanced_Click(object sender, EventArgs e)
@@ -177,7 +176,6 @@ namespace Uno {
         {
             mnuBeginner.Checked = false;
             mnuPro.Checked = false;
-            mnuHacker.Checked = false;
             ((ToolStripMenuItem)sender).Checked = true;
         }
 
@@ -310,7 +308,6 @@ namespace Uno {
                 LoadGame(s);
             mnuBeginner.Checked = true;
             mnuPro.Checked = false;
-            mnuHacker.Checked = false;
             mnuCanShowCards.Checked = true;
             mnuCheat.Checked = false;
             MnuStart_Click(mnuStart, new EventArgs());
@@ -414,7 +411,6 @@ namespace Uno {
             s += txtDecks.Text + "K";
             s += mnuBeginner.Checked + "K";
             s += mnuPro.Checked + "K";
-            s += mnuHacker.Checked + "K";
             s += mnuRygbBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
