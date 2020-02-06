@@ -46,6 +46,15 @@ namespace Uno {
             }
         }
 
+        private void KeepSafeForCheating_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!mnuBeginner.Checked && mnuCanShowCards.Checked)
+            {
+                MessageBox.Show("正規比賽中禁止明牌！", "正規比賽", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                mnuCanShowCards.Checked = false;
+            }
+        }
+
         private void LoadGame(string save)
         {
             string[] keys = save.Split(char.Parse("K"));
@@ -59,21 +68,21 @@ namespace Uno {
             txtDecks.Text = keys[14];
             mnuBeginner.Checked = bool.Parse(keys[15]);
             mnuPro.Checked = bool.Parse(keys[16]);
-            mnuRygbBlank.Checked = bool.Parse(keys[17]);
-            mnuMagentaBlank.Checked = bool.Parse(keys[18]);
-            mnuBlackBlank.Checked = bool.Parse(keys[19]);
-            mnuWildDownpourDraw.Checked = bool.Parse(keys[20]);
-            mnuDaWah.Checked = bool.Parse(keys[21]);
-            mnuWildHitfire.Checked = bool.Parse(keys[22]);
-            mnuDos.Checked = bool.Parse(keys[23]);
-            mnuCanShowCards.Checked = bool.Parse(keys[24]);
-            mnuPairs.Checked = bool.Parse(keys[25]);
-            mnuStacking.Checked = bool.Parse(keys[26]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[27]);
-            mnuDrawToMatch.Checked = bool.Parse(keys[28]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[29]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[30]);
-            mnuChallenges.Checked = bool.Parse(keys[31]);
+            mnuCheater.Checked = bool.Parse(keys[17]);
+            mnuRygbBlank.Checked = bool.Parse(keys[18]);
+            mnuMagentaBlank.Checked = bool.Parse(keys[19]);
+            mnuBlackBlank.Checked = bool.Parse(keys[20]);
+            mnuWildDownpourDraw.Checked = bool.Parse(keys[21]);
+            mnuDaWah.Checked = bool.Parse(keys[22]);
+            mnuWildHitfire.Checked = bool.Parse(keys[23]);
+            mnuDos.Checked = bool.Parse(keys[24]);
+            mnuCanShowCards.Checked = bool.Parse(keys[25]);
+            mnuPairs.Checked = bool.Parse(keys[26]);
+            mnuStacking.Checked = bool.Parse(keys[27]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[28]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[29]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[30]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[31]);
             mnuDoubleDraw.Checked = bool.Parse(keys[32]);
             mnuDrawBeforePlaying.Checked = bool.Parse(keys[33]);
             mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[34]);
@@ -106,9 +115,6 @@ namespace Uno {
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = false;
             mnuDrawTwoBeforePlaying.Checked = false;
-            mnuChallenges.Checked = false;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = false;
@@ -176,6 +182,7 @@ namespace Uno {
         {
             mnuBeginner.Checked = false;
             mnuPro.Checked = false;
+            mnuCheater.Checked = false;
             ((ToolStripMenuItem)sender).Checked = true;
         }
 
@@ -196,12 +203,9 @@ namespace Uno {
             mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = false;
             mnuDrawAndPlay.Checked = true;
-            mnuChallenges.Checked = false;
             mnuDoubleDraw.Checked = true;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = true;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;
@@ -226,12 +230,9 @@ namespace Uno {
             mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = true;
             mnuDrawAndPlay.Checked = true;
-            mnuChallenges.Checked = false;
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = false;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;
@@ -307,7 +308,7 @@ namespace Uno {
             else
                 LoadGame(s);
             mnuBeginner.Checked = true;
-            mnuPro.Checked = false;
+            mnuCheater.Checked = false;
             mnuCanShowCards.Checked = true;
             mnuCheat.Checked = false;
             MnuStart_Click(mnuStart, new EventArgs());
@@ -361,9 +362,6 @@ namespace Uno {
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = false;
             mnuDrawTwoBeforePlaying.Checked = false;
-            mnuChallenges.Checked = true;
-            mnuJumpin.Checked = false;
-            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = true;
             mnuSkipTimes.Checked = false;
             mnuOneWinner.Checked = true;
@@ -411,6 +409,7 @@ namespace Uno {
             s += txtDecks.Text + "K";
             s += mnuBeginner.Checked + "K";
             s += mnuPro.Checked + "K";
+            s += mnuCheater.Checked + "K";
             s += mnuRygbBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
@@ -425,7 +424,6 @@ namespace Uno {
             s += mnuDrawToMatch.Checked + "K";
             s += mnuDrawAllAndPlay.Checked + "K";
             s += mnuDrawAndPlay.Checked + "K";
-            s += mnuChallenges.Checked + "K";
             s += mnuDoubleDraw.Checked + "K";
             s += mnuDrawBeforePlaying.Checked + "K";
             s += mnuDrawTwoBeforePlaying.Checked + "K";

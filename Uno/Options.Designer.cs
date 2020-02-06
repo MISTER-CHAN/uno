@@ -55,7 +55,7 @@
             this.txtDecks = new System.Windows.Forms.ToolStripTextBox();
             this.mnuDifficulty = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBeginner = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuPro = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCheater = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCards = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRygbBlank = new System.Windows.Forms.ToolStripMenuItem();
@@ -119,6 +119,7 @@
             this.mnuMembership = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPro = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -385,7 +386,8 @@
             // 
             this.mnuDifficulty.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBeginner,
-            this.mnuPro});
+            this.mnuPro,
+            this.mnuCheater});
             this.mnuDifficulty.Name = "mnuDifficulty";
             this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
             this.mnuDifficulty.Text = "機器人水平";
@@ -397,14 +399,15 @@
             this.mnuBeginner.Name = "mnuBeginner";
             this.mnuBeginner.Size = new System.Drawing.Size(180, 22);
             this.mnuBeginner.Text = "新手";
+            this.mnuBeginner.CheckedChanged += new System.EventHandler(this.KeepSafeForCheating_CheckedChanged);
             this.mnuBeginner.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
-            // mnuPro
+            // mnuCheater
             // 
-            this.mnuPro.Name = "mnuPro";
-            this.mnuPro.Size = new System.Drawing.Size(180, 22);
-            this.mnuPro.Text = "賭神";
-            this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
+            this.mnuCheater.Name = "mnuCheater";
+            this.mnuCheater.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheater.Text = "賭神";
+            this.mnuCheater.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // mnuCards
             // 
@@ -430,7 +433,7 @@
             this.mnuBlankReverse,
             this.mnuBlankDraw});
             this.mnuBlank.Name = "mnuBlank";
-            this.mnuBlank.Size = new System.Drawing.Size(141, 22);
+            this.mnuBlank.Size = new System.Drawing.Size(180, 22);
             this.mnuBlank.Text = "[空白]";
             // 
             // mnuRygbBlank
@@ -518,7 +521,7 @@
             this.mnuWildDownpourDraw,
             this.mnuBlackBlank});
             this.mnuWater.Name = "mnuWater";
-            this.mnuWater.Size = new System.Drawing.Size(141, 22);
+            this.mnuWater.Size = new System.Drawing.Size(180, 22);
             this.mnuWater.Text = "UNO H₂O";
             // 
             // mnuWildDownpourDraw
@@ -544,7 +547,7 @@
             this.mnuWildHitfire,
             this.mnuTradeHands});
             this.mnuAttack.Name = "mnuAttack";
-            this.mnuAttack.Size = new System.Drawing.Size(141, 22);
+            this.mnuAttack.Size = new System.Drawing.Size(180, 22);
             this.mnuAttack.Text = "UNO Attack";
             // 
             // mnuDaWah
@@ -576,13 +579,13 @@
             // 
             this.mnuSpin.Enabled = false;
             this.mnuSpin.Name = "mnuSpin";
-            this.mnuSpin.Size = new System.Drawing.Size(141, 22);
+            this.mnuSpin.Size = new System.Drawing.Size(180, 22);
             this.mnuSpin.Text = "UNO Spin";
             // 
             // mnuDos
             // 
             this.mnuDos.Name = "mnuDos";
-            this.mnuDos.Size = new System.Drawing.Size(141, 22);
+            this.mnuDos.Size = new System.Drawing.Size(180, 22);
             this.mnuDos.Text = "Dos";
             this.mnuDos.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -616,6 +619,7 @@
             this.mnuCanShowCards.Name = "mnuCanShowCards";
             this.mnuCanShowCards.Size = new System.Drawing.Size(203, 22);
             this.mnuCanShowCards.Text = "明牌";
+            this.mnuCanShowCards.CheckedChanged += new System.EventHandler(this.KeepSafeForCheating_CheckedChanged);
             this.mnuCanShowCards.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuPairs
@@ -693,8 +697,7 @@
             // 
             // mnuChallenges
             // 
-            this.mnuChallenges.Checked = true;
-            this.mnuChallenges.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuChallenges.Enabled = false;
             this.mnuChallenges.Name = "mnuChallenges";
             this.mnuChallenges.Size = new System.Drawing.Size(203, 22);
             this.mnuChallenges.Text = "允许检举";
@@ -795,7 +798,7 @@
             this.mnuWatch.Checked = true;
             this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuWatch.Name = "mnuWatch";
-            this.mnuWatch.Size = new System.Drawing.Size(194, 22);
+            this.mnuWatch.Size = new System.Drawing.Size(180, 22);
             this.mnuWatch.Text = "计时";
             this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -804,7 +807,7 @@
             this.mnuAutoSave.Checked = true;
             this.mnuAutoSave.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAutoSave.Name = "mnuAutoSave";
-            this.mnuAutoSave.Size = new System.Drawing.Size(194, 22);
+            this.mnuAutoSave.Size = new System.Drawing.Size(180, 22);
             this.mnuAutoSave.Text = "自動存檔";
             // 
             // mnuFair
@@ -817,14 +820,14 @@
             // mnuCheat
             // 
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(194, 22);
+            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
             this.mnuCheat.Text = "允许作弊";
             this.mnuCheat.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuSeed
             // 
             this.mnuSeed.Name = "mnuSeed";
-            this.mnuSeed.Size = new System.Drawing.Size(194, 22);
+            this.mnuSeed.Size = new System.Drawing.Size(180, 22);
             this.mnuSeed.Text = "不洗牌";
             this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -837,7 +840,7 @@
             this.mnuAnim15,
             this.mnuAnim20});
             this.mnuAnimation.Name = "mnuAnimation";
-            this.mnuAnimation.Size = new System.Drawing.Size(194, 22);
+            this.mnuAnimation.Size = new System.Drawing.Size(180, 22);
             this.mnuAnimation.Text = "动画长度";
             // 
             // mnuAnim0
@@ -887,7 +890,7 @@
             this.mnuThinking.Checked = true;
             this.mnuThinking.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuThinking.Name = "mnuThinking";
-            this.mnuThinking.Size = new System.Drawing.Size(194, 22);
+            this.mnuThinking.Size = new System.Drawing.Size(180, 22);
             this.mnuThinking.Text = "思考中的機器人";
             this.mnuThinking.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -899,7 +902,7 @@
             this.mnuRNGCryptoServiceProvider,
             this.mnuMembership});
             this.mnuRnd.Name = "mnuRnd";
-            this.mnuRnd.Size = new System.Drawing.Size(194, 22);
+            this.mnuRnd.Size = new System.Drawing.Size(180, 22);
             this.mnuRnd.Text = "洗牌人";
             // 
             // mnuRandom
@@ -946,6 +949,13 @@
             this.mnuQuit.Size = new System.Drawing.Size(43, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
+            // 
+            // mnuPro
+            // 
+            this.mnuPro.Name = "mnuPro";
+            this.mnuPro.Size = new System.Drawing.Size(180, 22);
+            this.mnuPro.Text = "職業";
+            this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // Options
             // 
@@ -1048,7 +1058,7 @@
         public System.Windows.Forms.ToolStripMenuItem mnuUno;
         private System.Windows.Forms.ToolStripMenuItem mnuDifficulty;
         public System.Windows.Forms.ToolStripMenuItem mnuBeginner;
-        public System.Windows.Forms.ToolStripMenuItem mnuPro;
+        public System.Windows.Forms.ToolStripMenuItem mnuCheater;
         private System.Windows.Forms.ToolStripMenuItem mnuRnd;
         public System.Windows.Forms.ToolStripMenuItem mnuRandom;
         public System.Windows.Forms.ToolStripMenuItem mnuGuid;
@@ -1065,5 +1075,6 @@
         private System.Windows.Forms.ToolStripSeparator sepLoad;
         private System.Windows.Forms.ToolStripMenuItem mnuPlayRecord;
         public System.Windows.Forms.ToolStripMenuItem mnuFair;
+        public System.Windows.Forms.ToolStripMenuItem mnuPro;
     }
 }
