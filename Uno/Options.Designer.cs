@@ -55,6 +55,7 @@
             this.txtDecks = new System.Windows.Forms.ToolStripTextBox();
             this.mnuDifficulty = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBeginner = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPro = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheater = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCards = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBlank = new System.Windows.Forms.ToolStripMenuItem();
@@ -119,7 +120,6 @@
             this.mnuMembership = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuPro = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -390,7 +390,7 @@
             this.mnuCheater});
             this.mnuDifficulty.Name = "mnuDifficulty";
             this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
-            this.mnuDifficulty.Text = "機器人水平";
+            this.mnuDifficulty.Text = "對手水平";
             // 
             // mnuBeginner
             // 
@@ -401,6 +401,13 @@
             this.mnuBeginner.Text = "新手";
             this.mnuBeginner.CheckedChanged += new System.EventHandler(this.KeepSafeForCheating_CheckedChanged);
             this.mnuBeginner.Click += new System.EventHandler(this.MnuDifficulty_Click);
+            // 
+            // mnuPro
+            // 
+            this.mnuPro.Name = "mnuPro";
+            this.mnuPro.Size = new System.Drawing.Size(180, 22);
+            this.mnuPro.Text = "職業";
+            this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // mnuCheater
             // 
@@ -949,13 +956,6 @@
             this.mnuQuit.Size = new System.Drawing.Size(43, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
-            // 
-            // mnuPro
-            // 
-            this.mnuPro.Name = "mnuPro";
-            this.mnuPro.Size = new System.Drawing.Size(180, 22);
-            this.mnuPro.Text = "職業";
-            this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // Options
             // 
