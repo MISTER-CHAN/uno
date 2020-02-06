@@ -497,7 +497,7 @@ exit:
             {
                 if (cards.Count <= 0 && ((isAutomatic && form.mnuFair.Checked) || player > 0))
                 {
-                    bestCard = GetBestCard();
+                    bestCard = GetBestCard(player);
                     if (bestCard != null)
                     {
                         for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
@@ -1143,7 +1143,7 @@ deny:
             Application.Restart();
         }
 
-        Card GetBestCard()
+        Card GetBestCard(byte player)
         {
             if (MovingCard.isPlaying)
             {
@@ -1186,11 +1186,43 @@ deny:
                 {
                     return new Card().FromCard(UnoColor.MAGENTA, UnoNumber.BLANK);
                 }
-                for (byte c = 0; c < UnoColor.BLACK; c++)
+                for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                 {
                     if (pile.cards[c, backNumber] > 0)
                     {
                         return new Card().FromCard(c, backNumber);
+                    }
+                }
+                if (form.mnuPairs.Checked)
+                {
+                    byte mn = UnoNumber.MAX_VALUE;
+                    int mq = 0, qn;
+                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+                    {
+                        byte n = playlist[b];
+                        int q = GetQuantityByNumber(player, n);
+                        if (q > mq)
+                        {
+                            qn = 0;
+                            if (n < UnoNumber.BLANK && players[player].cards[backColor, n] <= 0 && pile.cards[backColor, n] <= 0)
+                                continue;
+                            for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                                qn += pile.cards[c, n];
+                            if (qn > 0)
+                            {
+                                mq = q;
+                                mn = n;
+                            }
+                        }
+                    }
+                    if (mn != UnoNumber.MAX_VALUE)
+                    {
+                        if (pile.cards[backColor, mn] > 0)
+                            return new Card().FromCard(backColor, mn);
+                        else
+                            for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
+                                if (pile.cards[c, mn] > 0)
+                                    return new Card().FromCard(c, mn);
                     }
                 }
                 for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
@@ -1674,7 +1706,7 @@ gameOver:
                     for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
                         players[p].cards[c, n] = int.Parse(numbers[n]);
                 }
-                lblCounts[p].Text = PlayersCards(p).Length + "";
+                lblCounts[p].Text = PlayersCardsCount(p) + "";
             }
             Sort();
             colors = keys[1].Split(char.Parse("C"));
@@ -1831,7 +1863,7 @@ gameOver:
                                     players[player].cards[color, number] = 0;
                             if (player == 0) Sort();
                             Action(0, "已淸除玩家" + GetPlayerName(player) + "的手牌");
-                            lblCounts[player].Text = PlayersCards(player).Length + "";
+                            lblCounts[player].Text = PlayersCardsCount(player) + "";
                             break;
                         case "/currard":
                             if (data.Length > 2)
@@ -1867,7 +1899,7 @@ gameOver:
                                     this.pile.cards[rndCard.color, rndCard.number]--;
                                     lblPile.Text = pile.Length - 1 + "";
                                     players[int.Parse(data[1])].cards[rndCard.color, rndCard.number]++;
-                                    lblCounts[int.Parse(data[1])].Text = PlayersCards(byte.Parse(data[1])).Length + "";
+                                    lblCounts[int.Parse(data[1])].Text = PlayersCardsCount(byte.Parse(data[1])) + "";
                                 }
                                 if (data[1] == "0")
                                     Sort();
@@ -1880,7 +1912,7 @@ gameOver:
                             players[Byte.Parse(data[1])].cards[Byte.Parse(data[2]), Byte.Parse(data[3])] += count;
                             if (data[1] == "0")
                                 Sort();
-                            lblCounts[int.Parse(data[1])].Text = PlayersCards(byte.Parse(data[1])).Length + "";
+                            lblCounts[int.Parse(data[1])].Text = PlayersCardsCount(byte.Parse(data[1])) + "";
                             Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予玩家" + GetPlayerName(byte.Parse(data[1])));
                             break;
                         case "/help":
@@ -2055,7 +2087,7 @@ gameOver:
             }
             else
             {
-                Card card = GetBestCard();
+                Card card = GetBestCard(0);
                 if (card != null)
                 {
                     byte color = GetColorId(control.BackColor), number = GetNumberId(control.Text);
@@ -2247,14 +2279,14 @@ gameOver:
                     if (cards.Count > 0)
                     {
                         Sort();
-                        rdoUno.Checked = PlayersCards(player).Length == 1;
+                        rdoUno.Checked = PlayersCardsCount(player) == 1;
                     }
                 }
             }
             if (player == 0)
                 Action(0, form.mnuUno.Checked && rdoUno.Checked ? "UNO!" : "出牌");
             else
-                Action(player, form.mnuUno.Checked && (player != 0 || isAutomatic) && PlayersCards(player).Length == 1 ? "UNO!" : "出牌");
+                Action(player, form.mnuUno.Checked && (player != 0 || isAutomatic) && PlayersCardsCount(player) == 1 ? "UNO!" : "出牌");
 			PlayersTurn(player, false);
             if (cards.Count > 0)
             {
@@ -2378,6 +2410,15 @@ gameOver:
 					};
 			return cards.ToArray();
 		}
+
+        int PlayersCardsCount(byte player)
+        {
+            int i = 0;
+            for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                    i += players[player].cards[c, n];
+            return i;
+        }
 
 		void PlayersTurn(byte player, bool turn = true, int dbp = 0, bool delay = true) {
             if (int.Parse(lblCounts[player].Text) <= dbp * 7)
@@ -2688,7 +2729,7 @@ gameOver:
         void Sort()
         {
             RemoveChkPlayer();
-            AddChkPlayer(PlayersCards(0).Length);
+            AddChkPlayer(PlayersCardsCount(0));
             int i = 0;
             if (mnuByColor.Checked)
                 for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
@@ -2868,7 +2909,7 @@ gameOver:
                     }
                     else
                     {
-                        rndCard = GetBestCard();
+                        rndCard = GetBestCard(MovingCard.player);
                         if (rndCard == null)
                             rndCard = pile[(int)(pile.Length * Rnd())];
                         if (MovingCard.isPlaying && MovingCard.player == 0 && form.mnuFair.Checked)
@@ -2884,7 +2925,7 @@ gameOver:
                 this.pile.cards[rndCard.color, rndCard.number]--;
 				lblPile.Text = pile.Length - 1 + "";
                 players[MovingCard.player].cards[rndCard.color, rndCard.number]++;
-                lblCounts[MovingCard.player].Text = PlayersCards(MovingCard.player).Length + "";
+                lblCounts[MovingCard.player].Text = PlayersCardsCount(MovingCard.player) + "";
                 if (MovingCard.player == 0 && !MovingCard.quickly)
                     Sort();
                 if (MovingCard.isPlaying)
@@ -3032,7 +3073,7 @@ arrived:
 			RemoveLabel(lblMovingCards, pnlMovingCards.Controls);
             pnlMovingCards.Location = new Point(-pnlMovingCards.Width, -pnlMovingCards.Height);
             BackColor = GetColor(MovingCard.color);
-            lblCounts[MovingCard.player].Text = PlayersCards(MovingCard.player).Length + "";
+            lblCounts[MovingCard.player].Text = PlayersCardsCount(MovingCard.player) + "";
             int downpour = 0;
             bool reversed = false;
             byte ons = 0;
@@ -3126,7 +3167,7 @@ arrived:
                 }
                 return;
             }
-            if (form.mnuUno.Checked && MovingCard.player == 0 && (PlayersCards(0).Length == 1 && !rdoUno.Checked || PlayersCards(0).Length != 1 && rdoUno.Checked))
+            if (form.mnuUno.Checked && MovingCard.player == 0 && (PlayersCardsCount(0) == 1 && !rdoUno.Checked || PlayersCardsCount(0) != 1 && rdoUno.Checked))
             {
                 Action(0, "UNO? +2");
 				AddDraw(2);
