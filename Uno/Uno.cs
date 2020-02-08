@@ -1105,7 +1105,8 @@ deny:
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
                                     label[length].BackColor = GetColor(color);
-                                    if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
+                                    if (p == 1 || p == 3)
+                                        label[length].Left = lblPlayers[p].Left;
                                     label[length].Text = GetNumber(number);
                                     if (p == 2) label[length].Top = lblPlayers[2].Top;
                                 }
@@ -1117,7 +1118,8 @@ deny:
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
                                     label[length].BackColor = GetColor(color);
-                                    if (new Regex("^(1|3)$").IsMatch(p + "")) label[length].Left = lblPlayers[p].Left;
+                                    if (p == 1 || p == 3)
+                                        label[length].Left = lblPlayers[p].Left;
                                     label[length].Text = GetNumber(number);
                                     if (p == 2) label[length].Top = lblPlayers[2].Top;
                                 }
@@ -1141,6 +1143,7 @@ deny:
                         }
                     }
                 }
+                lblPlayers[gameOver].Visible = false;
                 string msg = (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "赢了!\n" +
                     "\n" +
                     (form.mnuWatch.Checked && !form.isPlayingRecord ? "游戏时长\t" + lblWatch.Text + "\n" +
@@ -1163,7 +1166,8 @@ deny:
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
                                     label[length].BackColor = GetColor(color);
-                                    if (new Regex("^(1|3)$").IsMatch(gameOver + "")) label[length].Left = lblPlayers[gameOver].Left;
+                                    if (gameOver == 1 || gameOver == 3)
+                                        label[length].Left = lblPlayers[gameOver].Left;
                                     label[length].Text = GetNumber(number);
                                     if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
                                 }
@@ -1175,7 +1179,8 @@ deny:
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
                                     label[length].BackColor = GetColor(color);
-                                    if (new Regex("^(1|3)$").IsMatch(gameOver + "")) label[length].Left = lblPlayers[gameOver].Left;
+                                    if (gameOver == 1 || gameOver == 3)
+                                        label[length].Left = lblPlayers[gameOver].Left;
                                     label[length].Text = GetNumber(number);
                                     if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
                                 }
@@ -1199,6 +1204,7 @@ deny:
                         }
                     }
                 }
+                lblPlayers[gameOver].Visible = false;
                 if (MessageBox.Show((gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n" +
                     (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n" +
                     "游戏时长\t" + lblWatch.Text : ""), "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
@@ -2641,8 +2647,8 @@ gameOver:
 
 		void ResizeForm() {
             width = ClientRectangle.Width;
-            height = Height - mnuGame.Height;
-            lblPlayers[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, height - UnoSize.HEIGHT);
+            height = ClientRectangle.Height - mnuGame.Height;
+            lblPlayers[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, ClientRectangle.Height - UnoSize.HEIGHT);
             lblPlayers[1].Location = new Point(0, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
             lblPlayers[2].Location = new Point(width / 2 - UnoSize.WIDTH / 2, mnuGame.Height);
             lblPlayers[3].Location = new Point(width - UnoSize.WIDTH, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
@@ -3283,7 +3289,7 @@ arrived:
         public Uno(Options form)
         {
             InitializeComponent();
-            height = Height - mnuGame.Height;
+            height = ClientRectangle.Height - mnuGame.Height;
             this.form = form;
             imgUno = Properties.Resources.uno;
             lblPile.Top = mnuGame.Height;
@@ -3300,7 +3306,7 @@ arrived:
                 lblPlayers[i].ForeColor = Color.Black;
                 lblPlayers[i].Tag = i;
                 lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblPlayers[i].Size = new Size(UnoSize.WIDTH, 120);
+                lblPlayers[i].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 lblPlayers[i].Tag = i;
                 if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
