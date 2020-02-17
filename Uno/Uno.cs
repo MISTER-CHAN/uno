@@ -1152,7 +1152,7 @@ deny:
                 for (byte p = 0; p <= 3; p++)
                     msg += "\n" + (p == 0 ? "你" : "玩家" + GetPlayerName(p)) + "\t" + GetPointsByPlayer(p);
                 if (hasCheat)
-                    msg += "\n\n(你在本局中出了老千.)";
+                    msg += "\n\n(你在本局中出了老千)";
                 if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
             else
@@ -1210,7 +1210,7 @@ deny:
                 if (MessageBox.Show(
                     (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
-                    + (hasCheat ? "\n\n(你在本局中出了老千.)" : "")
+                    + (hasCheat ? "\n\n(你在本局中出了老千)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
                     goto retry;
             }
@@ -1751,6 +1751,8 @@ gameOver:
             if (e.Button == MouseButtons.Right)
             {
                 isFair = true;
+                foreach (CheckBox c in chkPlayer)
+                    c.ContextMenuStrip = mnuCheating;
             }
         }
 
@@ -1882,7 +1884,10 @@ gameOver:
                 MessageBox.Show("請在到你出牌時再學習此內容.", "出牌敎程", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            bool isFair = this.isFair;
+            this.isFair = true;
             Card[] cards = Ai(0);
+            this.isFair = isFair;
             string s = "";
             foreach (Card c in cards)
             {

@@ -92,13 +92,13 @@
             this.mnuCheating.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuCheat});
             this.mnuCheating.Name = "mnuCheating";
-            this.mnuCheating.Size = new System.Drawing.Size(101, 26);
+            this.mnuCheating.Size = new System.Drawing.Size(181, 48);
             // 
             // mnuCheat
             // 
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(100, 22);
-            this.mnuCheat.Text = "出千";
+            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
+            this.mnuCheat.Text = "換牌";
             this.mnuCheat.Click += new System.EventHandler(this.MnuCheat_Click);
             // 
             // timPileToPlayers
@@ -141,14 +141,14 @@
             // mnuNew
             // 
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Size = new System.Drawing.Size(167, 22);
+            this.mnuNew.Size = new System.Drawing.Size(180, 22);
             this.mnuNew.Text = "开局 (&N)";
             this.mnuNew.Click += new System.EventHandler(this.MnuNew_Click);
             // 
             // separatorNc
             // 
             this.separatorNc.Name = "separatorNc";
-            this.separatorNc.Size = new System.Drawing.Size(164, 6);
+            this.separatorNc.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuRank
             // 
@@ -156,7 +156,7 @@
             this.mnuByColor,
             this.mnuByNumber});
             this.mnuRank.Name = "mnuRank";
-            this.mnuRank.Size = new System.Drawing.Size(167, 22);
+            this.mnuRank.Size = new System.Drawing.Size(180, 22);
             this.mnuRank.Text = "排序 (&R)";
             // 
             // mnuByColor
@@ -180,7 +180,7 @@
             this.mnuScrollBar.Checked = true;
             this.mnuScrollBar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuScrollBar.Name = "mnuScrollBar";
-            this.mnuScrollBar.Size = new System.Drawing.Size(167, 22);
+            this.mnuScrollBar.Size = new System.Drawing.Size(180, 22);
             this.mnuScrollBar.Text = "多手持牌";
             this.mnuScrollBar.Click += new System.EventHandler(this.MnuScrollBar_Click);
             // 
@@ -189,7 +189,7 @@
             this.mnuToolTip.Checked = true;
             this.mnuToolTip.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuToolTip.Name = "mnuToolTip";
-            this.mnuToolTip.Size = new System.Drawing.Size(167, 22);
+            this.mnuToolTip.Size = new System.Drawing.Size(180, 22);
             this.mnuToolTip.Text = "显示工具提示 (&T)";
             this.mnuToolTip.Click += new System.EventHandler(this.MnuToolTip_Click);
             // 
@@ -198,27 +198,27 @@
             this.mnuAppearance.Checked = true;
             this.mnuAppearance.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAppearance.Name = "mnuAppearance";
-            this.mnuAppearance.Size = new System.Drawing.Size(167, 22);
+            this.mnuAppearance.Size = new System.Drawing.Size(180, 22);
             this.mnuAppearance.Text = "外观 (&A)";
             this.mnuAppearance.Click += new System.EventHandler(this.MnuAppearance_Click);
             // 
             // separatorCx
             // 
             this.separatorCx.Name = "separatorCx";
-            this.separatorCx.Size = new System.Drawing.Size(164, 6);
+            this.separatorCx.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuSaveGame
             // 
             this.mnuSaveGame.Enabled = false;
             this.mnuSaveGame.Name = "mnuSaveGame";
-            this.mnuSaveGame.Size = new System.Drawing.Size(167, 22);
+            this.mnuSaveGame.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveGame.Text = "储存 (&S)";
             this.mnuSaveGame.Click += new System.EventHandler(this.MnuSaveGame_Click);
             // 
             // itmQuit
             // 
             this.itmQuit.Name = "itmQuit";
-            this.itmQuit.Size = new System.Drawing.Size(167, 22);
+            this.itmQuit.Size = new System.Drawing.Size(180, 22);
             this.itmQuit.Text = "退出 (&X)";
             this.itmQuit.Click += new System.EventHandler(this.ItmQuit_Click);
             // 
@@ -253,33 +253,33 @@
             // 
             this.mnuContent.Name = "mnuContent";
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuContent.Size = new System.Drawing.Size(141, 22);
+            this.mnuContent.Size = new System.Drawing.Size(180, 22);
             this.mnuContent.Text = "目彔 (&C)";
             this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
             // 
             // mnuCanPlay
             // 
             this.mnuCanPlay.Name = "mnuCanPlay";
-            this.mnuCanPlay.Size = new System.Drawing.Size(141, 22);
+            this.mnuCanPlay.Size = new System.Drawing.Size(180, 22);
             this.mnuCanPlay.Text = "出牌規則";
             this.mnuCanPlay.Click += new System.EventHandler(this.MnuCanPlay_Click);
             // 
             // mnuControl
             // 
             this.mnuControl.Name = "mnuControl";
-            this.mnuControl.Size = new System.Drawing.Size(141, 22);
+            this.mnuControl.Size = new System.Drawing.Size(180, 22);
             this.mnuControl.Text = "按鍵說明";
             this.mnuControl.Click += new System.EventHandler(this.MnuControl_Click);
             // 
             // separatorHa
             // 
             this.separatorHa.Name = "separatorHa";
-            this.separatorHa.Size = new System.Drawing.Size(138, 6);
+            this.separatorHa.Size = new System.Drawing.Size(177, 6);
             // 
             // itmAbout
             // 
             this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(141, 22);
+            this.itmAbout.Size = new System.Drawing.Size(180, 22);
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
