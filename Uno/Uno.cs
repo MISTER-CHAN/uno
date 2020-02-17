@@ -1750,14 +1750,21 @@ gameOver:
         {
             if (e.Button == MouseButtons.Right)
             {
-                isFair = true;
+                lblPile.MouseDoubleClick -= LblPile_MouseDoubleClick;
+                for (byte p = 1; p <= 3; p++)
+                {
+                    lblPlayers[p].MouseDown += LblPlayers_MouseDown;
+                    lblPlayers[p].MouseUp += LblPlayers_MouseUp;
+                }
                 foreach (CheckBox c in chkPlayer)
                     c.ContextMenuStrip = mnuCheating;
+                isFair = true;
             }
         }
 
         private void LblPlayers_MouseDown(object sender, MouseEventArgs e)
         {
+            hasCheat = true;
             byte index = (byte)((Label)sender).Tag;
             lblPlayers[index].AutoSize = true;
             lblPlayers[index].BackgroundImage = null;
@@ -3330,11 +3337,6 @@ arrived:
                 lblPlayers[i].Tag = i;
                 if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                if (i > 0 && isFair)
-                {
-                    lblPlayers[i].MouseDown += LblPlayers_MouseDown;
-                    lblPlayers[i].MouseUp += LblPlayers_MouseUp;
-                }
                 lblCounts[i] = new Label();
                 Controls.Add(lblCounts[i]);
                 lblCounts[i].AutoSize = true;
