@@ -84,8 +84,8 @@
             this.lblPile.Size = new System.Drawing.Size(90, 120);
             this.lblPile.TabIndex = 0;
             this.lblPile.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblPile.Click += new System.EventHandler(this.LblPile_Click);
             this.lblPile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.LblPile_MouseClick);
+            this.lblPile.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LblPile_MouseDoubleClick);
             // 
             // mnuCheating
             // 

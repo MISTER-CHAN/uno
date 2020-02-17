@@ -91,7 +91,6 @@ namespace Uno {
             mnuOneWinner.Checked = bool.Parse(keys[37]);
             mnuOneLoser.Checked = bool.Parse(keys[38]);
             mnuUno.Checked = bool.Parse(keys[39]);
-            mnuFair.Checked = bool.Parse(keys[40]);
             mnuCheat.Checked = bool.Parse(keys[41]);
         }
 
@@ -432,7 +431,6 @@ namespace Uno {
             s += mnuOneWinner.Checked + "K";
             s += mnuOneLoser.Checked + "K";
             s += mnuUno.Checked + "K";
-            s += mnuFair.Checked + "K";
             s += mnuCheat.Checked + "K";
             s += DateAndTime.Now.ToString();
             return s;

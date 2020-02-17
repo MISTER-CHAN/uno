@@ -101,7 +101,7 @@ namespace Uno
             public const string NULL = "";
         }
 
-        private bool canPlay = false, reverse = false, isAutomatic = false, isPlayer0sTurn = false, isSelectingCards = false;
+        private bool canPlay = false, hasCheat = false, isAutomatic = false, isFair = false, isPlayer0sTurn = false, isSelectingCards = false, reverse = false;
         byte gameOver = 4;
         readonly byte[]
             mvcList = new byte[UnoNumber.MAX_VALUE]
@@ -164,7 +164,7 @@ namespace Uno
                 chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
 				chkPlayer[length].BringToFront();
 				chkPlayer[length].CheckedChanged += ChkPlayer_CheckedChanged;
-                if (form.mnuFair.Checked || form.mnuCheat.Checked)
+                if (isFair || form.mnuCheat.Checked)
                     chkPlayer[length].ContextMenuStrip = mnuCheating;
                 chkPlayer[length].Enter += ChkPlayer_Enter;
                 chkPlayer[length].FlatStyle = FlatStyle.Flat;
@@ -214,7 +214,7 @@ namespace Uno
 
         Card[] Ai(byte player, bool skipFirstCheating = false) {
             if (player > 0 && form.mnuCheater.Checked
-                || player == 0 && form.mnuFair.Checked)
+                || player == 0 && isFair)
             {
                 if (skipFirstCheating)
                     goto start;
@@ -561,7 +561,7 @@ number_color:
 exit:
             if (form.mnuPro.Checked || form.mnuCheater.Checked)
             {
-                if (cards.Count <= 0 && (isAutomatic && form.mnuFair.Checked || player > 0))
+                if (cards.Count <= 0 && (isAutomatic && isFair || player > 0))
                 {
                     bestCard = GetBestCard(player);
                     if (bestCard != null)
@@ -1151,6 +1151,8 @@ deny:
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
                     msg += "\n" + (p == 0 ? "你" : "玩家" + GetPlayerName(p)) + "\t" + GetPointsByPlayer(p);
+                if (hasCheat)
+                    msg += "\n\n(你在本局中出了老千.)";
                 if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
             else
@@ -1205,9 +1207,12 @@ deny:
                     }
                 }
                 lblPlayers[gameOver].Visible = false;
-                if (MessageBox.Show((gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n" +
-                    (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n" +
-                    "游戏时长\t" + lblWatch.Text : ""), "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
+                if (MessageBox.Show(
+                    (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n"
+                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
+                    + (hasCheat ? "\n\n(你在本局中出了老千.)" : "")
+                    , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
+                    goto retry;
             }
             Application.Exit();
             return;
@@ -1617,17 +1622,16 @@ deny:
             Application.Exit();
 		}
 
-        private void LblPile_Click(object sender, EventArgs e)
-        {
-            if (isPlayer0sTurn)
-                Draw(0);
-        }
-
         private void LblPile_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            switch (e.Button)
             {
-                if (form.mnuCanShowCards.Checked || form.mnuFair.Checked)
+                case MouseButtons.Left:
+                    if (isPlayer0sTurn)
+                        Draw(0);
+                    break;
+                case MouseButtons.Right:
+                if (form.mnuCanShowCards.Checked || isFair)
                 {
                     int i = 0;
                     string cards = "";
@@ -1650,8 +1654,10 @@ deny:
                             }
                         }
                     Action(0, cards);
-                }
-            }
+                    }
+                    break;
+            } 
+
         }
 
         void Label_MouseLeave(object sender, EventArgs e)
@@ -1737,6 +1743,14 @@ gameOver:
                 {
                     GameOver();
                 }
+            }
+        }
+
+        private void LblPile_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                isFair = true;
             }
         }
 
@@ -2163,6 +2177,7 @@ gameOver:
             Card card = GetBestCard(0);
             if (card != null)
             {
+                hasCheat = true;
                 byte color = GetColorId(control.BackColor), number = GetNumberId(control.Text);
                 pile.cards[card.color, card.number]--;
                 players[0].cards[color, number]--;
@@ -3310,7 +3325,7 @@ arrived:
                 lblPlayers[i].Tag = i;
                 if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
                 lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                if (i > 0 && form.mnuFair.Checked)
+                if (i > 0 && isFair)
                 {
                     lblPlayers[i].MouseDown += LblPlayers_MouseDown;
                     lblPlayers[i].MouseUp += LblPlayers_MouseUp;
