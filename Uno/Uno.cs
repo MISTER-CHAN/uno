@@ -1151,8 +1151,11 @@ deny:
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
                     msg += "\n" + (p == 0 ? "你" : "玩家" + GetPlayerName(p)) + "\t" + GetPointsByPlayer(p);
+                msg += "\n";
                 if (hasCheat)
-                    msg += "\n\n(你在本局中出了老千)";
+                    msg += "\n(你在本局中出了老千)";
+                if (form.mnuCheat.Checked)
+                    msg += "\n(本局允許作弊)";
                 if (MessageBox.Show(msg, "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry) goto retry;
             }
             else
@@ -1210,7 +1213,9 @@ deny:
                 if (MessageBox.Show(
                     (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
-                    + (hasCheat ? "\n\n(你在本局中出了老千)" : "")
+                    + "\n"
+                    + (hasCheat ? "\n(你在本局中出了老千)" : "")
+                    + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
                     goto retry;
             }
