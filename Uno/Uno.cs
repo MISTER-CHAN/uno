@@ -138,6 +138,7 @@ namespace Uno
         private readonly List<Label> lblCards = new List<Label>();
         private readonly List<Label> lblMovingCards = new List<Label>();
         readonly Options form;
+        readonly string[] PLAYER_NAMES;
 
         void Action(byte player, string msg)
         {
@@ -586,12 +587,30 @@ deleted:
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
+            if (!form.on0 && form.ons <= 0)
+            {
+                FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
+                if (MessageBox.Show(
+                    "打和!\n"
+                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
+                    + "\n"
+                    + (hasCheat ? "\n(你在本局中出了老千)" : "")
+                    + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
+                    , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
+                    Application.Restart();
+                else
+                    Application.Exit();
+                return;
+            }
             btnStart.Visible = false;
             lblMovingCards[0].BringToFront();
             mnuChat.Enabled = true;
             if (!form.isPlayingRecord)
             {
+rnd:
                 MovingCard.player = (byte)(4f * Rnd());
+                if (!lblPlayers[MovingCard.player].Visible)
+                    goto rnd;
                 Record.firstGettingCard = MovingCard.player;
             }
             else
@@ -892,7 +911,7 @@ deny:
                 MovingCard.quickly = true;
                 return;
             }
-            if (!form.mnuPlayer0.Checked)
+            if (form.txtPlayer0.Text == "")
                 return;
             string number = "%NULL%";
             switch (e.KeyCode)
@@ -1144,13 +1163,13 @@ deny:
                     }
                 }
                 lblPlayers[gameOver].Visible = false;
-                string msg = (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "赢了!\n" +
+                string msg = (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "赢了!\n" +
                     "\n" +
                     (form.mnuWatch.Checked && !form.isPlayingRecord ? "游戏时长\t" + lblWatch.Text + "\n" +
                     "\n" : "") +
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
-                    msg += "\n" + (p == 0 ? "你" : "玩家" + GetPlayerName(p)) + "\t" + GetPointsByPlayer(p);
+                    msg += "\n" + (p == 0 ? "你" : PLAYER_NAMES[p]) + "\t" + GetPointsByPlayer(p);
                 msg += "\n";
                 if (hasCheat)
                     msg += "\n(你在本局中出了老千)";
@@ -1211,7 +1230,7 @@ deny:
                 }
                 lblPlayers[gameOver].Visible = false;
                 if (MessageBox.Show(
-                    (gameOver == 0 ? "你" : "玩家" + GetPlayerName(gameOver)) + "输了!\n"
+                    (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
                     + "\n"
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
@@ -1463,18 +1482,6 @@ deny:
             return i;
         }
 
-        string GetPlayerName(byte id)
-        {
-            return id switch
-            {
-                0 => "南",
-                1 => "西",
-                2 => "北",
-                3 => "東",
-                _ => "中"
-            };
-        }
-
         bool IsNumeric(string s) {
 			return new Regex(@"^[+-]?\d+[.\d]*$").IsMatch(s);
 		}
@@ -1627,44 +1634,6 @@ deny:
             Application.Exit();
 		}
 
-        private void LblPile_MouseClick(object sender, MouseEventArgs e)
-        {
-            switch (e.Button)
-            {
-                case MouseButtons.Left:
-                    if (isPlayer0sTurn)
-                        Draw(0);
-                    break;
-                case MouseButtons.Right:
-                if (form.mnuCanShowCards.Checked || isFair)
-                {
-                    int i = 0;
-                    string cards = "";
-                    for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
-                        for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
-                        {
-                            string q = pile.cards[c, n] + "";
-                            if (q != "0")
-                            {
-                                if (q == "1")
-                                {
-                                    q = "";
-                                }
-                                cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
-                                i++;
-                                if (i % (int)((float)width / UnoSize.WIDTH) == 0)
-                                {
-                                    cards += "\n";
-                                }
-                            }
-                        }
-                    Action(0, cards);
-                    }
-                    break;
-            } 
-
-        }
-
         void Label_MouseLeave(object sender, EventArgs e)
         {
             toolTip.Hide(this);
@@ -1749,6 +1718,45 @@ gameOver:
                     GameOver();
                 }
             }
+        }
+
+        private void LblPile_MouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    if (isPlayer0sTurn)
+                        Draw(0);
+                    break;
+                case MouseButtons.Right:
+                    if (form.mnuCanShowCards.Checked || isFair)
+                    {
+                        hasCheat = true;
+                        int i = 0;
+                        string cards = "";
+                        for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
+                            for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
+                            {
+                                string q = pile.cards[c, n] + "";
+                                if (q != "0")
+                                {
+                                    if (q == "1")
+                                    {
+                                        q = "";
+                                    }
+                                    cards += "[" + GetColorName(c) + GetNumber(n) + "]" + q;
+                                    i++;
+                                    if (i % (int)((float)width / UnoSize.WIDTH) == 0)
+                                    {
+                                        cards += "\n";
+                                    }
+                                }
+                            }
+                        Action(0, cards);
+                    }
+                    break;
+            }
+
         }
 
         private void LblPile_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1972,7 +1980,7 @@ gameOver:
                                 for (byte number = fromNumber; number <= toNumber; number++)
                                     players[player].cards[color, number] = 0;
                             if (player == 0) Sort();
-                            Action(0, "已淸除玩家" + GetPlayerName(player) + "的手牌");
+                            Action(0, "已淸除 " + PLAYER_NAMES[player] + " 的手牌");
                             lblCounts[player].Text = PlayersCardsCount(player) + "";
                             break;
                         case "/currard":
@@ -2023,7 +2031,7 @@ gameOver:
                             if (data[1] == "0")
                                 Sort();
                             lblCounts[int.Parse(data[1])].Text = PlayersCardsCount(byte.Parse(data[1])) + "";
-                            Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予玩家" + GetPlayerName(byte.Parse(data[1])));
+                            Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予 " + PLAYER_NAMES[byte.Parse(data[1])]);
                             break;
                         case "/help":
                         case "/?":
@@ -2147,7 +2155,7 @@ gameOver:
                                     break;
                                 default:
                                     skips[byte.Parse(data[1])] = int.Parse(data[2]);
-                                    Action(0, "跳过玩家" + GetPlayerName(byte.Parse(data[1])) + " " + data[2] + " 次");
+                                    Action(0, "跳过 " + PLAYER_NAMES[byte.Parse(data[1])] + " " + data[2] + " 次");
                                     break;
                             }
                             break;
@@ -2594,7 +2602,7 @@ gameOver:
             {
                 if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
-                    Action(player, "玩家" + GetPlayerName(player) + "的回合");
+                    Action(player, PLAYER_NAMES[player] + "的回合");
                     timThinking.Interval = (int)(distance * 100 * Rnd()) + 1;
                     timThinking.Tag = player + "," + dbp;
                     timThinking.Enabled = true;
@@ -3354,10 +3362,30 @@ arrived:
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
-            for (int o = 0; o < lblPlayers.Length; o++)
+            bool[] ons;
+            switch (form.ons)
             {
-                lblPlayers[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
-                lblCounts[o].Visible = ((ToolStripMenuItem)form.mnuOns.DropDownItems[o]).Checked;
+                case 3:
+                    ons = new bool[4] { form.on0, true, true, true };
+                    PLAYER_NAMES = new string[] { form.txtPlayer0.Text, form.txtPlayer1.Text, form.txtPlayer2.Text, form.txtPlayer3.Text };
+                    break;
+                case 2:
+                    ons = new bool[4] { form.on0, true, false, true };
+                    PLAYER_NAMES = new string[] { form.txtPlayer0.Text, form.txtPlayer1.Text, "" , form.txtPlayer2.Text};
+                    break;
+                case 1:
+                    ons = new bool[4] { form.on0, false, true, false };
+                    PLAYER_NAMES = new string[] { form.txtPlayer0.Text, "", form.txtPlayer1.Text, "" };
+                    break;
+                default:
+                    ons = new bool[4] { form.on0, false, false, false };
+                    PLAYER_NAMES = new string[] { form.txtPlayer0.Text, "", "", ""};
+                    break;
+            }
+            for (int o = 0; o <= 3; o++)
+            {
+                lblPlayers[o].Visible = ons[o];
+                lblCounts[o].Visible = ons[o];
             }
             lblCards.Add(new Label());
             Controls.Add(lblCards[0]);
@@ -3455,21 +3483,6 @@ arrived:
                 Application.Exit();
             }
             else e.Cancel = true;
-        }
-
-        private void Uno_Load(object sender, EventArgs e)
-        {
-            for (byte p = 0; p < 4; p++)
-                if (lblPlayers[p].Visible)
-                {
-                    MovingCard.player = p;
-                    goto play;
-                }
-            FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
-            Application.Exit();
-            return;
-play:
-            return;
         }
 
         private void Uno_Resize(object sender, EventArgs e)
