@@ -609,7 +609,7 @@ deleted:
                 goto deny;
             }
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
-            if (form.mnuDaWah.Checked)
+            if (form.mnuAttack.Checked)
             {
                 byte discardColor = UnoColor.MAX_VALUE;
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
@@ -781,7 +781,7 @@ deny:
             {
                 chkPlayer[index].Top = chkPlayer[index].Checked ? 0 : UnoSize.HEIGHT / 8;
             }
-            if (!form.mnuPairs.Checked && !form.mnuDaWah.Checked && ((CheckBox)sender).Checked)
+            if (!form.mnuPairs.Checked && !form.mnuAttack.Checked && ((CheckBox)sender).Checked)
                 for (int c = 0; c < chkPlayer.ToArray().Length; c++)
                     if (c != index) chkPlayer[c].Checked = false;
 		}
@@ -2624,31 +2624,31 @@ gameOver:
                 }
                 for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
                     pile.cards[c, n] = 2 * decks - GetOnplayersCards(c, n);
-                if (form.mnuDaWah.Checked)
+                if (form.mnuAttack.Checked)
                 {
                     pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
                     // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks - getOnplayersCards(c, UnoNumber.TRADE_HANDS);
                 }
-                if (form.mnuRygbBlank.Checked)
+                if (form.mnuBlank.Checked)
                     pile.cards[c, UnoNumber.BLANK] = decks - GetOnplayersCards(c, UnoNumber.BLANK);
             }
             if (form.mnuDos.Checked)
             {
                 pile.cards[UnoColor.BLACK, 2] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, 2);
             }
-            if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
+            if (form.mnuBlank.Checked && form.mnuMagentaBlank.Checked)
                 pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks - GetOnplayersCards(UnoColor.MAGENTA, UnoNumber.BLANK);
-            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
+            if (form.mnuWater.Checked && form.mnuBlackBlank.Checked)
                 pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.BLANK);
             pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD);
-            if (form.mnuWildDownpourDraw.Checked)
+            if (form.mnuWater.Checked)
             {
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2);
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4);
             }
             pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
-            if (form.mnuDaWah.Checked)
+            if (form.mnuAttack.Checked)
             {
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1);
             }
@@ -3383,12 +3383,12 @@ arrived:
                 }
                 for (byte n = UnoNumber.SKIP; n <= UnoNumber.DRAW_2; n++)
                     pile.cards[c, n] = 2 * decks;
-                if (form.mnuDaWah.Checked)
+                if (form.mnuAttack.Checked)
                 {
                     pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
                     // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks;
                 }
-                if (form.mnuRygbBlank.Checked)
+                if (form.mnuBlank.Checked)
                 {
                     pile.cards[c, UnoNumber.BLANK] = 1 * decks;
                 }
@@ -3397,23 +3397,23 @@ arrived:
             {
                 pile.cards[UnoColor.BLACK, 2] = 4 * decks;
             }
-            if (form.mnuRygbBlank.Checked && form.mnuMagentaBlank.Checked)
+            if (form.mnuBlank.Checked && form.mnuMagentaBlank.Checked)
             {
                 pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks;
             }
-            if (form.mnuWildDownpourDraw.Checked && form.mnuBlackBlank.Checked)
+            if (form.mnuWater.Checked && form.mnuBlackBlank.Checked)
             {
                 pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks;
             }
             pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks;
-            if (form.mnuWildDownpourDraw.Checked)
+            if (form.mnuWater.Checked)
             {
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = decks;
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_2] = decks;
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_4] = decks;
             }
             pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] = 4 * decks;
-            if (form.mnuDaWah.Checked)
+            if (form.mnuAttack.Checked)
             {
                 pile.cards[UnoColor.BLACK, UnoNumber.WILD_DOWNPOUR_DRAW_1] = 2 * decks;
             }

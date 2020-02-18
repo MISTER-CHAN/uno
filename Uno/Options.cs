@@ -69,11 +69,11 @@ namespace Uno {
             mnuBeginner.Checked = bool.Parse(keys[15]);
             mnuPro.Checked = bool.Parse(keys[16]);
             mnuCheater.Checked = bool.Parse(keys[17]);
-            mnuRygbBlank.Checked = bool.Parse(keys[18]);
+            mnuBlank.Checked = bool.Parse(keys[18]);
             mnuMagentaBlank.Checked = bool.Parse(keys[19]);
             mnuBlackBlank.Checked = bool.Parse(keys[20]);
-            mnuWildDownpourDraw.Checked = bool.Parse(keys[21]);
-            mnuDaWah.Checked = bool.Parse(keys[22]);
+            mnuWater.Checked = bool.Parse(keys[21]);
+            mnuAttack.Checked = bool.Parse(keys[22]);
             mnuWildHitfire.Checked = bool.Parse(keys[23]);
             mnuDos.Checked = bool.Parse(keys[24]);
             mnuCanShowCards.Checked = bool.Parse(keys[25]);
@@ -98,11 +98,11 @@ namespace Uno {
         {
             txtDealt.Text = "11";
             txtDecks.Text = "1";
-            mnuRygbBlank.Checked = true;
+            mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = false;
-            mnuWildDownpourDraw.Checked = false;
-            mnuDaWah.Checked = false;
+            mnuWater.Checked = false;
+            mnuAttack.Checked = false;
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = true;
@@ -137,7 +137,8 @@ namespace Uno {
 
         private void MnuAttack_CheckedChanged(object sender, EventArgs e)
         {
-            mnuWildHitfire.Enabled = mnuDaWah.Checked;
+            foreach (ToolStripMenuItem mnu in mnuAttack.DropDownItems)
+                mnu.Visible = mnuAttack.Checked;
         }
 
         private void MnuBack_Click(object sender, EventArgs e)
@@ -156,11 +157,8 @@ namespace Uno {
 
         private void MnuBlank_CheckedChanged(object sender, EventArgs e)
         {
-            mnuMagentaBlank.Enabled = mnuRygbBlank.Checked;
-            mnuBlankText.Enabled = mnuRygbBlank.Checked;
-            mnuBlankSkip.Enabled = mnuRygbBlank.Checked;
-            mnuBlankReverse.Enabled = mnuRygbBlank.Checked;
-            mnuBlankDraw.Enabled = mnuRygbBlank.Checked;
+            foreach (ToolStripItem itm in mnuBlank.DropDownItems)
+                itm.Visible = mnuBlank.Checked;
         }
 
         private void MnuCustom_Click(object sender, EventArgs e)
@@ -189,11 +187,11 @@ namespace Uno {
         {
             txtDealt.Text = "56";
             txtDecks.Text = "5";
-            mnuRygbBlank.Checked = true;
+            mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
-            mnuWildDownpourDraw.Checked = true;
-            mnuDaWah.Checked = true;
+            mnuWater.Checked = true;
+            mnuAttack.Checked = true;
             mnuWildHitfire.Checked = true;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
@@ -216,11 +214,11 @@ namespace Uno {
         {
             txtDealt.Text = "35";
             txtDecks.Text = "3";
-            mnuRygbBlank.Checked = true;
+            mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
-            mnuWildDownpourDraw.Checked = true;
-            mnuDaWah.Checked = true;
+            mnuWater.Checked = true;
+            mnuAttack.Checked = true;
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
@@ -345,11 +343,11 @@ namespace Uno {
         {
             txtDealt.Text = "7";
             txtDecks.Text = "1";
-            mnuRygbBlank.Checked = false;
+            mnuBlank.Checked = false;
             mnuMagentaBlank.Checked = false;
             mnuBlackBlank.Checked = false;
-            mnuWildDownpourDraw.Checked = false;
-            mnuDaWah.Checked = false;
+            mnuWater.Checked = false;
+            mnuAttack.Checked = false;
             mnuWildHitfire.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = false;
@@ -385,11 +383,6 @@ namespace Uno {
             Hide();
         }
 
-        private void MnuWater_CheckedChanged(object sender, EventArgs e)
-        {
-            mnuBlackBlank.Enabled = mnuWildDownpourDraw.Checked;
-        }
-
         private void MnuWinnerLoser_Click(object sender, EventArgs e)
         {
             mnuOneWinner.Checked = false;
@@ -409,11 +402,11 @@ namespace Uno {
             s += mnuBeginner.Checked + "K";
             s += mnuPro.Checked + "K";
             s += mnuCheater.Checked + "K";
-            s += mnuRygbBlank.Checked + "K";
+            s += mnuBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
-            s += mnuWildDownpourDraw.Checked + "K";
-            s += mnuDaWah.Checked + "K";
+            s += mnuWater.Checked + "K";
+            s += mnuAttack.Checked + "K";
             s += mnuWildHitfire.Checked + "K";
             s += mnuDos.Checked + "K";
             s += mnuCanShowCards.Checked + "K";
