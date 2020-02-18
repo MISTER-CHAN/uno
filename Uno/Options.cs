@@ -419,6 +419,7 @@ namespace Uno {
         public string SaveRules()
         {
             string s = "";
+            s += on0 + "K";
             s += ons + "K";
             s += txtPlayer0.Text + "K";
             s += txtPlayer1.Text + "K";
