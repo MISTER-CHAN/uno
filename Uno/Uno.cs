@@ -1892,7 +1892,7 @@ gameOver:
                 return;
             }
             bool isFair = this.isFair;
-            this.isFair = true;
+            this.isFair = false;
             Card[] cards = Ai(0);
             this.isFair = isFair;
             string s = "";
