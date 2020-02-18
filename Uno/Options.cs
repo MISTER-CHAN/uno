@@ -91,7 +91,7 @@ namespace Uno {
             mnuOneWinner.Checked = bool.Parse(keys[37]);
             mnuOneLoser.Checked = bool.Parse(keys[38]);
             mnuUno.Checked = bool.Parse(keys[39]);
-            mnuCheat.Checked = bool.Parse(keys[41]);
+            mnuCheat.Checked = bool.Parse(keys[40]);
         }
 
         private void MnuAdvanced_Click(object sender, EventArgs e)
