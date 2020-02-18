@@ -1061,7 +1061,7 @@ deny:
             timTurn.Enabled = false;
             timPlayersToCenter.Enabled = false;
             timWatch.Enabled = false;
-            if (!form.isPlayingRecord && form.mnuBeginner.Checked)
+            if (!form.isPlayingRecord && form.mnuBeginner.Checked && !hasCheat)
             {
                 Interaction.SaveSetting("UNO", "RECORD", "REVERSE", Record.reverse.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "DEAL", Record.firstGettingCard.ToString());
