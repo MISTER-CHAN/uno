@@ -416,7 +416,7 @@
             this.mnuBeginner.Checked = true;
             this.mnuBeginner.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuBeginner.Name = "mnuBeginner";
-            this.mnuBeginner.Size = new System.Drawing.Size(100, 22);
+            this.mnuBeginner.Size = new System.Drawing.Size(180, 22);
             this.mnuBeginner.Text = "新手";
             this.mnuBeginner.CheckedChanged += new System.EventHandler(this.KeepSafeForCheating_CheckedChanged);
             this.mnuBeginner.Click += new System.EventHandler(this.MnuDifficulty_Click);
@@ -424,15 +424,16 @@
             // mnuPro
             // 
             this.mnuPro.Name = "mnuPro";
-            this.mnuPro.Size = new System.Drawing.Size(100, 22);
+            this.mnuPro.Size = new System.Drawing.Size(180, 22);
             this.mnuPro.Text = "職業";
             this.mnuPro.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // mnuCheater
             // 
             this.mnuCheater.Name = "mnuCheater";
-            this.mnuCheater.Size = new System.Drawing.Size(100, 22);
+            this.mnuCheater.Size = new System.Drawing.Size(180, 22);
             this.mnuCheater.Text = "賭神";
+            this.mnuCheater.Visible = false;
             this.mnuCheater.Click += new System.EventHandler(this.MnuDifficulty_Click);
             // 
             // mnuCards
@@ -459,7 +460,7 @@
             this.mnuBlackBlank,
             this.mnuMagentaBlank});
             this.mnuBlank.Name = "mnuBlank";
-            this.mnuBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlank.Size = new System.Drawing.Size(143, 22);
             this.mnuBlank.Text = "[空白]";
             this.mnuBlank.CheckedChanged += new System.EventHandler(this.MnuBlank_CheckedChanged);
             this.mnuBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -469,7 +470,7 @@
             this.mnuBlankText.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtBlankText});
             this.mnuBlankText.Name = "mnuBlankText";
-            this.mnuBlankText.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlankText.Size = new System.Drawing.Size(150, 22);
             this.mnuBlankText.Text = "文本";
             this.mnuBlankText.Visible = false;
             // 
@@ -486,7 +487,7 @@
             this.mnuBlankSkip.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtBlankSkip});
             this.mnuBlankSkip.Name = "mnuBlankSkip";
-            this.mnuBlankSkip.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlankSkip.Size = new System.Drawing.Size(150, 22);
             this.mnuBlankSkip.Text = "禁止";
             this.mnuBlankSkip.Visible = false;
             // 
@@ -500,7 +501,7 @@
             // mnuBlankReverse
             // 
             this.mnuBlankReverse.Name = "mnuBlankReverse";
-            this.mnuBlankReverse.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlankReverse.Size = new System.Drawing.Size(150, 22);
             this.mnuBlankReverse.Text = "反转";
             this.mnuBlankReverse.Visible = false;
             this.mnuBlankReverse.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -510,7 +511,7 @@
             this.mnuBlankDraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtBlankDraw});
             this.mnuBlankDraw.Name = "mnuBlankDraw";
-            this.mnuBlankDraw.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlankDraw.Size = new System.Drawing.Size(150, 22);
             this.mnuBlankDraw.Text = "摸牌";
             this.mnuBlankDraw.Visible = false;
             // 
@@ -524,14 +525,14 @@
             // separatorBlank
             // 
             this.separatorBlank.Name = "separatorBlank";
-            this.separatorBlank.Size = new System.Drawing.Size(177, 6);
+            this.separatorBlank.Size = new System.Drawing.Size(147, 6);
             this.separatorBlank.Tag = "e";
             this.separatorBlank.Visible = false;
             // 
             // mnuBlackBlank
             // 
             this.mnuBlackBlank.Name = "mnuBlackBlank";
-            this.mnuBlackBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlackBlank.Size = new System.Drawing.Size(150, 22);
             this.mnuBlackBlank.Text = "加入 [黑 空白]";
             this.mnuBlackBlank.Visible = false;
             this.mnuBlackBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -539,7 +540,7 @@
             // mnuMagentaBlank
             // 
             this.mnuMagentaBlank.Name = "mnuMagentaBlank";
-            this.mnuMagentaBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuMagentaBlank.Size = new System.Drawing.Size(150, 22);
             this.mnuMagentaBlank.Text = "加入 [紫 空白]";
             this.mnuMagentaBlank.Visible = false;
             this.mnuMagentaBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -547,7 +548,7 @@
             // mnuWater
             // 
             this.mnuWater.Name = "mnuWater";
-            this.mnuWater.Size = new System.Drawing.Size(180, 22);
+            this.mnuWater.Size = new System.Drawing.Size(143, 22);
             this.mnuWater.Text = "UNO H₂O";
             this.mnuWater.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -557,7 +558,7 @@
             this.mnuWildHitfire,
             this.mnuTradeHands});
             this.mnuAttack.Name = "mnuAttack";
-            this.mnuAttack.Size = new System.Drawing.Size(180, 22);
+            this.mnuAttack.Size = new System.Drawing.Size(143, 22);
             this.mnuAttack.Text = "UNO Attack";
             this.mnuAttack.CheckedChanged += new System.EventHandler(this.MnuAttack_CheckedChanged);
             this.mnuAttack.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -584,13 +585,13 @@
             // 
             this.mnuSpin.Enabled = false;
             this.mnuSpin.Name = "mnuSpin";
-            this.mnuSpin.Size = new System.Drawing.Size(180, 22);
+            this.mnuSpin.Size = new System.Drawing.Size(143, 22);
             this.mnuSpin.Text = "UNO Spin";
             // 
             // mnuDos
             // 
             this.mnuDos.Name = "mnuDos";
-            this.mnuDos.Size = new System.Drawing.Size(180, 22);
+            this.mnuDos.Size = new System.Drawing.Size(143, 22);
             this.mnuDos.Text = "Dos";
             this.mnuDos.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -632,6 +633,7 @@
             this.mnuPairs.Name = "mnuPairs";
             this.mnuPairs.Size = new System.Drawing.Size(205, 22);
             this.mnuPairs.Text = "允许对牌";
+            this.mnuPairs.CheckedChanged += new System.EventHandler(this.MnuPairs_CheckedChanged);
             this.mnuPairs.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuStacking

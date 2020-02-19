@@ -16,9 +16,17 @@ namespace Uno
         public class Card {
             public byte color = UnoColor.MAX_VALUE;
             public byte number = UnoNumber.MAX_VALUE;
-            public Card FromCard(byte color, byte number)
+
+            public Card()
             {
-                return new Card() { color = color, number = number };
+                color = UnoColor.MAX_VALUE;
+                number = UnoNumber.MAX_VALUE;
+            }
+
+            public Card(byte color, byte number)
+            {
+                this.color = color;
+                this.number = number;
             }
         }
 
@@ -217,70 +225,9 @@ namespace Uno
             if (player > 0 && form.mnuCheater.Checked
                 || player == 0 && isFair)
             {
-                if (skipFirstCheating)
-                    goto start;
-begin_hacking:
-                byte mn = UnoNumber.MAX_VALUE, mnc = UnoColor.MAX_VALUE;
-                int mq = 0;
-                for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
-                {
-                    byte n = mvcList[b];
-                    int q = GetNumberQuantity(player, n);
-                    if (q > mq)
-                    {
-                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
-                            if (pile.cards[c, n] > 0)
-                            {
-                                mq = q;
-                                mn = n;
-                                mnc = c;
-                                break;
-                            }
-                    }
-                }
-                if (!form.mnuPairs.Checked)
-                {
-                    Card card = GetBestCard(player);
-                    if (card != null)
-                    {
-                        pile.cards[mnc, mn]++;
-                        players[player].cards[mnc, mn]--;
-                        players[player].cards[card.color, card.number]++;
-                        pile.cards[card.color, card.number]--;
-                    }
-                }
-                else
-                {
-                    byte fn = UnoNumber.MAX_VALUE, fnc = UnoColor.MAX_VALUE;
-                    int fq = int.MaxValue;
-                    for (byte b = UnoNumber.MAX_VALUE - 1; 0 <= b && b < UnoNumber.MAX_VALUE; b--)
-                    {
-                        byte n = mvcList[b];
-                        int q = GetNumberQuantity(player, n);
-                        if (q < fq && q > 0)
-                        {
-                            for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
-                                if (players[player].cards[c, n] > 0)
-                                {
-                                    fq = q;
-                                    fn = n;
-                                    fnc = c;
-                                    break;
-                                }
-                        }
-                    }
-                    if (PlayersCardsCount(player) <= 1)
-                        goto start;
-                    if (mq <= fq)
-                        goto start;
-                    pile.cards[fnc, fn]++;
-                    players[player].cards[fnc, fn]--;
-                    players[player].cards[mnc, mn]++;
-                    pile.cards[mnc, mn]--;
-                    goto begin_hacking;
-                }
+                if (!skipFirstCheating && form.mnuPairs.Checked)
+                    CheatPairs(player);
             }
-start:
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
             Card bestCard = new Card();
             List<Card> cards = new List<Card>();
@@ -567,17 +514,36 @@ exit:
                     bestCard = GetBestCard(player);
                     if (bestCard != null)
                     {
-                        for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
-                            for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
-                                if (players[player].cards[c, n] > 0)
-                                {
-                                    players[player].cards[c, n]--;
-                                    pile.cards[c, n]++;
-                                    goto deleted;
+                        if (form.mnuPairs.Checked)
+                        {
+                            List<byte> colors = new List<byte>();
+                            for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                            {
+                                for (int i = 1; i <= pile.cards[c, bestCard.number]; i++)
+                                { 
+                                    Card card = PlayersCards(player)[0];
+                                    players[player].cards[card.color, card.number]--;
+                                    pile.cards[card.color, card.number]++;
+                                    colors.Add(c);
+                                    if (PlayersCardsCount(player) <= 0)
+                                        goto get_best;
                                 }
-deleted:
-                        pile.cards[bestCard.color, bestCard.number]--;
-                        players[player].cards[bestCard.color, bestCard.number]++;
+                            }
+get_best:
+                            foreach (byte c in colors)
+                            {
+                                pile.cards[c, bestCard.number]--;
+                                players[player].cards[c, bestCard.number]++;
+                            }
+                        }
+                        else
+                        {
+                            Card card = PlayersCards(player)[0];
+                            players[player].cards[card.color, card.number]--;
+                            pile.cards[card.color, card.number]++;
+                            pile.cards[bestCard.color, bestCard.number]--;
+                            players[player].cards[bestCard.color, bestCard.number]++;
+                        }
                         return Ai(player, true);
                     }
                 }
@@ -754,6 +720,58 @@ deny:
                 graphics.Flush();
                 graphics.Dispose();
             }
+        }
+
+        void CheatPairs(byte player)
+        {
+        begin_hacking:
+            byte mn = UnoNumber.MAX_VALUE, mnc = UnoColor.MAX_VALUE;
+            int mq = 0;
+            for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
+            {
+                byte n = mvcList[b];
+                int q = GetNumberQuantity(player, n);
+                if (q > mq)
+                {
+                    for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                        if (pile.cards[c, n] > 0)
+                        {
+                            mq = q;
+                            mn = n;
+                            mnc = c;
+                            break;
+                        }
+                }
+            }
+            byte fn = UnoNumber.MAX_VALUE, fnc = UnoColor.MAX_VALUE;
+            int fq = int.MaxValue;
+            for (byte b = UnoNumber.MAX_VALUE - 1; 0 <= b && b < UnoNumber.MAX_VALUE; b--)
+            {
+                byte n = mvcList[b];
+                int q = GetNumberQuantity(player, n);
+                if (q < fq && q > 0)
+                {
+                    for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                        if (players[player].cards[c, n] > 0)
+                        {
+                            fq = q;
+                            fn = n;
+                            fnc = c;
+                            break;
+                        }
+                }
+            }
+            if (PlayersCardsCount(player) <= 1)
+                goto start;
+            if (mq <= fq)
+                goto start;
+            pile.cards[fnc, fn]++;
+            players[player].cards[fnc, fn]--;
+            players[player].cards[mnc, mn]++;
+            pile.cards[mnc, mn]--;
+            goto begin_hacking;
+        start:
+            return;
         }
 
         void CheckPile()
@@ -1252,26 +1270,26 @@ deny:
                 if (backNumber == UnoNumber.WILD_DRAW_4 && !form.mnuPlayOrDrawAll.Checked)
                 {
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
-                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
+                        return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     else
                         return null;
                 }
                 if (backNumber == UnoNumber.DRAW_2 && !form.mnuPlayOrDrawAll.Checked)
                 {
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
-                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
+                        return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     else
                     {
                         for (byte b = UnoColor.RED; b <= UnoColor.BLUE; b++)
                             if (pile.cards[b, UnoNumber.DRAW_2] > 0)
-                                return new Card().FromCard(b, UnoNumber.DRAW_2);
+                                return new Card(b, UnoNumber.DRAW_2);
                         return null;
                     }
                 }
                 if (backNumber == UnoNumber.WILD_HITFIRE && !form.mnuPlayOrDrawAll.Checked)
                 {
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] > 0)
-                        return new Card().FromCard(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
+                        return new Card(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
                     else
                         return null;
                 }
@@ -1280,18 +1298,18 @@ deny:
                     byte n = mvcList[b];
                     if (pile.cards[UnoColor.BLACK, n] > 0)
                     {
-                        return new Card().FromCard(UnoColor.BLACK, n);
+                        return new Card(UnoColor.BLACK, n);
                     }
                 }
                 if (pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] > 0)
                 {
-                    return new Card().FromCard(UnoColor.MAGENTA, UnoNumber.BLANK);
+                    return new Card(UnoColor.MAGENTA, UnoNumber.BLANK);
                 }
                 for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                 {
                     if (pile.cards[c, backNumber] > 0)
                     {
-                        return new Card().FromCard(c, backNumber);
+                        return new Card(c, backNumber);
                     }
                 }
                 if (form.mnuPairs.Checked)
@@ -1319,11 +1337,11 @@ deny:
                     if (mn != UnoNumber.MAX_VALUE)
                     {
                         if (pile.cards[backColor, mn] > 0)
-                            return new Card().FromCard(backColor, mn);
+                            return new Card(backColor, mn);
                         else
                             for (byte c = UnoColor.RED; c <= UnoColor.BLUE; c++)
                                 if (pile.cards[c, mn] > 0)
-                                    return new Card().FromCard(c, mn);
+                                    return new Card(c, mn);
                     }
                 }
                 for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
@@ -1331,7 +1349,7 @@ deny:
                     byte n = mvcList[b];
                     if (pile.cards[backColor, n] > 0)
                     {
-                        return new Card().FromCard(backColor, n);
+                        return new Card(backColor, n);
                     }
                 }
             }
@@ -1342,7 +1360,7 @@ deny:
                 {
                     if (pile.cards[c, n] > 0)
                     {
-                        return new Card().FromCard(c, n);
+                        return new Card(c, n);
                     }
                 }
             }
@@ -1772,6 +1790,7 @@ gameOver:
                 foreach (CheckBox c in chkPlayer)
                     c.ContextMenuStrip = mnuCheating;
                 isFair = true;
+                mnuCheatAll.Visible = form.mnuPairs.Checked;
             }
         }
 
@@ -1855,7 +1874,7 @@ gameOver:
             Record.firstTurn = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "FIRST"));
             Record.unos = new List<bool>(Interaction.GetSetting("UNO", "RECORD", "UNOS").Split(',').Cast<string>().Select(s => bool.Parse(s)));
             Record.colors = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "COLORS").Split('C').Cast<string>().Select(s => byte.Parse(s)));
-            Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card().FromCard(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
+            Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
             string[] ps = Interaction.GetSetting("UNO", "RECORD", "PLAYERS").Split('P');
             for (byte p = 0; p < 4; p++)
             {
@@ -1873,7 +1892,7 @@ gameOver:
                     {
                         if (c == "")
                             continue;
-                        cards.Add(new Card().FromCard(byte.Parse(c.Split('I')[0]), byte.Parse(c.Split('I')[1])));
+                        cards.Add(new Card(byte.Parse(c.Split('I')[0]), byte.Parse(c.Split('I')[1])));
                     }
                     Record.players[p].Add(cards.ToArray());
                 }
@@ -2211,6 +2230,12 @@ gameOver:
                 control.BackColor = GetColor(card.color);
                 control.Text = GetNumber(card.number);
             }
+        }
+
+        private void MnuCheatAll_Click(object sender, EventArgs e)
+        {
+            CheatPairs(0);
+            Sort();
         }
 
         private void MnuContent_Click(object sender, EventArgs e)

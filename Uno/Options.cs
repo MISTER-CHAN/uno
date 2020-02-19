@@ -315,6 +315,16 @@ namespace Uno {
             MnuStart_Click(mnuStart, new EventArgs());
         }
 
+        private void MnuPairs_CheckedChanged(object sender, EventArgs e)
+        {
+            mnuCheater.Visible = mnuPairs.Checked;
+            if (mnuCheater.Checked && !mnuCheater.Visible)
+            {
+                mnuCheater.Checked = false;
+                mnuPro.Checked = true;
+            }
+        }
+
         private void MnuPlayRecord_Click(object sender, EventArgs e)
         {
             mnuLoad.Enabled = false;
