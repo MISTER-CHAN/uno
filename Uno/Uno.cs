@@ -1,9 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -169,7 +167,6 @@ namespace Uno
 				chkPlayer[length].AutoSize = false;
 				chkPlayer[length].Appearance = Appearance.Button;
                 chkPlayer[length].BackColor = Color.White;
-                chkPlayer[length].BackColorChanged += Card_BackColorChanged;
                 chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
 				chkPlayer[length].BringToFront();
 				chkPlayer[length].CheckedChanged += ChkPlayer_CheckedChanged;
@@ -186,7 +183,6 @@ namespace Uno
                 chkPlayer[length].MouseWheel += ChkPlayer_MouseWheel;
                 chkPlayer[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 chkPlayer[length].Tag = length;
-                chkPlayer[length].TextChanged += Card_TextChanged;
 				chkPlayer[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
@@ -207,7 +203,6 @@ namespace Uno
                 controls.Add(label[length]);
                 label[length].AutoSize = false;
                 label[length].BackColor = Color.White;
-                label[length].BackColorChanged += Card_BackColorChanged;
                 label[length].BackgroundImageLayout = ImageLayout.Stretch;
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
@@ -216,7 +211,6 @@ namespace Uno
                 label[length].MouseLeave += Label_MouseLeave;
                 label[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
                 label[length].Text = UnoNumberName.NULL;
-                label[length].TextChanged += Card_TextChanged;
                 label[length].TextAlign = ContentAlignment.MiddleCenter;
             }
 		}
@@ -618,6 +612,7 @@ rnd:
             if (form.mnuDos.Checked)
             {
                 byte n = backNumber;
+                
                 foreach (Card c in card)
                 {
                     if (c.color == backColor)
@@ -690,36 +685,6 @@ accept:
 deny:
             Action(0, "你不能这样出牌");
             return false;
-        }
-
-        private void Card_BackColorChanged(object sender, EventArgs e)
-        {
-            Control c = (Control)sender;
-            c.ForeColor = c.BackColor;
-            Card_TextChanged(sender, e);
-        }
-
-        private void Card_TextChanged(object sender, EventArgs e)
-        {
-            Control control = (Control)sender;
-            if (mnuAppearance.Checked)
-            {
-                byte b = GetNumberId(control.Text);
-                Image image = new Bitmap(120, 160);
-                Graphics graphics = Graphics.FromImage(image);
-                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), b * 120, GetColorId(control.BackColor) * 160, 120, 160, GraphicsUnit.Pixel);
-                control.BackgroundImage = image;
-                if (control.Text != form.txtBlankText.Text)
-                {
-                    control.Font = new Font(control.Font.FontFamily, 1);
-                }
-                else
-                {
-                    control.Font = new Font("MS Gothic", 42);
-                }
-                graphics.Flush();
-                graphics.Dispose();
-            }
         }
 
         void CheatPairs(byte player)
@@ -1141,10 +1106,9 @@ deny:
                                 {
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
-                                    label[length].BackColor = GetColor(color);
+                                    SetCard(label[length], color, number);
                                     if (p == 1 || p == 3)
                                         label[length].Left = lblPlayers[p].Left;
-                                    label[length].Text = GetNumber(number);
                                     if (p == 2) label[length].Top = lblPlayers[2].Top;
                                 }
                     else
@@ -1154,10 +1118,9 @@ deny:
                                 {
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
-                                    label[length].BackColor = GetColor(color);
+                                    SetCard(label[length], color, number);
                                     if (p == 1 || p == 3)
                                         label[length].Left = lblPlayers[p].Left;
-                                    label[length].Text = GetNumber(number);
                                     if (p == 2) label[length].Top = lblPlayers[2].Top;
                                 }
                     for (int c = playerPos; c < label.ToArray().Length; c++)
@@ -1207,10 +1170,9 @@ deny:
                                 {
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
-                                    label[length].BackColor = GetColor(color);
+                                    SetCard(label[length], color, number);
                                     if (gameOver == 1 || gameOver == 3)
                                         label[length].Left = lblPlayers[gameOver].Left;
-                                    label[length].Text = GetNumber(number);
                                     if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
                                 }
                     else
@@ -1220,10 +1182,9 @@ deny:
                                 {
                                     int length = label.ToArray().Length;
                                     AddLabel(label);
-                                    label[length].BackColor = GetColor(color);
+                                    SetCard(label[length], color, number);
                                     if (gameOver == 1 || gameOver == 3)
                                         label[length].Left = lblPlayers[gameOver].Left;
-                                    label[length].Text = GetNumber(number);
                                     if (gameOver == 2) label[length].Top = lblPlayers[2].Top;
                                 }
                     for (int c = 0; c < label.ToArray().Length; c++)
@@ -1603,32 +1564,30 @@ deny:
         {
             if (color == UnoColor.BLACK)
                 return "万能";
-            else if (number <= 9)
-                return "普通";
-            else
+            else if (number > 10)
                 return "功能";
+            else
+                return "普通";
         }
 
-        string GetUsage(string number)
+        string GetUsage(byte number)
         {
-            string usage = "任意指定颜色幷且所有玩家罚抽 %AMOUNT% 张牌.";
-            string[] usages = {"禁止下家出牌.", "反转出牌顺序.", "下家罚抽 %AMOUNT% 张牌."};
-            if (number == form.txtBlankText.Text)
-                return (int.Parse(form.txtBlankSkip.Text) > 0 ? usages[0] : "") + " " + (form.mnuBlankReverse.Checked ? usages[1] : "") + " " + (int.Parse(form.txtBlankDraw.Text) > 0 ? usages[2].Replace("%AMOUNT%", form.txtBlankDraw.Text) : "");
+            string[] usages = {"禁止下家出牌.", "反转出牌顺序.", "下家罚抽 %QUANTITY% 张牌." };
             return number switch
             {
-                UnoNumberName.SKIP => usages[0],
-                UnoNumberName.REVERSE => usages[1],
-                UnoNumberName.DRAW_2 => usages[2].Replace("%AMOUNT%", "2"),
-                UnoNumberName.DISCARD_ALL => "允许玩家打出所有相同颜色的牌.",
-                UnoNumberName.TRADE_HANDS => "所有玩家互相交換手牌.",
-                UnoNumberName.NUMBER => "任意指定数字.",
-                UnoNumberName.WILD => "任意指定颜色.",
-                UnoNumberName.WILD_DOWNPOUR_DRAW_1 => usage.Replace("%AMOUNT%", "1"),
-                UnoNumberName.WILD_DOWNPOUR_DRAW_2 => usage.Replace("%AMOUNT%", "2"),
-                UnoNumberName.WILD_DOWNPOUR_DRAW_4 => usage.Replace("%AMOUNT%", "4"),
-                UnoNumberName.WILD_DRAW_4 => "任意指定颜色幷且下家罚抽 4 张牌.",
-                UnoNumberName.WILD_HITFIRE => "任意指定颜色幷且下家罚抽牌盒中的所有牌.",
+                UnoNumber.SKIP => usages[0],
+                UnoNumber.REVERSE => usages[1],
+                UnoNumber.DRAW_2 => usages[2].Replace("%QUANTITY%", "2"),
+                UnoNumber.DISCARD_ALL => "允许玩家打出所有相同颜色的牌.",
+                UnoNumber.TRADE_HANDS => "所有玩家互相交換手牌.",
+                UnoNumber.NUMBER => "任意指定数字.",
+                UnoNumber.BLANK => (int.Parse(form.txtBlankSkip.Text) > 0 ? usages[0] : "") + " " + (form.mnuBlankReverse.Checked ? usages[1] : "") + " " + (int.Parse(form.txtBlankDraw.Text) > 0 ? usages[2].Replace("%QUANTITY%", form.txtBlankDraw.Text) : ""),
+                UnoNumber.WILD => "任意指定颜色.",
+                UnoNumber.WILD_DOWNPOUR_DRAW_1 => "任意指定颜色幷且所有玩家罚抽 1 张牌.",
+                UnoNumber.WILD_DOWNPOUR_DRAW_2 => "任意指定颜色幷且所有玩家罚抽 2 张牌.",
+                UnoNumber.WILD_DOWNPOUR_DRAW_4 => "任意指定颜色幷且所有玩家罚抽 4 张牌.",
+                UnoNumber.WILD_DRAW_4 => "任意指定颜色幷且下家罚抽 4 张牌.",
+                UnoNumber.WILD_HITFIRE => "任意指定颜色幷且下家罚抽牌盒中的所有牌.",
                 _ => "普通的 " + number + " 号牌.",
             };
         }
@@ -1854,10 +1813,7 @@ gameOver:
             lblPile.Text = GetPile().Length - 1 + "";
             BackColor = GetColor(byte.Parse(keys[2]));
             foreach (Label card in lblCards)
-            {
-                card.BackColor = BackColor;
-                card.Text = GetNumber(byte.Parse(keys[3]));
-            }
+                SetCard(card, byte.Parse(keys[2]), byte.Parse(keys[3]));
             skip = int.Parse(keys[4]);
             string[] sks = keys[5].Split(char.Parse("P"));
             for (byte sk = 0; sk <= 3; sk++)
@@ -2007,7 +1963,7 @@ gameOver:
                             {
                                 BackColor = GetColor(byte.Parse(data[1]));
                                 foreach (Label card in lblCards)
-                                    card.Text = GetNumber(byte.Parse(data[2]));
+                                    SetCard(card, byte.Parse(data[1]), byte.Parse(data[2]));
                             }
                             else if (data.Length == 2)
                                 BackColor = GetColor(byte.Parse(data[1]));
@@ -2227,8 +2183,7 @@ gameOver:
                 players[0].cards[color, number]--;
                 pile.cards[color, number]++;
                 players[0].cards[card.color, card.number]++;
-                control.BackColor = GetColor(card.color);
-                control.Text = GetNumber(card.number);
+                SetCard(control, card.color, card.number);
             }
         }
 
@@ -2502,8 +2457,7 @@ gameOver:
                 AddLabel(lblMovingCards, cards.Count, pnlMovingCards.Controls);
                 for (int c = 1; c < lblMovingCards.Count; c++)
                 {
-                    lblMovingCards[c].BackColor = GetColor(cards[c - 1].color == UnoColor.BLACK ? MovingCard.color : cards[c - 1].color);
-                    lblMovingCards[c].Text = GetNumber(cards[c - 1].number);
+                    SetCard(lblMovingCards[c], cards[c - 1].color == UnoColor.BLACK ? MovingCard.color : cards[c - 1].color, cards[c - 1].number);
                 }
                 if (lblMovingCards.Count > swpcw / 2)
                 {
@@ -2796,6 +2750,30 @@ gameOver:
             return s;
         }
 
+        void SetCard(Control card, byte color, byte number)
+        {
+            card.BackColor = GetColor(color);
+            card.Text = GetNumber(number);
+            if (mnuAppearance.Checked)
+            {
+                Image image = new Bitmap(120, 160);
+                Graphics graphics = Graphics.FromImage(image);
+                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                card.BackgroundImage = image;
+                if (card.Text != form.txtBlankText.Text)
+                    card.Font = new Font(card.Font.FontFamily, 1);
+                else
+                    card.Font = new Font(new FontFamily("MS Gothic"), 42);
+                graphics.Flush();
+                graphics.Dispose();
+            }
+            toolTip.SetToolTip(card, "" +
+                "颜色\t" + GetColorName(color) + "\n" +
+                "数字\t" + card.Text + "\n" +
+                "类型\t" + GetType(color, number) + "\n" +
+                "功能\t" + GetUsage(number));
+        }
+
         private void SetInterval(int distance)
         {
             this.distance = distance;
@@ -2807,16 +2785,6 @@ gameOver:
             }
             timTurn.Interval = interval;
             timUno.Interval = interval;
-        }
-
-        private void SetUsage(Control card)
-        {
-            byte color = GetColorId(card.BackColor);
-            toolTip.SetToolTip(card, "" +
-                "颜色\t" + GetColorName(color) + "\n" +
-                "数字\t" + card.Text + "\n" +
-                "类型\t" + GetType(color, GetNumberId(card.Text)) + "\n" +
-                "功能\t" + GetUsage(card.Text));
         }
 
         private void ShowCards(byte player)
@@ -2874,9 +2842,7 @@ gameOver:
                     for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
                         for (int c = 1; c <= players[0].cards[color, number]; c++)
                         {
-                            chkPlayer[i].BackColor = GetColor(color);
-                            chkPlayer[i].Text = GetNumber(number);
-                            SetUsage(chkPlayer[i]);
+                            SetCard(chkPlayer[i], color, number);
                             i++;
                         }
             else
@@ -2884,9 +2850,7 @@ gameOver:
                     for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
                         for (int c = 1; c <= players[0].cards[color, number]; c++)
                         {
-                            chkPlayer[i].BackColor = GetColor(color);
-                            chkPlayer[i].Text = GetNumber(number);
-                            SetUsage(chkPlayer[i]);
+                            SetCard(chkPlayer[i], color, number);
                             i++;
                         }
             hPlayer.Visible = false;
@@ -2943,14 +2907,12 @@ gameOver:
 				this.pile.cards[rndCard.color, rndCard.number]--;
 				lblPile.Text = pile.Length - 1 + "";
 				AddLabel(lblCards);
-				lblCards[1].BackColor = GetColor(rndCard.color);
 				lblCards[1].BringToFront();
 				lblCards[1].Font = new Font(lblCards[1].Font.FontFamily, 42);
 				lblCards[1].ForeColor = Color.White;
 				lblCards[1].Location = new Point(lblCards[0].Left, lblCards[0].Top);
-				lblCards[1].Text = GetNumber(rndCard.number);
 				lblCards[1].TextAlign = ContentAlignment.MiddleCenter;
-                SetUsage(lblCards[1]);
+                SetCard(lblCards[1], rndCard.color, rndCard.number);
                 if (lblCards[1].BackColor == Color.Magenta || lblCards[1].BackColor == Color.Black)
                 {
                     MovingCard.progress = 0;
@@ -3191,11 +3153,9 @@ arrived:
 			AddLabel(lblCards, lblMovingCards.ToArray().Length - 1);
 			for (int c = 1; c < lblCards.ToArray().Length; c++)
             {
-				lblCards[c].BackColor = lblMovingCards[c].BackColor;
-                lblCards[c].Text = lblMovingCards[c].Text;
+                SetCard(lblCards[c], GetColorId(lblMovingCards[c].BackColor), GetNumberId(lblMovingCards[c].Text));
 				lblCards[c].BringToFront();
                 lblCards[c].Location = new Point(lblMovingCards[c].Left + pnlMovingCards.Left, lblMovingCards[c].Top + pnlMovingCards.Top);
-                SetUsage(lblCards[c]);
 			}
 			RemoveLabel(lblMovingCards, pnlMovingCards.Controls);
             pnlMovingCards.Location = new Point(-pnlMovingCards.Width, -pnlMovingCards.Height);
