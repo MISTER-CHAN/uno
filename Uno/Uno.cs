@@ -552,7 +552,7 @@ get_best:
                 FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
                 if (MessageBox.Show(
                     "打和!\n"
-                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
+                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
@@ -650,7 +650,7 @@ draw:
                 {
                     case UnoNumberName.DRAW_2:
                         if (int.Parse(lblDraw.Text) >= 2)
-                            if (!new Regex("^(" + UnoNumber.DRAW_2 + "|" + UnoNumber.WILD_DRAW_4 + "$)").IsMatch(card[0].number + ""))
+                            if (card[0].number != UnoNumber.DRAW_2 && card[0].number != UnoNumber.WILD_DRAW_4)
                                 goto deny;
                         break;
                     case UnoNumberName.WILD_DRAW_4:
@@ -1146,7 +1146,7 @@ deny:
                 lblPlayers[gameOver].Visible = false;
                 string msg = (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "赢了!\n" +
                     "\n" +
-                    (form.mnuWatch.Checked && !form.isPlayingRecord ? "游戏时长\t" + lblWatch.Text + "\n" +
+                    (form.mnuWatch.Checked && !form.isPlayingRecord ? $"游戏时长\t{lblWatch.Text}\n" +
                     "\n" : "") +
                     "玩家\t得分";
                 for (byte p = 0; p <= 3; p++)
@@ -1210,7 +1210,7 @@ deny:
                 lblPlayers[gameOver].Visible = false;
                 if (MessageBox.Show(
                     (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "输了!\n"
-                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? "\n游戏时长\t" + lblWatch.Text : "")
+                    + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
@@ -1588,7 +1588,7 @@ deny:
                 UnoNumber.WILD_DOWNPOUR_DRAW_4 => "任意指定颜色幷且所有玩家罚抽 4 张牌.",
                 UnoNumber.WILD_DRAW_4 => "任意指定颜色幷且下家罚抽 4 张牌.",
                 UnoNumber.WILD_HITFIRE => "任意指定颜色幷且下家罚抽牌盒中的所有牌.",
-                _ => "普通的 " + number + " 号牌.",
+                _ => $"普通的 {number} 号牌.",
             };
         }
 
@@ -1895,11 +1895,11 @@ gameOver:
                 {
                     if (c.color == UnoColor.BLACK || c.color != cards[0].color)
                     {
-                        color = "\n轉" + GetColorName(MovingCard.color) + "色";
+                        color = $"\n轉{GetColorName(MovingCard.color)}色";
                         break;
                     }
                 }
-                if (MessageBox.Show("你可以嘗試出:\n" + s + color + "\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                if (MessageBox.Show($"你可以嘗試出:\n{s}{color}\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
                     foreach (CheckBox chk in chkPlayer)
                     {
@@ -1955,7 +1955,7 @@ gameOver:
                                 for (byte number = fromNumber; number <= toNumber; number++)
                                     players[player].cards[color, number] = 0;
                             if (player == 0) Sort();
-                            Action(0, "已淸除 " + PLAYER_NAMES[player] + " 的手牌");
+                            Action(0, $"已淸除 {PLAYER_NAMES[player]} 的手牌");
                             lblCounts[player].Text = PlayersCardsCount(player) + "";
                             break;
                         case "/currard":
@@ -1967,14 +1967,14 @@ gameOver:
                             }
                             else if (data.Length == 2)
                                 BackColor = GetColor(byte.Parse(data[1]));
-                            Action(0, "你的回合被指定为 [" + GetColorName(byte.Parse(data[1])) + " " + lblCards[1].Text + "]");
+                            Action(0, $"你的回合被指定为 [{GetColorName(byte.Parse(data[1]))} {lblCards[1].Text}]");
                             break;
                         case "/decks":
                             if (data.Length > 1)
                                 if (IsNumeric(data[1]))
                                 {
                                     form.txtDecks.Text = data[1];
-                                    Action(0, "已准备 " + data[1] + " 副牌");
+                                    Action(0, $"已准备 {data[1]} 副牌");
                                 }
                             break;
                         case "/draw":
@@ -2006,7 +2006,7 @@ gameOver:
                             if (data[1] == "0")
                                 Sort();
                             lblCounts[int.Parse(data[1])].Text = PlayersCardsCount(byte.Parse(data[1])) + "";
-                            Action(0, "已将 [" + GetColorName(byte.Parse(data[2])) + " " + GetNumber(byte.Parse(data[3])) + "] * " + count + " 给予 " + PLAYER_NAMES[byte.Parse(data[1])]);
+                            Action(0, $"已将 [{GetColorName(byte.Parse(data[2]))} {GetNumber(byte.Parse(data[3]))}] * {count} 给予 {PLAYER_NAMES[byte.Parse(data[1])]}");
                             break;
                         case "/help":
                         case "/?":
@@ -2036,7 +2036,7 @@ gameOver:
                                     "/? [int page]",
                                 _ => ""
                             };
-                            MessageBox.Show("=== 显示指令列表第 " + page + " 页, 共 1 页 ===\n" + help, "帮助", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"=== 显示指令列表第 {page} 页, 共 1 页 ===\n{help}", "帮助", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             break;
                         case "/load":
                             string[] keys;
@@ -2126,11 +2126,11 @@ gameOver:
                                     break;
                                 case 2:
                                     skip = int.Parse(data[1]);
-                                    Action(0, "跳过 " + skip + " 个玩家");
+                                    Action(0, $"跳过 {skip} 个玩家");
                                     break;
                                 default:
                                     skips[byte.Parse(data[1])] = int.Parse(data[2]);
-                                    Action(0, "跳过 " + PLAYER_NAMES[byte.Parse(data[1])] + " " + data[2] + " 次");
+                                    Action(0, $"跳过 {PLAYER_NAMES[byte.Parse(data[1])]} {data[2]} 次");
                                     break;
                             }
                             break;
@@ -2202,12 +2202,12 @@ gameOver:
         {
             MessageBox.Show(
                 "[0 ~ 9]\tNumpad0~9\n" +
-                "[" + UnoNumberName.SKIP + "]\tDelete\n" +
-                "[" + UnoNumberName.REVERSE + "]\tEnd\n" +
-                "[" + UnoNumberName.DRAW_2 + "]\tPageDown\n" +
-                "[" + form.txtBlankText.Text + "]\tInsert\n" +
-                "[" + UnoNumberName.WILD + "]\tHome\n" +
-                "[" + UnoNumberName.WILD_DRAW_4 + "]\tPageUp\n" +
+                $"[{UnoNumberName.SKIP}]\tDelete\n" +
+                $"[{UnoNumberName.REVERSE}]\tEnd\n" +
+                $"[{UnoNumberName.DRAW_2}]\tPageDown\n" +
+                $"[{form.txtBlankText.Text}]\tInsert\n" +
+                $"[{UnoNumberName.WILD}]\tHome\n" +
+                $"[{UnoNumberName.WILD_DRAW_4}]\tPageUp\n" +
                 "上一页\tNumpad/\n" +
                 "下一页\tNumpad*\n" +
                 "光标移动\t←↑→↓\n" +
@@ -2535,12 +2535,12 @@ gameOver:
                 {
                     if (form.mnuSkipPlayers.Checked)
                     {
-                        Action(player, "禁手 (" + skip + ")");
+                        Action(player, $"禁手 ({skip})");
                         skip--;
                     }
                     else
                     {
-                        Action(player, "禁手 (" + skips[player] + ")");
+                        Action(player, $"禁手 ({skips[player]})");
                         skips[player]--;
                     }
                     PlayersTurn(player, false);
