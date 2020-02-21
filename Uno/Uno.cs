@@ -1406,7 +1406,7 @@ deny:
             };
         }
 
-		byte GetNumberId(String number) {
+		byte GetNumberId(string number) {
             if (number == form.txtBlankText.Text)
             {
                 return UnoNumber.BLANK;
@@ -1574,23 +1574,29 @@ deny:
 
         string GetUsage(byte number)
         {
-            string[] usages = {"禁止下家出牌.", "反转出牌顺序.", "下家罚抽 %QUANTITY% 张牌." };
-            return number switch
+            switch (number)
             {
-                UnoNumber.SKIP => usages[0],
-                UnoNumber.REVERSE => usages[1],
-                UnoNumber.DRAW_2 => usages[2].Replace("%QUANTITY%", "2"),
-                UnoNumber.DISCARD_ALL => "允许玩家打出所有相同颜色的牌.",
-                UnoNumber.TRADE_HANDS => "所有玩家互相交換手牌.",
-                UnoNumber.NUMBER => "任意指定数字.",
-                UnoNumber.BLANK => (int.Parse(form.txtBlankSkip.Text) > 0 ? usages[0] : "") + " " + (form.mnuBlankReverse.Checked ? usages[1] : "") + " " + (int.Parse(form.txtBlankDraw.Text) > 0 ? usages[2].Replace("%QUANTITY%", form.txtBlankDraw.Text) : ""),
-                UnoNumber.WILD => "任意指定颜色.",
-                UnoNumber.WILD_DOWNPOUR_DRAW_1 => "任意指定颜色幷且所有玩家罚抽 1 张牌.",
-                UnoNumber.WILD_DOWNPOUR_DRAW_2 => "任意指定颜色幷且所有玩家罚抽 2 张牌.",
-                UnoNumber.WILD_DOWNPOUR_DRAW_4 => "任意指定颜色幷且所有玩家罚抽 4 张牌.",
-                UnoNumber.WILD_DRAW_4 => "任意指定颜色幷且下家罚抽 4 张牌.",
-                UnoNumber.WILD_HITFIRE => "任意指定颜色幷且下家罚抽牌盒中的所有牌.",
-                _ => $"普通的 {number} 号牌.",
+                case UnoNumber.SKIP: return "禁止下家出牌";
+                case UnoNumber.REVERSE: return "反转出牌顺序";
+                case UnoNumber.DRAW_2: return "下家罚抽 2 张牌";
+                case UnoNumber.DISCARD_ALL: return "允许玩家打出所有相同颜色的牌";
+                case UnoNumber.TRADE_HANDS: return "所有玩家互相交換手牌";
+                case UnoNumber.NUMBER: return "表示任意数字";
+                case UnoNumber.BLANK:
+                    int downpourDraw = int.Parse(form.txtBlankDownpourDraw.Text), draw = int.Parse(form.txtBlankDraw.Text), skip = int.Parse(form.txtBlankSkip.Text);
+                    string s = ""
+                        + (skip > 0 ? $"\n　　\t禁止下家出牌 × {skip}" : "")
+                        + (form.mnuBlankReverse.Checked ? "\n　　\t反转出牌顺序" : "")
+                        + (draw > 0 ? $"\n　　\t下家罚抽 {draw} 张牌" : "")
+                        + (downpourDraw > 0 ? $"\n　　\t所有玩家罚抽 {downpourDraw} 张牌" : "");
+                    return s == "" ? "普通的空白牌" : s.Substring(4);
+                case UnoNumber.WILD: return "";
+                case UnoNumber.WILD_DOWNPOUR_DRAW_1: return "所有玩家罚抽 1 张牌";
+                case UnoNumber.WILD_DOWNPOUR_DRAW_2: return "所有玩家罚抽 2 张牌";
+                case UnoNumber.WILD_DOWNPOUR_DRAW_4: return "所有玩家罚抽 4 张牌";
+                case UnoNumber.WILD_DRAW_4: return "下家罚抽 4 张牌";
+                case UnoNumber.WILD_HITFIRE: return "下家罚抽牌盒中的所有牌";
+                default: return $"普通的 {number} 号牌";
             };
         }
 
@@ -2758,24 +2764,28 @@ gameOver:
             card.Text = GetNumber(number);
             if (mnuAppearance.Checked)
             {
+                card.ForeColor = card.BackColor;
                 Image image = new Bitmap(120, 160);
                 Graphics graphics = Graphics.FromImage(image);
                 graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
                 card.BackgroundImage = image;
                 if (number != UnoNumber.BLANK)
                     card.Font = new Font(card.Font.FontFamily, 1);
-                else
-                {
-                    card.ForeColor = card.BackColor;
-                }
                 graphics.Flush();
                 graphics.Dispose();
             }
+            string usage = GetUsage(number);
+            usage = color switch
+            {
+                UnoColor.MAGENTA => "表示任意顏色" + (usage == "" ? "" : "\n　　\t") + usage,
+                UnoColor.BLACK => "任意指定颜色" + (usage == "" ? "" : "\n　　\t") + usage,
+                _ => usage,
+            };
             toolTip.SetToolTip(card, "" +
                 "颜色\t" + GetColorName(color) + "\n" +
                 "数字\t" + card.Text + "\n" +
                 "类型\t" + GetType(color, number) + "\n" +
-                "功能\t" + GetUsage(number));
+                "功能\t" + usage);
         }
 
         private void SetInterval(int distance)
@@ -3171,29 +3181,6 @@ arrived:
             foreach (Label p in lblPlayers)
                 if (p.Visible)
                     ons++;
-            if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-            {
-                foreach (Label l in lblCards)
-                {
-                    if (l.Text == UnoNumberName.NULL)
-                        continue;
-                    if (l.Text == UnoNumberName.REVERSE || l.Text == form.txtBlankText.Text && form.mnuBlankReverse.Checked)
-                    {
-                        reversed = true;
-                        break;
-                    }
-                }
-            }
-            else
-                foreach (Label l in lblCards)
-                {
-                    if (l.Text == UnoNumberName.NULL)
-                        continue;
-                    if (l.Text == UnoNumberName.REVERSE || l.Text == form.txtBlankText.Text && form.mnuBlankReverse.Checked)
-                    {
-                        reverse = !reverse;
-                    }
-                }
             for (int i = 1; i < lblCards.Count; i++)
             {
                 Label l = lblCards[i];
@@ -3216,6 +3203,10 @@ arrived:
                         else skips[NextPlayer(MovingCard.player)]++;
                         break;
                     case UnoNumberName.REVERSE:
+                        if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                            reversed = true;
+                        else
+                            reverse = !reverse;
                         break;
                     case UnoNumberName.DRAW_2:
                         AddDraw(2);
@@ -3245,6 +3236,12 @@ arrived:
                             else
                                 skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
                             AddDraw(int.Parse(form.txtBlankDraw.Text));
+                            if (form.mnuBlankReverse.Checked)
+                                if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                                    reversed = true;
+                                else
+                                    reverse = !reverse;
+                            downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
                         }
                         break;
                 }
