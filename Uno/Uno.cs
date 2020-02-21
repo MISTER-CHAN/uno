@@ -175,6 +175,7 @@ namespace Uno
                 chkPlayer[length].Enter += ChkPlayer_Enter;
                 chkPlayer[length].FlatStyle = FlatStyle.Flat;
                 chkPlayer[length].ForeColor = Color.White;
+                chkPlayer[length].Font = new Font(new FontFamily("MS Gothic"), 42);
                 chkPlayer[length].KeyDown += Control_KeyDown;
                 chkPlayer[length].MouseDown += ChkPlayer_MouseDown;
                 chkPlayer[length].MouseLeave += ChkPlayer_MouseLeave;
@@ -207,6 +208,7 @@ namespace Uno
                 label[length].BorderStyle = BorderStyle.FixedSingle;
                 label[length].BringToFront();
                 label[length].ForeColor = Color.White;
+                label[length].Font = new Font(new FontFamily("MS Gothic"), 42);
                 label[length].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                 label[length].MouseLeave += Label_MouseLeave;
                 label[length].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
@@ -2760,10 +2762,12 @@ gameOver:
                 Graphics graphics = Graphics.FromImage(image);
                 graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
                 card.BackgroundImage = image;
-                if (card.Text != form.txtBlankText.Text)
+                if (number != UnoNumber.BLANK)
                     card.Font = new Font(card.Font.FontFamily, 1);
                 else
-                    card.Font = new Font(new FontFamily("MS Gothic"), 42);
+                {
+                    card.ForeColor = card.BackColor;
+                }
                 graphics.Flush();
                 graphics.Dispose();
             }
