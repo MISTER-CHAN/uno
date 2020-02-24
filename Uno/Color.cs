@@ -14,7 +14,7 @@ namespace Uno
         public FrmColor()
         {
             InitializeComponent();
-            for (int c = 0; c <= 3; c++)
+            for (byte c = 0; c <= 3; c++)
             {
                 mnuColor.Items.Add("  ");
                 mnuColor.Items[c].Click += new EventHandler(MnuColor_Click);
@@ -33,11 +33,12 @@ namespace Uno
                 case Keys.NumPad1:
                 case Keys.NumPad2:
                 case Keys.NumPad3:
-                    int c = e.KeyCode - Keys.NumPad0;
-                    if (!mnuColor.Items[c].Enabled)
-                        break;
-                    Tag = c + "";
-                    Close();
+                    byte c = (byte)(e.KeyCode - Keys.NumPad0);
+                    if (mnuColor.Items[c].Enabled)
+                    {
+                        Tag = c;
+                        Close();
+                    }
                     break;
             }
         }

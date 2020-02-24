@@ -37,7 +37,6 @@
             this.mnuColor.Name = "mnuColor";
             this.mnuColor.Size = new System.Drawing.Size(292, 24);
             this.mnuColor.TabIndex = 0;
-            this.mnuColor.Text = "menuStrip1";
             // 
             // FrmColor
             // 
@@ -52,7 +51,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmColor";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmColor_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -83,6 +83,12 @@
     <Compile Include="Color.Designer.cs">
       <DependentUpon>Color.cs</DependentUpon>
     </Compile>
+    <Compile Include="TradeHands.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TradeHands.Designer.cs">
+      <DependentUpon>TradeHands.cs</DependentUpon>
+    </Compile>
     <Compile Include="Options.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +105,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Color.resx">
       <DependentUpon>Color.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TradeHands.resx">
+      <DependentUpon>TradeHands.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Options.resx">
       <DependentUpon>Options.cs</DependentUpon>

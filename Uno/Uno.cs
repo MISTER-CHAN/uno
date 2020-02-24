@@ -54,6 +54,12 @@ namespace Uno
             public static List<Card[]>[] players = new List<Card[]>[4] { new List<Card[]>(), new List<Card[]>(), new List<Card[]>(), new List<Card[]>() };
         }
 
+        public class TradingHands
+        {
+            public static byte player1 = 4, player2 = 4;
+            public static List<int> x, y;
+        }
+
         public class UnoSize
         {
             public const int WIDTH = 90;
@@ -109,30 +115,6 @@ namespace Uno
 
         private bool canPlay = false, hasCheat = false, isAutomatic = false, isFair = false, isPlayer0sTurn = false, isSelectingCards = false, reverse = false;
         byte gameOver = 4;
-        readonly byte[]
-            mvcList = new byte[UnoNumber.MAX_VALUE]
-            {
-                UnoNumber.WILD_HITFIRE, UnoNumber.WILD_DRAW_4,
-                UnoNumber.WILD_DOWNPOUR_DRAW_4, UnoNumber.WILD_DOWNPOUR_DRAW_2, UnoNumber.WILD_DOWNPOUR_DRAW_1,
-                UnoNumber.WILD, UnoNumber.BLANK, UnoNumber.DISCARD_ALL, UnoNumber.NUMBER, UnoNumber.DRAW_2, UnoNumber.SKIP, UnoNumber.REVERSE,
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, UnoNumber.TRADE_HANDS
-            },
-            playlist = new byte[UnoNumber.MAX_VALUE] {
-            UnoNumber.DISCARD_ALL,
-            UnoNumber.SKIP,
-            UnoNumber.REVERSE,
-            UnoNumber.DRAW_2,
-            10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
-            UnoNumber.NUMBER,
-            UnoNumber.TRADE_HANDS,
-            UnoNumber.BLANK,
-            UnoNumber.WILD,
-            UnoNumber.WILD_DOWNPOUR_DRAW_1,
-            UnoNumber.WILD_DOWNPOUR_DRAW_2,
-            UnoNumber.WILD_DOWNPOUR_DRAW_4,
-            UnoNumber.WILD_DRAW_4,
-            UnoNumber.WILD_HITFIRE
-        };
         readonly Cards pile = new Cards();
         readonly Cards[] players = new Cards[4];
         readonly Image imgUno;
@@ -145,6 +127,42 @@ namespace Uno
         private readonly List<Label> lblMovingCards = new List<Label>();
         readonly Options form;
         readonly string[] PLAYER_NAMES;
+
+        readonly byte[]
+            mvcList = new byte[UnoNumber.MAX_VALUE]
+            {
+                UnoNumber.WILD_HITFIRE,
+                UnoNumber.WILD_DRAW_4,
+                UnoNumber.WILD_DOWNPOUR_DRAW_4,
+                UnoNumber.WILD_DOWNPOUR_DRAW_2,
+                UnoNumber.WILD_DOWNPOUR_DRAW_1,
+                UnoNumber.WILD,
+                UnoNumber.BLANK,
+                UnoNumber.DISCARD_ALL,
+                UnoNumber.NUMBER,
+                UnoNumber.DRAW_2,
+                UnoNumber.SKIP,
+                UnoNumber.REVERSE,
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                UnoNumber.TRADE_HANDS
+            },
+            playlist = new byte[UnoNumber.MAX_VALUE]
+            {
+                UnoNumber.DISCARD_ALL,
+                UnoNumber.SKIP,
+                UnoNumber.REVERSE,
+                UnoNumber.DRAW_2,
+                10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+                UnoNumber.NUMBER,
+                UnoNumber.BLANK,
+                UnoNumber.WILD,
+                UnoNumber.WILD_DOWNPOUR_DRAW_1,
+                UnoNumber.WILD_DOWNPOUR_DRAW_2,
+                UnoNumber.WILD_DOWNPOUR_DRAW_4,
+                UnoNumber.WILD_DRAW_4,
+                UnoNumber.WILD_HITFIRE,
+                UnoNumber.TRADE_HANDS
+            };
 
         void Action(byte player, string msg)
         {
@@ -242,7 +260,6 @@ namespace Uno
                         quantityNumber = i;
                         backNumber = b;
                     }
-
                 }
             }
             else
@@ -1808,7 +1825,7 @@ gameOver:
                     for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
                         players[p].cards[c, n] = int.Parse(numbers[n]);
                 }
-                lblCounts[p].Text = PlayersCardsCount(p) + "";
+                lblCounts[p].Text = PlayersCardsCount(p).ToString();
             }
             Sort();
             colors = keys[1].Split(char.Parse("C"));
@@ -2393,7 +2410,7 @@ gameOver:
                 MovingCard.player = player; MovingCard.progress = 0;
                 if (player == 0 && !isAutomatic && playingCards == null)
                 {
-                    bool b = int.Parse(lblCounts[0].Text) - cards.Count > 0;
+                    bool b = PlayersCardsCount(0) > 0;
                     if (!b)
                     {
                         if (form.mnuOneLoser.Checked)
@@ -2465,7 +2482,7 @@ gameOver:
                 AddLabel(lblMovingCards, cards.Count, pnlMovingCards.Controls);
                 for (int c = 1; c < lblMovingCards.Count; c++)
                 {
-                    SetCard(lblMovingCards[c], cards[c - 1].color == UnoColor.BLACK ? MovingCard.color : cards[c - 1].color, cards[c - 1].number);
+                    SetCard(lblMovingCards[c], cards[c - 1].color, cards[c - 1].number);
                 }
                 if (lblMovingCards.Count > swpcw / 2)
                 {
@@ -2533,6 +2550,31 @@ gameOver:
                     return;
                 }
                 timTurn.Tag = "4,";
+                if (TradingHands.player1 < 4)
+                {
+                    if (player == 0 && !isAutomatic && TradingHands.player2 == 5)
+                    {
+                        TradeHands t = new TradeHands();
+                        for (byte p = 1; p <= 3; p++)
+                        {
+                            if (lblPlayers[p].Visible)
+                            {
+                                t.mnuTradeHands.Items[p].Enabled = true;
+                                t.mnuTradeHands.Items[p].Text = p switch
+                                {
+                                    1 => "◀",
+                                    2 => "▲",
+                                    3 => "▶",
+                                    _ => "▼"
+                                };
+                            }
+                        }
+                        t.ShowDialog();
+                        TradingHands.player2 = (byte)t.Tag;
+                    }
+                    TradeHands();
+                    return;
+                }
                 if (Downpour.count > 0)
                 {
                     DownpourDraw(player, Downpour.count);
@@ -2622,7 +2664,8 @@ gameOver:
                 if (form.mnuAttack.Checked)
                 {
                     pile.cards[c, UnoNumber.DISCARD_ALL] = decks - GetOnplayersCards(c, UnoNumber.DISCARD_ALL);
-                    // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks - getOnplayersCards(c, UnoNumber.TRADE_HANDS);
+                    if (form.mnuTradeHands.Checked)
+                        pile.cards[c, UnoNumber.TRADE_HANDS] = decks - GetOnplayersCards(c, UnoNumber.TRADE_HANDS);
                 }
                 if (form.mnuBlank.Checked)
                     pile.cards[c, UnoNumber.BLANK] = decks - GetOnplayersCards(c, UnoNumber.BLANK);
@@ -2896,6 +2939,7 @@ gameOver:
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
                     chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
             }
+            pnlPlayer.BringToFront();
             if (!form.Visible && chkPlayer.Count > 0)
             {
                 chkPlayer[0].Focus();
@@ -3136,34 +3180,29 @@ draw:
 				case 0:
                     pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2,
                         height - (lblPlayers[0].Top - lblCards[0].Top) / distance * MovingCard.progress - pnlMovingCards.Height / 2 - UnoSize.HEIGHT / 2);
-					if (MovingCard.progress >= distance)
-                        goto arrived;
 					break;
 				case 1:
                     pnlMovingCards.Location = new Point(lblCards[0].Left / distance * MovingCard.progress - pnlMovingCards.Width / 2 + UnoSize.WIDTH / 2,
                         height / 2 - pnlMovingCards.Height / 2);
-					if (MovingCard.progress >= distance)
-                        goto arrived;
 					break;
 				case 2:
                     pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2,
                         lblCards[0].Top / distance * MovingCard.progress - pnlMovingCards.Height / 2 + UnoSize.HEIGHT / 2);
-					if (MovingCard.progress >= distance)
-                        goto arrived;
 					break;
 				case 3:
                     pnlMovingCards.Location = new Point(width - (lblPlayers[MovingCard.player].Left - lblCards[0].Left) / distance * MovingCard.progress - pnlMovingCards.Width / 2 - UnoSize.WIDTH / 2,
                         height / 2 - pnlMovingCards.Height / 2);
-					if (MovingCard.progress >= distance)
-                        goto arrived;
 					break;
 			}
+			if (MovingCard.progress >= distance)
+                goto arrived;
             MovingCard.progress++;
 			return;
 arrived:
-            pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2, height / 2 - pnlMovingCards.Height / 2);
+            timPlayersToCenter.Enabled = false;
             MovingCard.progress = 0;
-			RemoveLabel(lblCards);
+            pnlMovingCards.Location = new Point(width / 2 - pnlMovingCards.Width / 2, height / 2 - pnlMovingCards.Height / 2);
+            RemoveLabel(lblCards);
 			AddLabel(lblCards, lblMovingCards.ToArray().Length - 1);
 			for (int c = 1; c < lblCards.ToArray().Length; c++)
             {
@@ -3181,72 +3220,106 @@ arrived:
             foreach (Label p in lblPlayers)
                 if (p.Visible)
                     ons++;
-            for (int i = 1; i < lblCards.Count; i++)
+            if (form.mnuSevenZero.Checked || form.mnuTradeHands.Checked)
             {
-                Label l = lblCards[i];
-                if (l.Text == UnoNumberName.NULL)
-                    continue;
-                switch (l.Text)
+                switch (lblCards[1].Text)
                 {
                     case "0":
                         if (form.mnuSevenZero.Checked)
                         {
+                            TradingHands.player1 = MovingCard.player;
+                            TradingHands.player2 = 4;
                         }
                         break;
                     case "7":
+                    case UnoNumberName.TRADE_HANDS:
                         if (form.mnuSevenZero.Checked)
                         {
-                        }
-                        break;
-                    case UnoNumberName.SKIP:
-                        if (form.mnuSkipPlayers.Checked) skip++;
-                        else skips[NextPlayer(MovingCard.player)]++;
-                        break;
-                    case UnoNumberName.REVERSE:
-                        if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                            reversed = true;
-                        else
-                            reverse = !reverse;
-                        break;
-                    case UnoNumberName.DRAW_2:
-                        AddDraw(2);
-                        break;
-                    case UnoNumberName.TRADE_HANDS:
-                        break;
-                    case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
-                        downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
-                        break;
-                    case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
-                        downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
-                        break;
-                    case UnoNumberName.WILD_DOWNPOUR_DRAW_4:
-                        downpour += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
-                        break;
-                    case UnoNumberName.WILD_DRAW_4:
-                        AddDraw(4);
-                        break;
-                    case UnoNumberName.WILD_HITFIRE:
-                        lblDraw.Text = lblPile.Text;
-                        break;
-                    default:
-                        if (l.Text == form.txtBlankText.Text)
-                        {
-                            if (form.mnuSkipPlayers.Checked)
-                                skip += int.Parse(form.txtBlankSkip.Text);
-                            else
-                                skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
-                            AddDraw(int.Parse(form.txtBlankDraw.Text));
-                            if (form.mnuBlankReverse.Checked)
-                                if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                                    reversed = true;
+                            if (lblPlayers[MovingCard.player].Visible)
+                            {
+                                TradingHands.player1 = MovingCard.player;
+                                if (MovingCard.player != 0 || isAutomatic)
+                                {
+                                    byte fp = MovingCard.player, p = NextPlayer(MovingCard.player);
+                                    int fc = int.MaxValue;
+                                    while (p != MovingCard.player)
+                                    {
+                                        int c = PlayersCardsCount(p);
+                                        if (c < fc)
+                                        {
+                                            fc = c;
+                                            fp = p;
+                                        }
+                                        p = NextPlayer(p);
+                                    }
+                                    TradingHands.player2 = fp;
+                                }
                                 else
-                                    reverse = !reverse;
-                            downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                                    TradingHands.player2 = 5;
+                            }
                         }
                         break;
                 }
+
             }
-            timPlayersToCenter.Enabled = false;
+            else
+            {
+                for (int i = 1; i < lblCards.Count; i++)
+                {
+                    Label l = lblCards[i];
+                    if (l.Text == UnoNumberName.NULL)
+                        continue;
+                    switch (l.Text)
+                    {
+                        case UnoNumberName.SKIP:
+                            if (form.mnuSkipPlayers.Checked) skip++;
+                            else skips[NextPlayer(MovingCard.player)]++;
+                            break;
+                        case UnoNumberName.REVERSE:
+                            if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                                reversed = true;
+                            else
+                                reverse = !reverse;
+                            break;
+                        case UnoNumberName.DRAW_2:
+                            AddDraw(2);
+                            break;
+                        case UnoNumberName.TRADE_HANDS:
+                            break;
+                        case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
+                            downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
+                            break;
+                        case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
+                            downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                            break;
+                        case UnoNumberName.WILD_DOWNPOUR_DRAW_4:
+                            downpour += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                            break;
+                        case UnoNumberName.WILD_DRAW_4:
+                            AddDraw(4);
+                            break;
+                        case UnoNumberName.WILD_HITFIRE:
+                            lblDraw.Text = lblPile.Text;
+                            break;
+                        default:
+                            if (l.Text == form.txtBlankText.Text)
+                            {
+                                if (form.mnuSkipPlayers.Checked)
+                                    skip += int.Parse(form.txtBlankSkip.Text);
+                                else
+                                    skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
+                                AddDraw(int.Parse(form.txtBlankDraw.Text));
+                                if (form.mnuBlankReverse.Checked)
+                                    if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                                        reversed = true;
+                                    else
+                                        reverse = !reverse;
+                                downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                            }
+                            break;
+                    }
+                }
+            }
             if (gameOver < 4)
             {
                 if (downpour > 0)
@@ -3268,6 +3341,8 @@ arrived:
                 timUno.Enabled = true;
             else if (reversed)
                 PlayersTurn(MovingCard.player, true, GetDbp());
+            else if (TradingHands.player1 < 4)
+                PlayersTurn(MovingCard.player, true, GetDbp());
             else if (downpour > 0)
             {
                 Downpour.count = downpour;
@@ -3282,6 +3357,71 @@ arrived:
             timThinking.Enabled = false;
             string[] tag = timThinking.Tag.ToString().Split(char.Parse(","));
             PlayersTurn(byte.Parse(tag[0]), true, int.Parse(tag[1]));
+        }
+
+        private void TimTradeHands_Tick(object sender, EventArgs e)
+        {
+            if (TradingHands.player2 < 4)
+            {
+                int x1 = TradingHands.x[TradingHands.player1], x2 = TradingHands.x[TradingHands.player2],
+                    y1 = TradingHands.y[TradingHands.player1], y2 = TradingHands.y[TradingHands.player2];
+                lblPlayers[TradingHands.player1].Location = new Point(x1 + (x2 - x1) / distance * MovingCard.progress,
+                                                                      y1 + (y2 - y1) / distance * MovingCard.progress);
+                lblPlayers[TradingHands.player2].Location = new Point(x1 + (x2 - x1) / distance * (distance - MovingCard.progress),
+                                                                      y1 + (y2 - y1) / distance * (distance - MovingCard.progress));
+            }
+            else
+            {
+                int[] x = TradingHands.x.ToArray(), y = TradingHands.y.ToArray();
+                for (byte p = 0; p <= 3; p++)
+                {
+                    if (lblPlayers[p].Visible)
+                    {
+                        byte np = NextPlayer(p);
+                        lblPlayers[p].Location = new Point(x[p] + (x[np] - x[p]) / distance * MovingCard.progress,
+                                                           y[p] + (y[np] - y[p]) / distance * MovingCard.progress);
+                    }
+                }
+            }
+            if (MovingCard.progress >= distance)
+                goto arrived;
+            MovingCard.progress++;
+            return;
+arrived:
+            timTradeHands.Enabled = false;
+            MovingCard.progress = 0;
+            lblPlayers[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, ClientRectangle.Height - UnoSize.HEIGHT);
+            lblPlayers[1].Location = new Point(0, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
+            lblPlayers[2].Location = new Point(width / 2 - UnoSize.WIDTH / 2, mnuGame.Height);
+            lblPlayers[3].Location = new Point(width - UnoSize.WIDTH, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
+            if (TradingHands.player2 < 4)
+            {
+                int[,] i = players[TradingHands.player1].cards;
+                players[TradingHands.player1].cards = players[TradingHands.player2].cards;
+                players[TradingHands.player2].cards = i;
+            }
+            else
+            {
+                byte pp, p = MovingCard.player;
+                int[,] i = players[MovingCard.player].cards;
+                pp = NextPlayer(p, true);
+                do
+                {
+                    players[p].cards = players[pp].cards;
+                    p = pp;
+                }
+                while ((pp = NextPlayer(p, true)) != MovingCard.player);
+                players[p].cards = i;
+            }
+            if (TradingHands.player1 == 0 || TradingHands.player2 == 0 || TradingHands.player2 == 4)
+            {
+                lblPlayers[0].BackgroundImage = null;
+                Sort();
+            }
+            TradingHands.player1 = 4;
+            for (byte p = 0; p <= 3; p++)
+                lblCounts[p].Text = PlayersCardsCount(p).ToString();
+            PlayersTurn(NextPlayer(MovingCard.player));
         }
 
         private void TimTurn_Tick(object sender, EventArgs e)
@@ -3310,6 +3450,23 @@ arrived:
                 toolTip.ToolTipTitle = GetNumberName(GetNumberId(e.AssociatedControl.Text));
             else
                 toolTip.ToolTipTitle = "";
+        }
+
+        void TradeHands()
+        {
+            TradingHands.x = new List<int>(lblPlayers.Cast<Label>().Select(l => l.Left));
+            TradingHands.y = new List<int>(lblPlayers.Cast<Label>().Select(l => l.Top));
+            MovingCard.progress = 0;
+            MovingCard.quickly = false;
+            if (TradingHands.player1 == 0 || TradingHands.player2 == 0 || TradingHands.player2 == 4)
+            {
+                RemoveChkPlayer();
+                lblPlayers[0].BackgroundImage = Properties.Resources.uno_back;
+                lblPlayers[0].BringToFront();
+            }
+            for (byte p = 1; p <= 3; p++)
+                lblPlayers[p].BringToFront();
+            timTradeHands.Enabled = true;
         }
 
         public Uno(Options form)
@@ -3400,7 +3557,8 @@ arrived:
                 if (form.mnuAttack.Checked)
                 {
                     pile.cards[c, UnoNumber.DISCARD_ALL] = decks;
-                    // Pile.uno[c, UnoNumber.TRADE_HANDS] = decks;
+                    if (form.mnuTradeHands.Checked)
+                        pile.cards[c, UnoNumber.TRADE_HANDS] = decks;
                 }
                 if (form.mnuBlank.Checked)
                 {
