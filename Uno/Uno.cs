@@ -3230,7 +3230,7 @@ arrived:
                             TradingHands.player1 = MovingCard.player;
                             TradingHands.player2 = 4;
                         }
-                        break;
+                        goto end_action;
                     case "7":
                     case UnoNumberName.TRADE_HANDS:
                         if (form.mnuSevenZero.Checked)
@@ -3258,68 +3258,64 @@ arrived:
                                     TradingHands.player2 = 5;
                             }
                         }
-                        break;
+                        goto end_action;
                 }
 
             }
-            else
+            for (int i = 1; i < lblCards.Count; i++)
             {
-                for (int i = 1; i < lblCards.Count; i++)
+                Label l = lblCards[i];
+                if (l.Text == UnoNumberName.NULL)
+                    continue;
+                switch (l.Text)
                 {
-                    Label l = lblCards[i];
-                    if (l.Text == UnoNumberName.NULL)
-                        continue;
-                    switch (l.Text)
-                    {
-                        case UnoNumberName.SKIP:
-                            if (form.mnuSkipPlayers.Checked) skip++;
-                            else skips[NextPlayer(MovingCard.player)]++;
-                            break;
-                        case UnoNumberName.REVERSE:
-                            if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                                reversed = true;
+                    case UnoNumberName.SKIP:
+                        if (form.mnuSkipPlayers.Checked) skip++;
+                        else skips[NextPlayer(MovingCard.player)]++;
+                        break;
+                    case UnoNumberName.REVERSE:
+                        if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                            reversed = true;
+                        else
+                            reverse = !reverse;
+                        break;
+                    case UnoNumberName.DRAW_2:
+                        AddDraw(2);
+                        break;
+                    case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
+                        downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
+                        break;
+                    case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
+                        downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        break;
+                    case UnoNumberName.WILD_DOWNPOUR_DRAW_4:
+                        downpour += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        break;
+                    case UnoNumberName.WILD_DRAW_4:
+                        AddDraw(4);
+                        break;
+                    case UnoNumberName.WILD_HITFIRE:
+                        lblDraw.Text = lblPile.Text;
+                        break;
+                    default:
+                        if (l.Text == form.txtBlankText.Text)
+                        {
+                            if (form.mnuSkipPlayers.Checked)
+                                skip += int.Parse(form.txtBlankSkip.Text);
                             else
-                                reverse = !reverse;
-                            break;
-                        case UnoNumberName.DRAW_2:
-                            AddDraw(2);
-                            break;
-                        case UnoNumberName.TRADE_HANDS:
-                            break;
-                        case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
-                            downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
-                            break;
-                        case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
-                            downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
-                            break;
-                        case UnoNumberName.WILD_DOWNPOUR_DRAW_4:
-                            downpour += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
-                            break;
-                        case UnoNumberName.WILD_DRAW_4:
-                            AddDraw(4);
-                            break;
-                        case UnoNumberName.WILD_HITFIRE:
-                            lblDraw.Text = lblPile.Text;
-                            break;
-                        default:
-                            if (l.Text == form.txtBlankText.Text)
-                            {
-                                if (form.mnuSkipPlayers.Checked)
-                                    skip += int.Parse(form.txtBlankSkip.Text);
+                                skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
+                            AddDraw(int.Parse(form.txtBlankDraw.Text));
+                            if (form.mnuBlankReverse.Checked)
+                                if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                                    reversed = true;
                                 else
-                                    skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
-                                AddDraw(int.Parse(form.txtBlankDraw.Text));
-                                if (form.mnuBlankReverse.Checked)
-                                    if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                                        reversed = true;
-                                    else
-                                        reverse = !reverse;
-                                downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
-                            }
-                            break;
-                    }
+                                    reverse = !reverse;
+                            downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        }
+                        break;
                 }
             }
+end_action:
             if (gameOver < 4)
             {
                 if (downpour > 0)
@@ -3596,6 +3592,27 @@ arrived:
             lblPile.Text = GetPile().Length + "";
             for (byte p = 0; p < 4; p++)
                 players[p] = new Cards();
+            if (form.mnuSevenZero.Checked)
+            {
+                playlist = new byte[UnoNumber.MAX_VALUE]
+                {
+                    UnoNumber.DISCARD_ALL,
+                    UnoNumber.SKIP,
+                    UnoNumber.REVERSE,
+                    UnoNumber.DRAW_2,
+                    10, 9, 8, 6, 5, 4, 3, 2, 1,
+                    UnoNumber.NUMBER,
+                    UnoNumber.BLANK,
+                    UnoNumber.WILD,
+                    UnoNumber.WILD_DOWNPOUR_DRAW_1,
+                    UnoNumber.WILD_DOWNPOUR_DRAW_2,
+                    UnoNumber.WILD_DOWNPOUR_DRAW_4,
+                    UnoNumber.WILD_DRAW_4,
+                    UnoNumber.WILD_HITFIRE,
+                    UnoNumber.TRADE_HANDS,
+                    7, 0
+                };
+            }
             AddLabel(lblMovingCards);
             lblMovingCards[0].BackgroundImageLayout = ImageLayout.Stretch;
             lblMovingCards[0].BackgroundImage = Properties.Resources.uno_back;
