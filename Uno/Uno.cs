@@ -40,7 +40,7 @@ namespace Uno
 
 		public class MovingCard {
             public static byte color = 0, number = 0, player = 0;
-			public static bool drew = false, isPlaying = false, quickly = false, unoDraw = false;
+			public static bool drawAll = false, drew = false, isPlaying = false, quickly = false, unoDraw = false;
 			public static int dbp = 0, downpour = -1, progress = 0;
 		}
 
@@ -1066,6 +1066,7 @@ deny:
                         Action(0, "UNO? +2");
                     }
                 }
+                MovingCard.drawAll = int.Parse(lblDraw.Text) > 0;
                 MovingCard.player = player; MovingCard.progress = 0; MovingCard.quickly = false;
                 lblMovingCards[0].BackColor = Color.White;
                 lblMovingCards[0].BringToFront();
@@ -1087,7 +1088,7 @@ deny:
             timTurn.Enabled = false;
             timPlayersToCenter.Enabled = false;
             timWatch.Enabled = false;
-            if (!form.isPlayingRecord && form.mnuBeginner.Checked && !hasCheat)
+            if (!form.isPlayingRecord && form.mnuBeginner.Checked && !hasCheat && !form.mnuSevenZero.Checked && !form.mnuTradeHands.Checked)
             {
                 Interaction.SaveSetting("UNO", "RECORD", "REVERSE", Record.reverse.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "DEAL", Record.firstGettingCard.ToString());
@@ -3112,6 +3113,14 @@ draw:
                         {
                             MovingCard.unoDraw = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
+                        }
+                        else if (MovingCard.drawAll)
+                        {
+                            MovingCard.drawAll = false;
+                            if (form.mnuDrawAllAndPlay.Checked)
+                                PlayersTurn(MovingCard.player, true, GetDbp());
+                            else
+                                PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
                         else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawToMatch.Checked && drawAll)
                         {
