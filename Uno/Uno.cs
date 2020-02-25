@@ -155,13 +155,13 @@ namespace Uno
                 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
                 UnoNumber.NUMBER,
                 UnoNumber.BLANK,
+                UnoNumber.TRADE_HANDS,
                 UnoNumber.WILD,
                 UnoNumber.WILD_DOWNPOUR_DRAW_1,
                 UnoNumber.WILD_DOWNPOUR_DRAW_2,
                 UnoNumber.WILD_DOWNPOUR_DRAW_4,
                 UnoNumber.WILD_DRAW_4,
-                UnoNumber.WILD_HITFIRE,
-                UnoNumber.TRADE_HANDS
+                UnoNumber.WILD_HITFIRE
             };
 
         void Action(byte player, string msg)
@@ -313,7 +313,7 @@ namespace Uno
                 if (!form.mnuPairs.Checked || int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
                 {
                     int mq = 0;
-                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
+                    for (byte b = 0; b < UnoNumber.WILD; b++)
                     {
                         byte n = playlist[b];
                         if (players[player].cards[backColor, n] > 0)
@@ -331,7 +331,7 @@ namespace Uno
                 else
                 {
                     int fq = int.MaxValue;
-                    for (byte b = 0; b <= UnoNumber.BLANK; b++)
+                    for (byte b = 0; b < UnoNumber.WILD; b++)
                     {
                         byte n = playlist[b];
                         if (players[player].cards[backColor, n] <= 0)
@@ -607,31 +607,55 @@ rnd:
                 goto deny;
             }
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
+            if (!form.mnuPlayOrDrawAll.Checked)
+            {
+                switch (lblCards[1].Text)
+                {
+                    case UnoNumberName.DRAW_2:
+                        if (int.Parse(lblDraw.Text) >= 2)
+                            if (card[0].number != UnoNumber.DRAW_2 && card[0].number != UnoNumber.WILD_DRAW_4)
+                                goto deny;
+                        break;
+                    case UnoNumberName.WILD_DRAW_4:
+                        if (int.Parse(lblDraw.Text) >= 4 && card[0].number != UnoNumber.WILD_DRAW_4)
+                            goto deny;
+                        break;
+                    case UnoNumberName.WILD_HITFIRE:
+                        if (int.Parse(lblDraw.Text) > 0 && card[0].number != UnoNumber.WILD_HITFIRE)
+                            goto deny;
+                        break;
+                }
+            }
             if (form.mnuAttack.Checked)
             {
+                if (card[0].number != UnoNumber.DISCARD_ALL)
+                    goto end_discard_all;
                 byte discardColor = UnoColor.MAX_VALUE;
+                List<byte> discardColors = new List<byte>();
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
                     discardColor = backColor;
-                foreach (Card d in card)
-                    if (d.number == UnoNumber.DISCARD_ALL)
+                foreach (Card c in card)
+                {
+                    switch (c.number)
                     {
-                        foreach (Card c in card)
-                        {
-                            if (c.number != UnoNumber.DISCARD_ALL && discardColor == UnoColor.MAX_VALUE)
+                        case UnoNumber.DISCARD_ALL:
+                            if (discardColor == UnoColor.MAX_VALUE)
+                                discardColors.Add(c.color);
+                            break;
+                        default:
+                            if (discardColor == UnoColor.MAX_VALUE && discardColors.Contains(c.color))
                                 discardColor = c.color;
-                            if (c.color != discardColor && c.number != UnoNumber.DISCARD_ALL)
+                            if (c.color != discardColor)
                                 goto deny;
-                        }
-                        goto draw;
+                            break;
                     }
-                if (!form.mnuPairs.Checked)
-                    if (card.ToArray().Length > 1)
-                        goto deny;
+                }
+                goto end_number;
             }
+end_discard_all:
             if (form.mnuDos.Checked)
             {
                 byte n = backNumber;
-                
                 foreach (Card c in card)
                 {
                     if (c.color == backColor)
@@ -662,26 +686,7 @@ number:
                 if (c.number != card[0].number)
                     goto deny;
             }
-draw:
-            if (!form.mnuPlayOrDrawAll.Checked)
-            {
-                switch (lblCards[1].Text)
-                {
-                    case UnoNumberName.DRAW_2:
-                        if (int.Parse(lblDraw.Text) >= 2)
-                            if (card[0].number != UnoNumber.DRAW_2 && card[0].number != UnoNumber.WILD_DRAW_4)
-                                goto deny;
-                        break;
-                    case UnoNumberName.WILD_DRAW_4:
-                        if (int.Parse(lblDraw.Text) >= 4 && card[0].number != UnoNumber.WILD_DRAW_4)
-                            goto deny;
-                        break;
-                    case UnoNumberName.WILD_HITFIRE:
-                        if (int.Parse(lblDraw.Text) > 0 && card[0].number != UnoNumber.WILD_HITFIRE)
-                            goto deny;
-                        break;
-                }
-            }
+end_number:
             for (int c = 0; c < card.ToArray().Length; c++)
                 if (card[c].color == UnoColor.BLACK)
                     goto accept;
@@ -1597,7 +1602,7 @@ deny:
                 case UnoNumber.REVERSE: return "反转出牌顺序";
                 case UnoNumber.DRAW_2: return "下家罚抽 2 张牌";
                 case UnoNumber.DISCARD_ALL: return "允许玩家打出所有相同颜色的牌";
-                case UnoNumber.TRADE_HANDS: return "所有玩家互相交換手牌";
+                case UnoNumber.TRADE_HANDS: return "選擇一位玩家交換手牌";
                 case UnoNumber.NUMBER: return "表示任意数字";
                 case UnoNumber.BLANK:
                     int downpourDraw = int.Parse(form.txtBlankDownpourDraw.Text), draw = int.Parse(form.txtBlankDraw.Text), skip = int.Parse(form.txtBlankSkip.Text);
@@ -3603,14 +3608,14 @@ arrived:
                     10, 9, 8, 6, 5, 4, 3, 2, 1,
                     UnoNumber.NUMBER,
                     UnoNumber.BLANK,
+                    UnoNumber.TRADE_HANDS,
+                    7, 0,
                     UnoNumber.WILD,
                     UnoNumber.WILD_DOWNPOUR_DRAW_1,
                     UnoNumber.WILD_DOWNPOUR_DRAW_2,
                     UnoNumber.WILD_DOWNPOUR_DRAW_4,
                     UnoNumber.WILD_DRAW_4,
-                    UnoNumber.WILD_HITFIRE,
-                    UnoNumber.TRADE_HANDS,
-                    7, 0
+                    UnoNumber.WILD_HITFIRE
                 };
             }
             AddLabel(lblMovingCards);

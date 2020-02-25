@@ -87,23 +87,25 @@ namespace Uno {
             mnuWater.Checked = bool.Parse(keys[28]);
             mnuAttack.Checked = bool.Parse(keys[29]);
             mnuWildHitfire.Checked = bool.Parse(keys[30]);
-            mnuDos.Checked = bool.Parse(keys[31]);
-            mnuCanShowCards.Checked = bool.Parse(keys[32]);
-            mnuPairs.Checked = bool.Parse(keys[33]);
-            mnuStacking.Checked = bool.Parse(keys[34]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[35]);
-            mnuDrawToMatch.Checked = bool.Parse(keys[36]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[37]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[38]);
-            mnuDoubleDraw.Checked = bool.Parse(keys[39]);
-            mnuDrawBeforePlaying.Checked = bool.Parse(keys[40]);
-            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[41]);
-            mnuSkipPlayers.Checked = bool.Parse(keys[42]);
-            mnuSkipTimes.Checked = bool.Parse(keys[43]);
-            mnuOneWinner.Checked = bool.Parse(keys[44]);
-            mnuOneLoser.Checked = bool.Parse(keys[45]);
-            mnuUno.Checked = bool.Parse(keys[46]);
-            mnuCheat.Checked = bool.Parse(keys[47]);
+            mnuTradeHands.Checked = bool.Parse(keys[31]);
+            mnuDos.Checked = bool.Parse(keys[32]);
+            mnuCanShowCards.Checked = bool.Parse(keys[33]);
+            mnuPairs.Checked = bool.Parse(keys[34]);
+            mnuStacking.Checked = bool.Parse(keys[35]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[36]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[37]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[38]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[39]);
+            mnuDoubleDraw.Checked = bool.Parse(keys[40]);
+            mnuDrawBeforePlaying.Checked = bool.Parse(keys[41]);
+            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[42]);
+            mnuSevenZero.Checked = bool.Parse(keys[43]);
+            mnuSkipPlayers.Checked = bool.Parse(keys[44]);
+            mnuSkipTimes.Checked = bool.Parse(keys[45]);
+            mnuOneWinner.Checked = bool.Parse(keys[46]);
+            mnuOneLoser.Checked = bool.Parse(keys[47]);
+            mnuUno.Checked = bool.Parse(keys[48]);
+            mnuCheat.Checked = bool.Parse(keys[49]);
         }
 
         private void MnuAddBot_Click(object sender, EventArgs e)
@@ -129,6 +131,7 @@ namespace Uno {
             mnuWater.Checked = false;
             mnuAttack.Checked = false;
             mnuWildHitfire.Checked = false;
+            mnuTradeHands.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
@@ -139,6 +142,7 @@ namespace Uno {
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = false;
             mnuDrawTwoBeforePlaying.Checked = false;
+            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = false;
@@ -218,6 +222,7 @@ namespace Uno {
             mnuWater.Checked = true;
             mnuAttack.Checked = true;
             mnuWildHitfire.Checked = true;
+            mnuTradeHands.Checked = false;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
@@ -228,6 +233,7 @@ namespace Uno {
             mnuDoubleDraw.Checked = true;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = true;
+            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;
@@ -245,6 +251,7 @@ namespace Uno {
             mnuWater.Checked = true;
             mnuAttack.Checked = true;
             mnuWildHitfire.Checked = false;
+            mnuTradeHands.Checked = false;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
@@ -255,6 +262,7 @@ namespace Uno {
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = false;
+            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;
@@ -390,6 +398,7 @@ namespace Uno {
             mnuWater.Checked = false;
             mnuAttack.Checked = false;
             mnuWildHitfire.Checked = false;
+            mnuTradeHands.Checked = false;
             mnuDos.Checked = false;
             mnuPairs.Checked = false;
             mnuStacking.Checked = false;
@@ -400,6 +409,7 @@ namespace Uno {
             mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = false;
             mnuDrawTwoBeforePlaying.Checked = false;
+            mnuSevenZero.Checked = false;
             mnuSkipPlayers.Checked = true;
             mnuSkipTimes.Checked = false;
             mnuOneWinner.Checked = true;
@@ -456,6 +466,7 @@ namespace Uno {
             s += mnuWater.Checked + "K";
             s += mnuAttack.Checked + "K";
             s += mnuWildHitfire.Checked + "K";
+            s += mnuTradeHands.Checked + "K";
             s += mnuDos.Checked + "K";
             s += mnuCanShowCards.Checked + "K";
             s += mnuPairs.Checked + "K";
@@ -467,6 +478,7 @@ namespace Uno {
             s += mnuDoubleDraw.Checked + "K";
             s += mnuDrawBeforePlaying.Checked + "K";
             s += mnuDrawTwoBeforePlaying.Checked + "K";
+            s += mnuSevenZero.Checked + "K";
             s += mnuSkipPlayers.Checked + "K";
             s += mnuSkipTimes.Checked + "K";
             s += mnuOneWinner.Checked + "K";
