@@ -40,7 +40,7 @@ namespace Uno
 
 		public class MovingCard {
             public static byte color = 0, number = 0, player = 0;
-			public static bool drawAll = false, drew = false, isPlaying = false, quickly = false, unoDraw = false;
+			public static bool drew = false, isPlaying = false, quickly = false, unoDraw = false;
 			public static int dbp = 0, downpour = -1, progress = 0;
 		}
 
@@ -48,7 +48,7 @@ namespace Uno
         {
             public static bool reverse;
             public static byte firstGettingCard, firstTurn;
-            public static List<byte> colors = new List<byte>();
+            public static List<byte> colors = new List<byte>(), tradeHands = new List<byte>();
             public static List<bool> unos = new List<bool>();
             public static List<Card> pile = new List<Card>();
             public static List<Card[]>[] players = new List<Card[]>[4] { new List<Card[]>(), new List<Card[]>(), new List<Card[]>(), new List<Card[]>() };
@@ -1066,7 +1066,6 @@ deny:
                         Action(0, "UNO? +2");
                     }
                 }
-                MovingCard.drawAll = int.Parse(lblDraw.Text) > 0;
                 MovingCard.player = player; MovingCard.progress = 0; MovingCard.quickly = false;
                 lblMovingCards[0].BackColor = Color.White;
                 lblMovingCards[0].BringToFront();
@@ -1088,12 +1087,13 @@ deny:
             timTurn.Enabled = false;
             timPlayersToCenter.Enabled = false;
             timWatch.Enabled = false;
-            if (!form.isPlayingRecord && form.mnuBeginner.Checked && !hasCheat && !form.mnuSevenZero.Checked && !form.mnuTradeHands.Checked)
+            if (!form.isPlayingRecord && form.mnuBeginner.Checked && !hasCheat)
             {
                 Interaction.SaveSetting("UNO", "RECORD", "REVERSE", Record.reverse.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "DEAL", Record.firstGettingCard.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "FIRST", Record.firstTurn.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "UNOS", string.Join(",", Record.unos));
+                Interaction.SaveSetting("UNO", "RECORD", "TRADE_HANDS", string.Join("P", Record.tradeHands));
                 Interaction.SaveSetting("UNO", "RECORD", "COLORS", string.Join("C", Record.colors));
                 if (form.keys.Length > 0)
                     Interaction.SaveSetting("UNO", "RECORD", "GAME", string.Join("K", form.keys));
@@ -1860,6 +1860,7 @@ gameOver:
             Record.firstGettingCard = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "DEAL"));
             Record.firstTurn = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "FIRST"));
             Record.unos = new List<bool>(Interaction.GetSetting("UNO", "RECORD", "UNOS").Split(',').Cast<string>().Select(s => bool.Parse(s)));
+            Record.tradeHands = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "TRADE_HANDS").Split('P').Cast<string>().Select(s => byte.Parse(s)));
             Record.colors = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "COLORS").Split('C').Cast<string>().Select(s => byte.Parse(s)));
             Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
             string[] ps = Interaction.GetSetting("UNO", "RECORD", "PLAYERS").Split('P');
@@ -2260,6 +2261,7 @@ gameOver:
                 {
                     SetInterval(0);
                     mnuPlayPause.Text = "⏵播放 (&P)";
+                    MovingCard.quickly = true;
                 }
                 else
                 {
@@ -2566,17 +2568,12 @@ gameOver:
                             if (lblPlayers[p].Visible)
                             {
                                 t.mnuTradeHands.Items[p].Enabled = true;
-                                t.mnuTradeHands.Items[p].Text = p switch
-                                {
-                                    1 => "◀",
-                                    2 => "▲",
-                                    3 => "▶",
-                                    _ => "▼"
-                                };
+                                t.mnuTradeHands.Items[p].Text = p switch { 1 => "◀", 2 => "▲", 3 => "▶", _ => "▼" };
                             }
                         }
                         t.ShowDialog();
                         TradingHands.player2 = (byte)t.Tag;
+                        Record.tradeHands.Add(TradingHands.player2);
                     }
                     TradeHands();
                     return;
@@ -3092,14 +3089,14 @@ draw:
                         lblDraw.Text = int.Parse(lblDraw.Text) - 1 + "";
                         if (lblDraw.Text == "0")
                             drawAll = true;
-                        if (int.Parse(lblDraw.Text) > 0)
+                        else if (int.Parse(lblDraw.Text) > 0)
                             CheckPile();
                         if (int.Parse(lblDraw.Text) <= 0)
                             goto draw;
                         else
                             timPileToPlayers.Enabled = true;
                     }
-                    else if (int.Parse(lblDraw.Text) <= 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
+                    if (int.Parse(lblDraw.Text) <= 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
                     {
                         if (gameOver < 4 && MovingCard.downpour <= -1)
                         {
@@ -3114,15 +3111,15 @@ draw:
                             MovingCard.unoDraw = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
-                        else if (MovingCard.drawAll)
+                        else if (drawAll)
                         {
-                            MovingCard.drawAll = false;
+                            MovingCard.drew = false;
                             if (form.mnuDrawAllAndPlay.Checked)
                                 PlayersTurn(MovingCard.player, true, GetDbp());
                             else
                                 PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
-                        else if (!form.mnuDrawAndPlay.Checked || !form.mnuDrawToMatch.Checked && drawAll)
+                        else if (!form.mnuDrawAndPlay.Checked)
                         {
                             MovingCard.drew = false;
                             PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
@@ -3245,13 +3242,13 @@ arrived:
                             TradingHands.player2 = 4;
                         }
                         goto end_action;
-                    case "7":
+                    case "7" when form.mnuSevenZero.Checked:
                     case UnoNumberName.TRADE_HANDS:
-                        if (form.mnuSevenZero.Checked)
+                        if (lblPlayers[MovingCard.player].Visible)
                         {
-                            if (lblPlayers[MovingCard.player].Visible)
+                            TradingHands.player1 = MovingCard.player;
+                            if (!form.isPlayingRecord)
                             {
-                                TradingHands.player1 = MovingCard.player;
                                 if (MovingCard.player != 0 || isAutomatic)
                                 {
                                     byte fp = MovingCard.player, p = NextPlayer(MovingCard.player);
@@ -3267,9 +3264,15 @@ arrived:
                                         p = NextPlayer(p);
                                     }
                                     TradingHands.player2 = fp;
+                                    Record.tradeHands.Add(TradingHands.player2);
                                 }
                                 else
                                     TradingHands.player2 = 5;
+                            }
+                            else
+                            {
+                                TradingHands.player2 = Record.tradeHands[0];
+                                Record.tradeHands.RemoveAt(0);
                             }
                         }
                         goto end_action;
@@ -3427,10 +3430,14 @@ arrived:
             {
                 lblPlayers[0].BackgroundImage = null;
                 Sort();
+                lblCounts[0].Text = PlayersCardsCount(0).ToString();
             }
             TradingHands.player1 = 4;
-            for (byte p = 0; p <= 3; p++)
+            for (byte p = 1; p <= 3; p++)
+            {
+                ShowCards(p);
                 lblCounts[p].Text = PlayersCardsCount(p).ToString();
+            }
             PlayersTurn(NextPlayer(MovingCard.player));
         }
 
