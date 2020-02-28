@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web.Security;
 using System.Windows.Forms;
 
@@ -595,6 +596,7 @@ rnd:
             else
                 MovingCard.player = Record.firstGettingCard;
             MovingCard.quickly = false;
+            lblMovingCards[0].BringToFront();
             timPileToPlayers.Enabled = true;
         }
 
@@ -2942,7 +2944,6 @@ gameOver:
                 for (i = 0; i < chkPlayer.ToArray().Length; i++)
                     chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
             }
-            pnlPlayer.BringToFront();
             if (!form.Visible && chkPlayer.Count > 0)
             {
                 chkPlayer[0].Focus();
@@ -3231,53 +3232,57 @@ arrived:
             foreach (Label p in lblPlayers)
                 if (p.Visible)
                     ons++;
-            if (form.mnuSevenZero.Checked || form.mnuTradeHands.Checked)
+            switch (lblCards[1].Text)
             {
-                switch (lblCards[1].Text)
-                {
-                    case "0":
-                        if (form.mnuSevenZero.Checked)
+                case "0" when form.mnuSevenZero.Checked:
+                    TradingHands.player1 = MovingCard.player;
+                    TradingHands.player2 = 4;
+                    goto end_action;
+                case "7" when form.mnuSevenZero.Checked:
+                case UnoNumberName.TRADE_HANDS when form.mnuTradeHands.Checked:
+                    if (lblPlayers[MovingCard.player].Visible)
+                    {
+                        TradingHands.player1 = MovingCard.player;
+                        if (!form.isPlayingRecord)
                         {
-                            TradingHands.player1 = MovingCard.player;
-                            TradingHands.player2 = 4;
-                        }
-                        goto end_action;
-                    case "7" when form.mnuSevenZero.Checked:
-                    case UnoNumberName.TRADE_HANDS:
-                        if (lblPlayers[MovingCard.player].Visible)
-                        {
-                            TradingHands.player1 = MovingCard.player;
-                            if (!form.isPlayingRecord)
+                            if (MovingCard.player != 0 || isAutomatic)
                             {
-                                if (MovingCard.player != 0 || isAutomatic)
+                                byte fp = MovingCard.player, p = NextPlayer(MovingCard.player);
+                                int fc = int.MaxValue;
+                                while (p != MovingCard.player)
                                 {
-                                    byte fp = MovingCard.player, p = NextPlayer(MovingCard.player);
-                                    int fc = int.MaxValue;
-                                    while (p != MovingCard.player)
+                                    int c = PlayersCardsCount(p);
+                                    if (c < fc)
                                     {
-                                        int c = PlayersCardsCount(p);
-                                        if (c < fc)
-                                        {
-                                            fc = c;
-                                            fp = p;
-                                        }
-                                        p = NextPlayer(p);
+                                        fc = c;
+                                        fp = p;
                                     }
-                                    TradingHands.player2 = fp;
-                                    Record.tradeHands.Add(TradingHands.player2);
+                                    p = NextPlayer(p);
                                 }
-                                else
-                                    TradingHands.player2 = 5;
+                                TradingHands.player2 = fp;
+                                Record.tradeHands.Add(TradingHands.player2);
                             }
                             else
-                            {
-                                TradingHands.player2 = Record.tradeHands[0];
-                                Record.tradeHands.RemoveAt(0);
-                            }
+                                TradingHands.player2 = 5;
                         }
-                        goto end_action;
+                        else
+                        {
+                            TradingHands.player2 = Record.tradeHands[0];
+                            Record.tradeHands.RemoveAt(0);
+                        }
+                    }
+                    goto end_action;
+            }
+            for (int i = 1; i < lblCards.Count; i++)
+            {
+                Label l = lblCards[i];
+                if (l.Text == UnoNumberName.REVERSE || l.Text == form.txtBlankText.Text && form.mnuBlankReverse.Checked)
+                {
+                    if (ons == 2 && lblPlayers[MovingCard.player].Visible)
+                        reversed = true;
+                    else
+                        reverse = !reverse;
                 }
-
             }
             for (int i = 1; i < lblCards.Count; i++)
             {
@@ -3291,10 +3296,6 @@ arrived:
                         else skips[NextPlayer(MovingCard.player)]++;
                         break;
                     case UnoNumberName.REVERSE:
-                        if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                            reversed = true;
-                        else
-                            reverse = !reverse;
                         break;
                     case UnoNumberName.DRAW_2:
                         AddDraw(2);
@@ -3322,11 +3323,6 @@ arrived:
                             else
                                 skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
                             AddDraw(int.Parse(form.txtBlankDraw.Text));
-                            if (form.mnuBlankReverse.Checked)
-                                if (ons == 2 && lblPlayers[MovingCard.player].Visible)
-                                    reversed = true;
-                                else
-                                    reverse = !reverse;
                             downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
                         }
                         break;
