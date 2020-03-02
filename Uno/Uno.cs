@@ -3116,7 +3116,7 @@ draw:
                         {
                             MovingCard.drew = false;
                             if (form.mnuDrawAllAndPlay.Checked)
-                                PlayersTurn(MovingCard.player, true, GetDbp());
+                                PlayersTurn(MovingCard.player);
                             else
                                 PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
                         }
