@@ -1095,7 +1095,8 @@ deny:
                 Interaction.SaveSetting("UNO", "RECORD", "DEAL", Record.firstGettingCard.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "FIRST", Record.firstTurn.ToString());
                 Interaction.SaveSetting("UNO", "RECORD", "UNOS", string.Join(",", Record.unos));
-                Interaction.SaveSetting("UNO", "RECORD", "TRADE_HANDS", string.Join("P", Record.tradeHands));
+                if (form.mnuSevenZero.Checked || form.mnuTradeHands.Checked)
+                    Interaction.SaveSetting("UNO", "RECORD", "TRADE_HANDS", string.Join("P", Record.tradeHands));
                 Interaction.SaveSetting("UNO", "RECORD", "COLORS", string.Join("C", Record.colors));
                 if (form.keys.Length > 0)
                     Interaction.SaveSetting("UNO", "RECORD", "GAME", string.Join("K", form.keys));
@@ -1862,7 +1863,8 @@ gameOver:
             Record.firstGettingCard = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "DEAL"));
             Record.firstTurn = byte.Parse(Interaction.GetSetting("UNO", "RECORD", "FIRST"));
             Record.unos = new List<bool>(Interaction.GetSetting("UNO", "RECORD", "UNOS").Split(',').Cast<string>().Select(s => bool.Parse(s)));
-            Record.tradeHands = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "TRADE_HANDS").Split('P').Cast<string>().Select(s => byte.Parse(s)));
+            if (form.mnuSevenZero.Checked || form.mnuTradeHands.Checked)
+                Record.tradeHands = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "TRADE_HANDS").Split('P').Cast<string>().Select(s => byte.Parse(s)));
             Record.colors = new List<byte>(Interaction.GetSetting("UNO", "RECORD", "COLORS").Split('C').Cast<string>().Select(s => byte.Parse(s)));
             Record.pile = new List<Card>(Interaction.GetSetting("UNO", "RECORD", "PILE").Split('C').Cast<string>().Select(s => new Card(byte.Parse(s.Split('I')[0]), byte.Parse(s.Split('I')[1]))));
             string[] ps = Interaction.GetSetting("UNO", "RECORD", "PLAYERS").Split('P');
