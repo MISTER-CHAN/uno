@@ -3428,12 +3428,14 @@ arrived:
             {
                 lblPlayers[0].BackgroundImage = null;
                 Sort();
+                pnlPlayer.BringToFront();
                 lblCounts[0].Text = PlayersCardsCount(0).ToString();
             }
             TradingHands.player1 = 4;
             for (byte p = 1; p <= 3; p++)
             {
-                ShowCards(p);
+                if (form.mnuCanShowCards.Checked)
+                    ShowCards(p);
                 lblCounts[p].Text = PlayersCardsCount(p).ToString();
             }
             PlayersTurn(NextPlayer(MovingCard.player));
