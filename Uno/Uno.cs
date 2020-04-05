@@ -3495,6 +3495,7 @@ arrived:
             lblPile.Top = mnuGame.Height;
             lblPile.BackgroundImageLayout = ImageLayout.Stretch;
             lblPile.BackgroundImage = Properties.Resources.uno_pile;
+            isFair = form.mnuBotPro.Checked;
             for (byte i = 0; i < 4; i++)
             {
                 lblPlayers[i] = new Label();

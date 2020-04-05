@@ -76,36 +76,38 @@ namespace Uno {
             mnuBeginner.Checked = bool.Parse(keys[17]);
             mnuPro.Checked = bool.Parse(keys[18]);
             mnuCheater.Checked = bool.Parse(keys[19]);
-            mnuBlank.Checked = bool.Parse(keys[20]);
-            mnuMagentaBlank.Checked = bool.Parse(keys[21]);
-            mnuBlackBlank.Checked = bool.Parse(keys[22]);
-            txtBlankText.Text = keys[23];
-            txtBlankSkip.Text = keys[24];
-            mnuBlankReverse.Checked = bool.Parse(keys[25]);
-            txtBlankDraw.Text = keys[26];
-            txtBlankDownpourDraw.Text = keys[27];
-            mnuWater.Checked = bool.Parse(keys[28]);
-            mnuAttack.Checked = bool.Parse(keys[29]);
-            mnuWildHitfire.Checked = bool.Parse(keys[30]);
-            mnuTradeHands.Checked = bool.Parse(keys[31]);
-            mnuDos.Checked = bool.Parse(keys[32]);
-            mnuCanShowCards.Checked = bool.Parse(keys[33]);
-            mnuPairs.Checked = bool.Parse(keys[34]);
-            mnuStacking.Checked = bool.Parse(keys[35]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[36]);
-            mnuDrawToMatch.Checked = bool.Parse(keys[37]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[38]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[39]);
-            mnuDoubleDraw.Checked = bool.Parse(keys[40]);
-            mnuDrawBeforePlaying.Checked = bool.Parse(keys[41]);
-            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[42]);
-            mnuSevenZero.Checked = bool.Parse(keys[43]);
-            mnuSkipPlayers.Checked = bool.Parse(keys[44]);
-            mnuSkipTimes.Checked = bool.Parse(keys[45]);
-            mnuOneWinner.Checked = bool.Parse(keys[46]);
-            mnuOneLoser.Checked = bool.Parse(keys[47]);
-            mnuUno.Checked = bool.Parse(keys[48]);
-            mnuCheat.Checked = bool.Parse(keys[49]);
+            mnuBotBeginner.Checked = bool.Parse(keys[20]);
+            mnuBotPro.Checked = bool.Parse(keys[21]);
+            mnuBlank.Checked = bool.Parse(keys[22]);
+            mnuMagentaBlank.Checked = bool.Parse(keys[23]);
+            mnuBlackBlank.Checked = bool.Parse(keys[24]);
+            txtBlankText.Text = keys[25];
+            txtBlankSkip.Text = keys[26];
+            mnuBlankReverse.Checked = bool.Parse(keys[27]);
+            txtBlankDraw.Text = keys[28];
+            txtBlankDownpourDraw.Text = keys[29];
+            mnuWater.Checked = bool.Parse(keys[30]);
+            mnuAttack.Checked = bool.Parse(keys[31]);
+            mnuWildHitfire.Checked = bool.Parse(keys[32]);
+            mnuTradeHands.Checked = bool.Parse(keys[33]);
+            mnuDos.Checked = bool.Parse(keys[34]);
+            mnuCanShowCards.Checked = bool.Parse(keys[35]);
+            mnuPairs.Checked = bool.Parse(keys[36]);
+            mnuStacking.Checked = bool.Parse(keys[37]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[38]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[39]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[40]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[41]);
+            mnuDoubleDraw.Checked = bool.Parse(keys[42]);
+            mnuDrawBeforePlaying.Checked = bool.Parse(keys[43]);
+            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[44]);
+            mnuSevenZero.Checked = bool.Parse(keys[45]);
+            mnuSkipPlayers.Checked = bool.Parse(keys[46]);
+            mnuSkipTimes.Checked = bool.Parse(keys[47]);
+            mnuOneWinner.Checked = bool.Parse(keys[48]);
+            mnuOneLoser.Checked = bool.Parse(keys[49]);
+            mnuUno.Checked = bool.Parse(keys[50]);
+            mnuCheat.Checked = bool.Parse(keys[51]);
         }
 
         private void MnuAddBot_Click(object sender, EventArgs e)
@@ -188,6 +190,13 @@ namespace Uno {
         {
             foreach (ToolStripItem itm in mnuBlank.DropDownItems)
                 itm.Visible = mnuBlank.Checked;
+        }
+
+        private void MnuBotDifficulty_Click(object sender, EventArgs e)
+        {
+            mnuBotBeginner.Checked = false;
+            mnuBotPro.Checked = false;
+            ((ToolStripMenuItem)sender).Checked = true;
         }
 
         private void MnuCustom_Click(object sender, EventArgs e)
@@ -455,6 +464,8 @@ namespace Uno {
             s += mnuBeginner.Checked + "K";
             s += mnuPro.Checked + "K";
             s += mnuCheater.Checked + "K";
+            s += mnuBotBeginner.Checked + "K";
+            s += mnuBotPro.Checked + "K";
             s += mnuBlank.Checked + "K";
             s += mnuMagentaBlank.Checked + "K";
             s += mnuBlackBlank.Checked + "K";
