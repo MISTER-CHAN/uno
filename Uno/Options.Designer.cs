@@ -23,6 +23,7 @@
 		/// 使用代码编辑器修改此方法的内容。
 		/// </summary>
 		private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Options));
             this.mnuOptions = new System.Windows.Forms.MenuStrip();
             this.mnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLoad = new System.Windows.Forms.ToolStripMenuItem();
@@ -323,7 +324,7 @@
             this.mnuRemoveBot,
             this.mnuAddBot});
             this.mnuOns.Name = "mnuOns";
-            this.mnuOns.Size = new System.Drawing.Size(180, 22);
+            this.mnuOns.Size = new System.Drawing.Size(172, 22);
             this.mnuOns.Text = "玩家";
             // 
             // txtPlayer0
@@ -382,7 +383,7 @@
             this.mnuDealt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDealt});
             this.mnuDealt.Name = "mnuDealt";
-            this.mnuDealt.Size = new System.Drawing.Size(180, 22);
+            this.mnuDealt.Size = new System.Drawing.Size(172, 22);
             this.mnuDealt.Text = "每玩家牌数（张）";
             // 
             // txtDealt
@@ -397,7 +398,7 @@
             this.mnuDecks.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDecks});
             this.mnuDecks.Name = "mnuDecks";
-            this.mnuDecks.Size = new System.Drawing.Size(180, 22);
+            this.mnuDecks.Size = new System.Drawing.Size(172, 22);
             this.mnuDecks.Text = "总牌数（副）";
             // 
             // txtDecks
@@ -414,7 +415,7 @@
             this.mnuPro,
             this.mnuCheater});
             this.mnuDifficulty.Name = "mnuDifficulty";
-            this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
+            this.mnuDifficulty.Size = new System.Drawing.Size(172, 22);
             this.mnuDifficulty.Text = "對手水平";
             // 
             // mnuBeginner
@@ -448,7 +449,7 @@
             this.mnuBotBeginner,
             this.mnuBotPro});
             this.mnuBotDifficulty.Name = "mnuBotDifficulty";
-            this.mnuBotDifficulty.Size = new System.Drawing.Size(180, 22);
+            this.mnuBotDifficulty.Size = new System.Drawing.Size(172, 22);
             this.mnuBotDifficulty.Text = "託管水平";
             // 
             // mnuBotBeginner
@@ -456,14 +457,14 @@
             this.mnuBotBeginner.Checked = true;
             this.mnuBotBeginner.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuBotBeginner.Name = "mnuBotBeginner";
-            this.mnuBotBeginner.Size = new System.Drawing.Size(180, 22);
+            this.mnuBotBeginner.Size = new System.Drawing.Size(100, 22);
             this.mnuBotBeginner.Text = "弱智";
             this.mnuBotBeginner.Click += new System.EventHandler(this.MnuBotDifficulty_Click);
             // 
             // mnuBotPro
             // 
             this.mnuBotPro.Name = "mnuBotPro";
-            this.mnuBotPro.Size = new System.Drawing.Size(180, 22);
+            this.mnuBotPro.Size = new System.Drawing.Size(100, 22);
             this.mnuBotPro.Text = "老千";
             this.mnuBotPro.Click += new System.EventHandler(this.MnuBotDifficulty_Click);
             // 
@@ -1004,6 +1005,7 @@
             this.Controls.Add(this.mnuOptions);
             this.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Options";

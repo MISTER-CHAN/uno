@@ -24,6 +24,7 @@
 		/// </summary>
 		private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Uno));
             this.lblPile = new System.Windows.Forms.Label();
             this.mnuCheating = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
@@ -486,6 +487,7 @@
             this.Controls.Add(this.mnuGame);
             this.Controls.Add(this.lblPile);
             this.Font = new System.Drawing.Font("微軟正黑體", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuGame;
             this.Margin = new System.Windows.Forms.Padding(8, 7, 8, 7);
             this.Name = "Uno";
