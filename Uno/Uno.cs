@@ -641,8 +641,7 @@ rnd:
                     switch (c.number)
                     {
                         case UnoNumber.DISCARD_ALL:
-                            if (discardColor == UnoColor.MAX_VALUE)
-                                discardColors.Add(c.color);
+                            discardColors.Add(c.color);
                             break;
                         default:
                             if (discardColor == UnoColor.MAX_VALUE && discardColors.Contains(c.color))
@@ -652,6 +651,8 @@ rnd:
                             break;
                     }
                 }
+                if (!discardColors.Contains(discardColor))
+                    goto deny;
                 goto end_number;
             }
 end_discard_all:
