@@ -1668,9 +1668,9 @@ deny:
 
         private void LblCounts_TextChanged(object sender, EventArgs e) {
             byte index = (byte)((Label)sender).Tag;
-            if (form.mnuCanShowCards.Checked && index > 0)
+            if (form.mnuRevealable.Checked && index > 0)
             {
-                ShowCards(index);
+                Reveal(index);
             }
             if (MovingCard.isPlaying)
             {
@@ -1741,7 +1741,7 @@ gameOver:
                         Draw(0);
                     break;
                 case MouseButtons.Right:
-                    if (form.mnuCanShowCards.Checked || isFair)
+                    if (form.mnuRevealable.Checked || isFair)
                     {
                         hasCheat = true;
                         int i = 0;
@@ -1794,7 +1794,7 @@ gameOver:
             byte index = (byte)((Label)sender).Tag;
             lblPlayers[index].AutoSize = true;
             lblPlayers[index].BackgroundImage = null;
-            ShowCards(index);
+            Reveal(index);
             switch (index)
             {
                 case 1: lblPlayers[1].Top = height / 2 - lblPlayers[1].Height / 2; break;
@@ -2852,7 +2852,7 @@ gameOver:
             timUno.Interval = interval;
         }
 
-        private void ShowCards(byte player)
+        private void Reveal(byte player)
         {
             int i = 0;
             string cards = "";
@@ -3435,8 +3435,8 @@ arrived:
             TradingHands.player1 = 4;
             for (byte p = 1; p <= 3; p++)
             {
-                if (form.mnuCanShowCards.Checked)
-                    ShowCards(p);
+                if (form.mnuRevealable.Checked)
+                    Reveal(p);
                 lblCounts[p].Text = PlayersCardsCount(p).ToString();
             }
             PlayersTurn(NextPlayer(MovingCard.player));
@@ -3501,9 +3501,9 @@ arrived:
             {
                 lblPlayers[i] = new Label();
                 Controls.Add(lblPlayers[i]);
-                lblPlayers[i].AutoSize = form.mnuCanShowCards.Checked;
+                lblPlayers[i].AutoSize = form.mnuRevealable.Checked;
                 lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                if (i > 0 && !form.mnuCanShowCards.Checked)
+                if (i > 0 && !form.mnuRevealable.Checked)
                     lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
                 lblPlayers[i].ForeColor = Color.Black;
                 lblPlayers[i].Tag = i;

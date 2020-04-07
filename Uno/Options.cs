@@ -50,10 +50,10 @@ namespace Uno {
 
         private void KeepSafeForCheating_CheckedChanged(object sender, EventArgs e)
         {
-            if (!mnuBeginner.Checked && mnuCanShowCards.Checked)
+            if (!mnuBeginner.Checked && mnuRevealable.Checked)
             {
                 MessageBox.Show("正規比賽中禁止明牌！", "正規比賽", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                mnuCanShowCards.Checked = false;
+                mnuRevealable.Checked = false;
             }
         }
 
@@ -91,7 +91,7 @@ namespace Uno {
             mnuWildHitfire.Checked = bool.Parse(keys[32]);
             mnuTradeHands.Checked = bool.Parse(keys[33]);
             mnuDos.Checked = bool.Parse(keys[34]);
-            mnuCanShowCards.Checked = bool.Parse(keys[35]);
+            mnuRevealable.Checked = bool.Parse(keys[35]);
             mnuPairs.Checked = bool.Parse(keys[36]);
             mnuStacking.Checked = bool.Parse(keys[37]);
             mnuPlayOrDrawAll.Checked = bool.Parse(keys[38]);
@@ -358,7 +358,7 @@ namespace Uno {
                 LoadGame(s);
             mnuBeginner.Checked = true;
             mnuCheater.Checked = false;
-            mnuCanShowCards.Checked = true;
+            mnuRevealable.Checked = true;
             mnuCheat.Checked = false;
             MnuStart_Click(mnuStart, new EventArgs());
         }
@@ -479,7 +479,7 @@ namespace Uno {
             s += mnuWildHitfire.Checked + "K";
             s += mnuTradeHands.Checked + "K";
             s += mnuDos.Checked + "K";
-            s += mnuCanShowCards.Checked + "K";
+            s += mnuRevealable.Checked + "K";
             s += mnuPairs.Checked + "K";
             s += mnuStacking.Checked + "K";
             s += mnuPlayOrDrawAll.Checked + "K";
