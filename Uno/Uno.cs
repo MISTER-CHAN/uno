@@ -792,7 +792,7 @@ deny:
                             case DialogResult.Ignore:
                                 lblDraw.Text = "0";
                                 MovingCard.dbp = 0;
-                                MovingCard.downpour = -1;
+                                MovingCard.downpour = 0;
                                 break;
                         }
                     }
@@ -1032,14 +1032,10 @@ deny:
             }
         }
 
-        void DownpourDraw(byte player, int draw)
+        void DownpourDraw(byte player)
         {
             Downpour.player = player;
-            byte ons = 0;
-            for (byte p = 0; p <= 3; p++)
-                if (lblPlayers[p].Visible && p != player)
-                    ons++;
-            MovingCard.downpour = draw * ons;
+            MovingCard.downpour = Downpour.count;
             MovingCard.player = NextPlayer(player);
             MovingCard.progress = 0;
             MovingCard.quickly = false;
@@ -2585,8 +2581,7 @@ gameOver:
                 }
                 if (Downpour.count > 0)
                 {
-                    DownpourDraw(player, Downpour.count);
-                    Downpour.count = 0;
+                    DownpourDraw(player);
                     return;
                 }
                 if (skip > 0 || skips[player] > 0)
@@ -3088,7 +3083,7 @@ gameOver:
                     lblMovingCards[0].Location = new Point(-UnoSize.WIDTH, -UnoSize.HEIGHT);
                     timPileToPlayers.Enabled = false;
 draw:
-                    if (int.Parse(lblDraw.Text) > 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
+                    if (int.Parse(lblDraw.Text) > 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= 0)
                     {
                         lblDraw.Text = int.Parse(lblDraw.Text) - 1 + "";
                         if (lblDraw.Text == "0")
@@ -3100,13 +3095,13 @@ draw:
                         else
                             timPileToPlayers.Enabled = true;
                     }
-                    if (int.Parse(lblDraw.Text) <= 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
+                    if (int.Parse(lblDraw.Text) <= 0 && MovingCard.dbp <= 0 && MovingCard.downpour <= 0)
                     {
-                        if (gameOver < 4 && MovingCard.downpour <= -1)
+                        if (gameOver < 4 && MovingCard.downpour <= 0)
                         {
                             GameOver();
                         }
-                        if (MovingCard.dbp <= 0 && MovingCard.downpour <= -1)
+                        if (MovingCard.dbp <= 0 && MovingCard.downpour <= 0)
                             MovingCard.drew = !MovingCard.unoDraw;
                         if (MovingCard.player == 0 && MovingCard.quickly)
                             Sort();
@@ -3141,31 +3136,34 @@ draw:
                         else
                             timPileToPlayers.Enabled = true;
                     }
-                    else if (MovingCard.downpour > -1)
+                    else if (MovingCard.downpour > 0)
                     {
                         MovingCard.downpour--;
-                        if (MovingCard.player == 0 && MovingCard.quickly && MovingCard.downpour < 3)
-                            Sort();
                         if (MovingCard.downpour > 0)
-                            CheckPile();
-                        if (MovingCard.downpour <= 0)
                         {
-                            if (gameOver < 4)
-                            {
-                                GameOver();
-                            }
-                            MovingCard.downpour = -1;
-                            if (NextPlayer(MovingCard.player) == Downpour.player)
-                                PlayersTurn(NextPlayer(NextPlayer(MovingCard.player)), true, GetDbp());
-                            else
-                                PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
+                            CheckPile();
+                            timPileToPlayers.Enabled = true;
                         }
                         else
                         {
-                            MovingCard.player = NextPlayer(MovingCard.player);
-                            if (MovingCard.player == Downpour.player)
-                                MovingCard.player = NextPlayer(MovingCard.player);
-                            timPileToPlayers.Enabled = true;
+                            byte nextPlayer = NextPlayer(MovingCard.player);
+                            if (nextPlayer != Downpour.player)
+                            {
+                                MovingCard.downpour = Downpour.count;
+                                MovingCard.player = nextPlayer;
+                                timPileToPlayers.Enabled = true;
+                            }
+                            else
+                            {
+                                if (MovingCard.quickly)
+                                    Sort();
+                                if (gameOver < 4)
+                                {
+                                    GameOver();
+                                }
+                                Downpour.count = 0;
+                                PlayersTurn(NextPlayer(nextPlayer), true, GetDbp());
+                            }
                         }
                     }
                 }
@@ -3229,7 +3227,6 @@ arrived:
             pnlMovingCards.Location = new Point(-pnlMovingCards.Width, -pnlMovingCards.Height);
             BackColor = GetColor(MovingCard.color);
             lblCounts[MovingCard.player].Text = PlayersCardsCount(MovingCard.player) + "";
-            int downpour = 0;
             bool reversed = false;
             byte ons = 0;
             foreach (Label p in lblPlayers)
@@ -3304,13 +3301,13 @@ arrived:
                         AddDraw(2);
                         break;
                     case UnoNumberName.WILD_DOWNPOUR_DRAW_1:
-                        downpour += form.mnuDoubleDraw.Checked ? 2 : 1;
+                        Downpour.count += form.mnuDoubleDraw.Checked ? 2 : 1;
                         break;
                     case UnoNumberName.WILD_DOWNPOUR_DRAW_2:
-                        downpour += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        Downpour.count += 2 * (form.mnuDoubleDraw.Checked ? 2 : 1);
                         break;
                     case UnoNumberName.WILD_DOWNPOUR_DRAW_4:
-                        downpour += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                        Downpour.count += 4 * (form.mnuDoubleDraw.Checked ? 2 : 1);
                         break;
                     case UnoNumberName.WILD_DRAW_4:
                         AddDraw(4);
@@ -3326,7 +3323,7 @@ arrived:
                             else
                                 skips[NextPlayer(MovingCard.player)] += int.Parse(form.txtBlankSkip.Text);
                             AddDraw(int.Parse(form.txtBlankDraw.Text));
-                            downpour += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
+                            Downpour.count += int.Parse(form.txtBlankDownpourDraw.Text) * (form.mnuDoubleDraw.Checked ? 2 : 1);
                         }
                         break;
                 }
@@ -3334,9 +3331,9 @@ arrived:
 end_action:
             if (gameOver < 4)
             {
-                if (downpour > 0)
+                if (Downpour.count > 0)
                 {
-                    DownpourDraw(MovingCard.player, downpour);
+                    DownpourDraw(MovingCard.player);
                 }
                 return;
             }
@@ -3355,9 +3352,8 @@ end_action:
                 PlayersTurn(MovingCard.player, true, GetDbp());
             else if (TradingHands.player1 < 4)
                 PlayersTurn(MovingCard.player, true, GetDbp());
-            else if (downpour > 0)
+            else if (Downpour.count > 0)
             {
-                Downpour.count = downpour;
                 PlayersTurn(MovingCard.player, true, GetDbp());
             }
             else
