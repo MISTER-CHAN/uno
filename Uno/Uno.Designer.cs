@@ -37,6 +37,7 @@
             this.mnuRank = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuByColor = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuByNumber = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPicPlayer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScrollBar = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuToolTip = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAppearance = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,8 +72,10 @@
             this.rdoUno = new System.Windows.Forms.RadioButton();
             this.btnStart = new System.Windows.Forms.Button();
             this.timTradeHands = new System.Windows.Forms.Timer(this.components);
+            this.picPlayer = new System.Windows.Forms.PictureBox();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picPlayer)).BeginInit();
             this.SuspendLayout();
             // 
             // lblPile
@@ -139,6 +142,7 @@
             this.mnuNew,
             this.separatorNc,
             this.mnuRank,
+            this.mnuPicPlayer,
             this.mnuScrollBar,
             this.mnuToolTip,
             this.mnuAppearance,
@@ -152,14 +156,14 @@
             // mnuNew
             // 
             this.mnuNew.Name = "mnuNew";
-            this.mnuNew.Size = new System.Drawing.Size(167, 22);
+            this.mnuNew.Size = new System.Drawing.Size(180, 22);
             this.mnuNew.Text = "开局 (&N)";
             this.mnuNew.Click += new System.EventHandler(this.MnuNew_Click);
             // 
             // separatorNc
             // 
             this.separatorNc.Name = "separatorNc";
-            this.separatorNc.Size = new System.Drawing.Size(164, 6);
+            this.separatorNc.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuRank
             // 
@@ -167,7 +171,7 @@
             this.mnuByColor,
             this.mnuByNumber});
             this.mnuRank.Name = "mnuRank";
-            this.mnuRank.Size = new System.Drawing.Size(167, 22);
+            this.mnuRank.Size = new System.Drawing.Size(180, 22);
             this.mnuRank.Text = "排序 (&R)";
             // 
             // mnuByColor
@@ -186,12 +190,21 @@
             this.mnuByNumber.Text = "按数字";
             this.mnuByNumber.Click += new System.EventHandler(this.MnuRank_Click);
             // 
+            // mnuPicPlayer
+            // 
+            this.mnuPicPlayer.Checked = true;
+            this.mnuPicPlayer.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuPicPlayer.Name = "mnuPicPlayer";
+            this.mnuPicPlayer.Size = new System.Drawing.Size(180, 22);
+            this.mnuPicPlayer.Text = "排序優化";
+            this.mnuPicPlayer.Click += new System.EventHandler(this.MnuPicPlayer_Click);
+            // 
             // mnuScrollBar
             // 
             this.mnuScrollBar.Checked = true;
             this.mnuScrollBar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuScrollBar.Name = "mnuScrollBar";
-            this.mnuScrollBar.Size = new System.Drawing.Size(167, 22);
+            this.mnuScrollBar.Size = new System.Drawing.Size(180, 22);
             this.mnuScrollBar.Text = "多手持牌";
             this.mnuScrollBar.Click += new System.EventHandler(this.MnuScrollBar_Click);
             // 
@@ -200,7 +213,7 @@
             this.mnuToolTip.Checked = true;
             this.mnuToolTip.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuToolTip.Name = "mnuToolTip";
-            this.mnuToolTip.Size = new System.Drawing.Size(167, 22);
+            this.mnuToolTip.Size = new System.Drawing.Size(180, 22);
             this.mnuToolTip.Text = "显示工具提示 (&T)";
             this.mnuToolTip.Click += new System.EventHandler(this.MnuToolTip_Click);
             // 
@@ -209,27 +222,27 @@
             this.mnuAppearance.Checked = true;
             this.mnuAppearance.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAppearance.Name = "mnuAppearance";
-            this.mnuAppearance.Size = new System.Drawing.Size(167, 22);
+            this.mnuAppearance.Size = new System.Drawing.Size(180, 22);
             this.mnuAppearance.Text = "外观 (&A)";
             this.mnuAppearance.Click += new System.EventHandler(this.MnuAppearance_Click);
             // 
             // separatorCx
             // 
             this.separatorCx.Name = "separatorCx";
-            this.separatorCx.Size = new System.Drawing.Size(164, 6);
+            this.separatorCx.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuSaveGame
             // 
             this.mnuSaveGame.Enabled = false;
             this.mnuSaveGame.Name = "mnuSaveGame";
-            this.mnuSaveGame.Size = new System.Drawing.Size(167, 22);
+            this.mnuSaveGame.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveGame.Text = "储存 (&S)";
             this.mnuSaveGame.Click += new System.EventHandler(this.MnuSaveGame_Click);
             // 
             // itmQuit
             // 
             this.itmQuit.Name = "itmQuit";
-            this.itmQuit.Size = new System.Drawing.Size(167, 22);
+            this.itmQuit.Size = new System.Drawing.Size(180, 22);
             this.itmQuit.Text = "退出 (&X)";
             this.itmQuit.Click += new System.EventHandler(this.ItmQuit_Click);
             // 
@@ -264,33 +277,33 @@
             // 
             this.mnuContent.Name = "mnuContent";
             this.mnuContent.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.mnuContent.Size = new System.Drawing.Size(141, 22);
+            this.mnuContent.Size = new System.Drawing.Size(180, 22);
             this.mnuContent.Text = "目彔 (&C)";
             this.mnuContent.Click += new System.EventHandler(this.MnuContent_Click);
             // 
             // mnuCanPlay
             // 
             this.mnuCanPlay.Name = "mnuCanPlay";
-            this.mnuCanPlay.Size = new System.Drawing.Size(141, 22);
+            this.mnuCanPlay.Size = new System.Drawing.Size(180, 22);
             this.mnuCanPlay.Text = "出牌規則";
             this.mnuCanPlay.Click += new System.EventHandler(this.MnuCanPlay_Click);
             // 
             // mnuControl
             // 
             this.mnuControl.Name = "mnuControl";
-            this.mnuControl.Size = new System.Drawing.Size(141, 22);
+            this.mnuControl.Size = new System.Drawing.Size(180, 22);
             this.mnuControl.Text = "按鍵說明";
             this.mnuControl.Click += new System.EventHandler(this.MnuControl_Click);
             // 
             // separatorHa
             // 
             this.separatorHa.Name = "separatorHa";
-            this.separatorHa.Size = new System.Drawing.Size(138, 6);
+            this.separatorHa.Size = new System.Drawing.Size(177, 6);
             // 
             // itmAbout
             // 
             this.itmAbout.Name = "itmAbout";
-            this.itmAbout.Size = new System.Drawing.Size(141, 22);
+            this.itmAbout.Size = new System.Drawing.Size(180, 22);
             this.itmAbout.Text = "关于 (&A)";
             this.itmAbout.Click += new System.EventHandler(this.ItmAbout_Click);
             // 
@@ -403,7 +416,7 @@
             // 
             this.hPlayer.Location = new System.Drawing.Point(0, 214);
             this.hPlayer.Name = "hPlayer";
-            this.hPlayer.Size = new System.Drawing.Size(80, 14);
+            this.hPlayer.Size = new System.Drawing.Size(90, 14);
             this.hPlayer.TabIndex = 9;
             this.hPlayer.Visible = false;
             this.hPlayer.Scroll += new System.Windows.Forms.ScrollEventHandler(this.HPlayer_Scroll);
@@ -413,8 +426,9 @@
             // 
             this.pnlPlayer.Location = new System.Drawing.Point(0, 214);
             this.pnlPlayer.Name = "pnlPlayer";
-            this.pnlPlayer.Size = new System.Drawing.Size(90, 132);
+            this.pnlPlayer.Size = new System.Drawing.Size(90, 120);
             this.pnlPlayer.TabIndex = 10;
+            this.pnlPlayer.Visible = false;
             this.pnlPlayer.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
             // 
             // timWatch
@@ -470,11 +484,23 @@
             this.timTradeHands.Interval = 10;
             this.timTradeHands.Tick += new System.EventHandler(this.TimTradeHands_Tick);
             // 
+            // picPlayer
+            // 
+            this.picPlayer.Location = new System.Drawing.Point(96, 214);
+            this.picPlayer.Name = "picPlayer";
+            this.picPlayer.Size = new System.Drawing.Size(90, 120);
+            this.picPlayer.TabIndex = 15;
+            this.picPlayer.TabStop = false;
+            this.picPlayer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseDown);
+            this.picPlayer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseMove);
+            this.picPlayer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseUp);
+            // 
             // Uno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 34F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(890, 658);
+            this.Controls.Add(this.picPlayer);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.rdoUno);
             this.Controls.Add(this.pnlMovingCards);
@@ -501,6 +527,7 @@
             this.mnuCheating.ResumeLayout(false);
             this.mnuGame.ResumeLayout(false);
             this.mnuGame.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picPlayer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -554,6 +581,8 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.ToolStripMenuItem mnuCheatAll;
         private System.Windows.Forms.Timer timTradeHands;
+        private System.Windows.Forms.PictureBox picPlayer;
+        private System.Windows.Forms.ToolStripMenuItem mnuPicPlayer;
     }
 }
 

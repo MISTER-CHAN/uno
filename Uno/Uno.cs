@@ -45,6 +45,16 @@ namespace Uno
 			public static int dbp = 0, downpour = -1, progress = 0;
 		}
 
+        public class PicPlayer
+        {
+            public static bool isSelecting = false;
+            public static bool[] checkeds;
+            public static float cardWidth = 0;
+            public static int count = 0, pointing = -1, selected = -1, selecting = -1;
+            public static List<Card> picPlayer = new List<Card>();
+            
+        }
+
         public class Record
         {
             public static bool reverse;
@@ -113,12 +123,13 @@ namespace Uno
             public const string WILD_HITFIRE = "+?";
             public const string NULL = "";
         }
-
+        
         private bool canPlay = false, hasCheat = false, isAutomatic = false, isFair = false, isPlayer0sTurn = false, isSelectingCards = false, reverse = false;
         byte gameOver = 4;
         readonly Cards pile = new Cards();
         readonly Cards[] players = new Cards[4];
-        readonly Image imgUno;
+        Graphics gpsPlayer;
+        Image imgPlayer, imgUno;
         private int distance = 20, gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
@@ -183,7 +194,7 @@ namespace Uno
 				int length = chkPlayer.ToArray().Length;
 				chkPlayer.Add(new CheckBox());
 				pnlPlayer.Controls.Add(chkPlayer[length]);
-				chkPlayer[length].AutoSize = false;
+                chkPlayer[length].AutoSize = false;
 				chkPlayer[length].Appearance = Appearance.Button;
                 chkPlayer[length].BackColor = Color.White;
                 chkPlayer[length].BackgroundImageLayout = ImageLayout.Stretch;
@@ -923,7 +934,7 @@ deny:
             }
             if (form.txtPlayer0.Text == "")
                 return;
-            string number = "%NULL%";
+            byte number = UnoNumber.MAX_VALUE;
             switch (e.KeyCode)
             {
                 case Keys.Enter:
@@ -938,10 +949,10 @@ deny:
                     rdoUno.Checked = true;
                     break;
                 case Keys.Divide:
-                    ChkPlayer_MouseWheel(new object(), new MouseEventArgs(MouseButtons.Middle, 0, 0, 0, 1));
+                    // ChkPlayer_MouseWheel(new object(), new MouseEventArgs(MouseButtons.Middle, 0, 0, 0, 1));
                     return;
                 case Keys.Multiply:
-                    ChkPlayer_MouseWheel(new object(), new MouseEventArgs(MouseButtons.Middle, 0, 0, 0, -1));
+                    // ChkPlayer_MouseWheel(new object(), new MouseEventArgs(MouseButtons.Middle, 0, 0, 0, -1));
                     return;
                 case Keys.T:
                 case Keys.OemQuestion:
@@ -957,77 +968,72 @@ deny:
                 case Keys.NumPad7:
                 case Keys.NumPad8:
                 case Keys.NumPad9:
-                    number = e.KeyCode - Keys.NumPad0 + "";
+                    number = (byte)(e.KeyCode - Keys.NumPad0);
                     break;
                 case Keys.Delete:
-                    number = UnoNumberName.SKIP;
+                    number = UnoNumber.SKIP;
                     break;
                 case Keys.End:
-                    number = UnoNumberName.REVERSE;
+                    number = UnoNumber.REVERSE;
                     break;
                 case Keys.PageDown:
-                    number = UnoNumberName.DRAW_2;
+                    number = UnoNumber.DRAW_2;
                     break;
                 case Keys.Insert:
-                    number = form.txtBlankText.Text;
+                    number = UnoNumber.BLANK;
                     break;
                 case Keys.Home:
-                    number = UnoNumberName.WILD;
+                    number = UnoNumber.WILD;
                     break;
                 case Keys.PageUp:
-                    number = UnoNumberName.WILD_DRAW_4;
+                    number = UnoNumber.WILD_DRAW_4;
                     break;
                 default:
                     return;
             }
             if (form.mnuPairs.Checked)
             {
-                foreach (CheckBox c in chkPlayer)
+                if (mnuPicPlayer.Checked)
                 {
-                    if (c.Text == number)
-                    {
-                        c.Checked = true;
-                        c.Focus();
-                    }
-                    else
-                    {
-                        c.Checked = false;
-                    }
+                    for (int i = 0; i < PicPlayer.count; i++)
+                        PicPlayer.checkeds[i] = PicPlayer.picPlayer[i].number == number;
+                    PicPlayer_CheckedChanged();
                 }
             }
             else
             {
-                bool b = true;
-                foreach (CheckBox c in chkPlayer)
+                if (mnuPicPlayer.Checked)
                 {
-                    if (c.Checked && c.Text == number)
+                    bool b = true;
+                    for (int i = 0; i < PicPlayer.count; i++)
                     {
-                        b = false;
-                    }
-                    else
-                    {
-                        c.Checked = false;
-                    }
-                }
-                foreach (CheckBox c in chkPlayer)
-                {
-                    if (!b)
-                    {
-                        if (c.Checked)
+                        if (PicPlayer.checkeds[i] && PicPlayer.picPlayer[i].number == number)
                         {
-                            b = true;
-                            c.Checked = false;
+                            b = false;
                         }
-                        continue;
+                        else
+                        {
+                            PicPlayer.checkeds[i] = false;
+                        }
                     }
-                    if (c.Text == number)
+                    for (int i = 0; i < PicPlayer.count; i++)
                     {
-                        if (c.Left + pnlPlayer.Left < 0 || c.Left + c.Width + pnlPlayer.Left > width)
-                            pnlPlayer.Left = -c.Left;
-                        c.Checked = true;
-                        c.Focus();
-                        break;
+                        if (!b)
+                        {
+                            if (PicPlayer.checkeds[i])
+                            {
+                                b = true;
+                                PicPlayer.checkeds[i] = false;
+                            }
+                            continue;
+                        }
+                        if (PicPlayer.picPlayer[i].number == number)
+                        {
+                            PicPlayer.checkeds[i] = true;
+                            break;
+                        }
                     }
+                    PicPlayer_CheckedChanged();
                 }
             }
         }
@@ -1169,7 +1175,7 @@ deny:
                     }
                 }
                 lblPlayers[gameOver].Visible = false;
-                string msg = (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "赢了!\n" +
+                string msg = (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + " 赢了!\n" +
                     "\n" +
                     (form.mnuWatch.Checked && !form.isPlayingRecord ? $"游戏时长\t{lblWatch.Text}\n" +
                     "\n" : "") +
@@ -1234,7 +1240,7 @@ deny:
                 }
                 lblPlayers[gameOver].Visible = false;
                 if (MessageBox.Show(
-                    (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + "输了!\n"
+                    (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + " 输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
@@ -1777,8 +1783,11 @@ gameOver:
                     lblPlayers[p].MouseDown += LblPlayers_MouseDown;
                     lblPlayers[p].MouseUp += LblPlayers_MouseUp;
                 }
-                foreach (CheckBox c in chkPlayer)
-                    c.ContextMenuStrip = mnuCheating;
+                if (mnuPicPlayer.Checked)
+                    picPlayer.ContextMenuStrip = mnuCheating;
+                else
+                    foreach (CheckBox c in chkPlayer)
+                        c.ContextMenuStrip = mnuCheating;
                 isFair = true;
                 mnuCheatAll.Visible = form.mnuPairs.Checked;
             }
@@ -1909,7 +1918,7 @@ gameOver:
         {
             if (!isPlayer0sTurn)
             {
-                MessageBox.Show("請在到你出牌時再學習此內容.", "出牌敎程", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("請在到你出牌時再來學習此內容.", "出牌敎程", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
             bool isFair = this.isFair;
@@ -1934,11 +1943,36 @@ gameOver:
                 }
                 if (MessageBox.Show($"你可以嘗試出:\n{s}{color}\n\n需要我敎你嗎?", "出牌敎程", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                 {
-                    foreach (CheckBox chk in chkPlayer)
+                    if (mnuPicPlayer.Checked)
                     {
-                        chk.Checked = false;
-                        foreach (Card c in cards)
-                            if (GetColorId(chk.BackColor) == c.color && GetNumberId(chk.Text) == c.number) chk.Checked = true;
+                        for (int i = 0; i < PicPlayer.count; i++)
+                        {
+                            PicPlayer.checkeds[i] = false;
+                            foreach (Card c in cards)
+                            {
+                                if (PicPlayer.picPlayer[i].color == c.color && PicPlayer.picPlayer[i].number == c.number)
+                                {
+                                    PicPlayer.checkeds[i] = true;
+                                    break;
+                                }
+                            }
+                        }
+                        PicPlayer_CheckedChanged();
+                    }
+                    else
+                    {
+                        foreach (CheckBox chk in chkPlayer)
+                        {
+                            chk.Checked = false;
+                            foreach (Card c in cards)
+                            {
+                                if (GetColorId(chk.BackColor) == c.color && GetNumberId(chk.Text) == c.number)
+                                {
+                                    chk.Checked = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     Action(0, "提示");
                 }
@@ -2280,6 +2314,11 @@ gameOver:
             Application.Restart();
         }
 
+        private void MnuPicPlayer_Click(object sender, EventArgs e)
+        {
+            mnuPicPlayer.Checked = !mnuPicPlayer.Checked;
+        }
+
         private void MnuPlayPause_Click(object sender, EventArgs e)
         {
             if (1 < distance && distance < short.MaxValue)
@@ -2330,7 +2369,128 @@ gameOver:
             if (this.reverse) r = !r;
             byte next = (byte)(!r ? currentPlayer == 3 ? 0 : currentPlayer + 1 : currentPlayer == 0 ? 3 : currentPlayer - 1);
             return lblPlayers[next].Visible ? next : NextPlayer(next, reverse);
-		}
+        }
+
+        void PicPlayer_CheckedChanged()
+        {
+            if (PicPlayer.count <= 0)
+            {
+                picPlayer.Visible = false;
+                return;
+            }
+            int i = 0;
+            if (PicPlayer.count * UnoSize.WIDTH <= width)
+            {
+                imgPlayer = new Bitmap(PicPlayer.count * UnoSize.WIDTH, UnoSize.HEIGHT);
+                gpsPlayer = Graphics.FromImage(imgPlayer);
+                picPlayer.Width = PicPlayer.count * UnoSize.WIDTH;
+                PicPlayer.cardWidth = UnoSize.WIDTH;
+                if (mnuByColor.Checked)
+                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                PicPlayer.picPlayer.Add(new Card(color, number));
+                                gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                i++;
+                            }
+                else
+                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                        for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                PicPlayer.picPlayer.Add(new Card(color, number));
+                                gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                i++;
+                            }
+                picPlayer.Left = width / 2 - picPlayer.Width / 2;
+            }
+            else
+            {
+                imgPlayer = new Bitmap(width, UnoSize.HEIGHT);
+                gpsPlayer = Graphics.FromImage(imgPlayer);
+                picPlayer.Width = width;
+                PicPlayer.cardWidth = (float)width / PicPlayer.count;
+                if (mnuByColor.Checked)
+                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                PicPlayer.picPlayer.Add(new Card(color, number));
+                                gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                i++;
+                            }
+                else
+                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                        for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                PicPlayer.picPlayer.Add(new Card(color, number));
+                                gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                i++;
+                            }
+                picPlayer.Left = 0;
+            }
+            picPlayer.Image = imgPlayer;
+            PicPlayer.selecting = -1;
+        }
+        void PicPlayer_CheckedChanging(int index, bool isChecked)
+        {
+            gpsPlayer = Graphics.FromImage(imgPlayer);
+            gpsPlayer.FillRectangle(new SolidBrush(Color.FromArgb(0x80, Color.Gray)), index * PicPlayer.cardWidth, isChecked ? UnoSize.HEIGHT / 8 : 0, PicPlayer.cardWidth, UnoSize.HEIGHT); ;
+            picPlayer.Image = imgPlayer;
+        }
+
+        private void PicPlayer_MouseDown(object sender, MouseEventArgs e)
+        {
+            PicPlayer.isSelecting = true;
+            PicPlayer_MouseMove(sender, e);
+        }
+
+        private void PicPlayer_MouseMove(object sender, MouseEventArgs e)
+        {
+            int i = (int)(e.X / PicPlayer.cardWidth);
+            if (i != PicPlayer.selecting)
+            {
+                if (i != PicPlayer.pointing)
+                {
+                    SetUsage(picPlayer, PicPlayer.picPlayer[i].color, PicPlayer.picPlayer[i].number);
+                    PicPlayer.pointing = i;
+                }
+                if (PicPlayer.isSelecting)
+                {
+                    switch (e.Button)
+                    {
+                        case MouseButtons.Left:
+                            if (!form.mnuPairs.Checked && PicPlayer.selected != -1)
+                                PicPlayer.checkeds[PicPlayer.selected] = false;
+                            PicPlayer.checkeds[i] = true;
+                            if (!form.mnuPairs.Checked)
+                                PicPlayer.selected = i;
+                            PicPlayer_CheckedChanging(i, true);
+                            break;
+                        case MouseButtons.Right:
+                            PicPlayer.checkeds[i] = false;
+                            PicPlayer_CheckedChanging(i, false);
+                            break;
+                    }
+                    PicPlayer.selecting = i;
+                }
+            }
+        }
+
+        private void PicPlayer_MouseUp(object sender, MouseEventArgs e)
+        {
+            PicPlayer.isSelecting = false;
+            PicPlayer_CheckedChanged();
+            PicPlayer.selecting = -1;
+            PicPlayer.pointing = -1;
+            if (e.Y < 0 && isPlayer0sTurn)
+            {
+                PicPlayer.checkeds[(int)(e.X / PicPlayer.cardWidth)] = true;
+                Play(0);
+            }
+        }
 
         void Play(byte player, Card[] playingCards = null)
         {
@@ -2359,26 +2519,51 @@ gameOver:
 			else if (player == 0 && !isAutomatic)
             {
                 List<Card> discardAll = new List<Card>(), number = new List<Card>();
-                foreach (CheckBox c in chkPlayer)
+                if (mnuPicPlayer.Checked)
                 {
-                    if (c.Checked)
+                    for (int i = 0; i < PicPlayer.count; i++)
                     {
-                        Card card = new Card
+                        if (PicPlayer.checkeds[i])
                         {
-                            color = GetColorId(c.BackColor),
-                            number = GetNumberId(c.Text)
-                        };
-                        switch (c.Text)
+                            Card card = PicPlayer.picPlayer[i];
+                            switch (card.number)
+                            {
+                                default:
+                                    cards.Add(card);
+                                    break;
+                                case UnoNumber.DISCARD_ALL:
+                                    discardAll.Add(card);
+                                    break;
+                                case UnoNumber.NUMBER:
+                                    number.Add(card);
+                                    break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (CheckBox c in chkPlayer)
+                    {
+                        if (c.Checked)
                         {
-                            default:
-                                cards.Add(card);
-                                break;
-                            case UnoNumberName.DISCARD_ALL:
-                                discardAll.Add(card);
-                                break;
-                            case UnoNumberName.NUMBER:
-                                number.Add(card);
-                                break;
+                            Card card = new Card
+                            {
+                                color = GetColorId(c.BackColor),
+                                number = GetNumberId(c.Text)
+                            };
+                            switch (c.Text)
+                            {
+                                default:
+                                    cards.Add(card);
+                                    break;
+                                case UnoNumberName.DISCARD_ALL:
+                                    discardAll.Add(card);
+                                    break;
+                                case UnoNumberName.NUMBER:
+                                    number.Add(card);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -2619,7 +2804,7 @@ gameOver:
                     MovingCard.dbp = 0;
                     Action(0, "你的回合");
                     rdoUno.Checked = false;
-                    if (!form.Visible)
+                    if (!form.Visible && !mnuPicPlayer.Checked)
                         chkPlayer[0].Focus();
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
@@ -2634,7 +2819,7 @@ gameOver:
             {
                 if (form.mnuThinking.Checked && player > 0 && !MovingCard.drew && timThinking.Tag.ToString().Split(char.Parse(","))[0] == "4")
                 {
-                    Action(player, PLAYER_NAMES[player] + "的回合");
+                    Action(player, PLAYER_NAMES[player] + " 的回合");
                     timThinking.Interval = (int)(distance * 100 * Rnd()) + 1;
                     timThinking.Tag = player + "," + dbp;
                     timThinking.Enabled = true;
@@ -2731,7 +2916,8 @@ gameOver:
             lblWatch.Left = width - lblWatch.Width;
             rdoUno.Location = new Point(width - rdoUno.Width, lblCounts[0].Top);
             pnlPlayer.Top = rdoUno.Top + rdoUno.Height;
-            hPlayer.Top = pnlPlayer.Top;
+            picPlayer.Top = rdoUno.Top + rdoUno.Height;
+            hPlayer.Top = picPlayer.Top;
             hPlayer.Width = width;
             swpcw = width / UnoSize.WIDTH;
             if (MovingCard.isPlaying)
@@ -2820,18 +3006,7 @@ gameOver:
                 graphics.Flush();
                 graphics.Dispose();
             }
-            string usage = GetUsage(number);
-            usage = color switch
-            {
-                UnoColor.MAGENTA => "表示任意顏色" + (usage == "" ? "" : "\n　　\t") + usage,
-                UnoColor.BLACK => "任意指定颜色" + (usage == "" ? "" : "\n　　\t") + usage,
-                _ => usage,
-            };
-            toolTip.SetToolTip(card, "" +
-                "颜色\t" + GetColorName(color) + "\n" +
-                "数字\t" + card.Text + "\n" +
-                "类型\t" + GetType(color, number) + "\n" +
-                "功能\t" + usage);
+            SetUsage(card, color, number);
         }
 
         private void SetInterval(int distance)
@@ -2845,6 +3020,23 @@ gameOver:
             }
             timTurn.Interval = interval;
             timUno.Interval = interval;
+        }
+
+        void SetUsage(Control card, byte color, byte number)
+        {
+            string usage = GetUsage(number);
+            usage = color switch
+            {
+                UnoColor.MAGENTA => "表示任意顏色" + (usage == "" ? "" : "\n　　\t") + usage,
+                UnoColor.BLACK => "任意指定颜色" + (usage == "" ? "" : "\n　　\t") + usage,
+                _ => usage,
+            };
+            toolTip.ToolTipTitle = GetNumberName(number);
+            toolTip.SetToolTip(card, "" +
+                "颜色\t" + GetColorName(color) + "\n" +
+                "数字\t" + card.Text + "\n" +
+                "类型\t" + GetType(color, number) + "\n" +
+                "功能\t" + usage);
         }
 
         private void Reveal(byte player)
@@ -2894,57 +3086,67 @@ gameOver:
 
         void Sort()
         {
-            RemoveChkPlayer();
-            AddChkPlayer(PlayersCards(0).Length);
-            int i = 0;
-            if (mnuByColor.Checked)
-                for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                        for (int c = 1; c <= players[0].cards[color, number]; c++)
-                        {
-                            SetCard(chkPlayer[i], color, number);
-                            i++;
-                        }
+            if (mnuPicPlayer.Checked)
+            {
+                PicPlayer.picPlayer.Clear();
+                PicPlayer.count = PlayersCards(0).Length;
+                PicPlayer.checkeds = new bool[PicPlayer.count];
+                PicPlayer_CheckedChanged();
+            }
             else
-                for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+            {
+                RemoveChkPlayer();
+                AddChkPlayer(PlayersCards(0).Length);
+                int i = 0;
+                if (mnuByColor.Checked)
                     for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                        for (int c = 1; c <= players[0].cards[color, number]; c++)
-                        {
-                            SetCard(chkPlayer[i], color, number);
-                            i++;
-                        }
-            hPlayer.Visible = false;
-            int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
-            if (width <= this.width)
-            {
-                pnlPlayer.Left = this.width / 2 - width / 2;
-                pnlPlayer.Width = width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
-            }
-            else if (width > this.width * 8 && mnuScrollBar.Checked)
-            {
-                pnlPlayer.Left = 0;
-                pnlPlayer.Width = width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
-                hPlayer.Maximum = width - this.width;
-                hPlayer.Visible = true;
-                if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                SetCard(chkPlayer[i], color, number);
+                                i++;
+                            }
+                else
+                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                        for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                            for (int c = 1; c <= players[0].cards[color, number]; c++)
+                            {
+                                SetCard(chkPlayer[i], color, number);
+                                i++;
+                            }
+                hPlayer.Visible = false;
+                int top = mnuAppearance.Checked ? UnoSize.HEIGHT / 8 : 0, width = UnoSize.WIDTH * chkPlayer.Count;
+                if (width <= this.width)
                 {
-                    HPlayer_Scroll(hPlayer, new ScrollEventArgs(new ScrollEventType(), hPlayer.Value));
+                    pnlPlayer.Left = this.width / 2 - width / 2;
+                    pnlPlayer.Width = width;
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
                 }
-            }
-            else
-            {
-                pnlPlayer.Left = 0;
-                pnlPlayer.Width = this.width;
-                for (i = 0; i < chkPlayer.ToArray().Length; i++)
-                    chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
-            }
-            if (!form.Visible && chkPlayer.Count > 0)
-            {
-                chkPlayer[0].Focus();
+                else if (width > this.width * 8 && mnuScrollBar.Checked)
+                {
+                    pnlPlayer.Left = 0;
+                    pnlPlayer.Width = width;
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Location = new Point(UnoSize.WIDTH * i, top);
+                    hPlayer.Maximum = width - this.width;
+                    hPlayer.Visible = true;
+                    if (pnlPlayer.Left > 0 || pnlPlayer.Left + pnlPlayer.Width < width)
+                    {
+                        HPlayer_Scroll(hPlayer, new ScrollEventArgs(new ScrollEventType(), hPlayer.Value));
+                    }
+                }
+                else
+                {
+                    pnlPlayer.Left = 0;
+                    pnlPlayer.Width = this.width;
+                    for (i = 0; i < chkPlayer.ToArray().Length; i++)
+                        chkPlayer[i].Location = new Point(this.width / chkPlayer.ToArray().Length * i, top);
+                }
+                if (!form.Visible && chkPlayer.Count > 0)
+                {
+                    chkPlayer[0].Focus();
+                }
             }
         }
 
@@ -3424,8 +3626,11 @@ arrived:
             if (TradingHands.player1 == 0 || TradingHands.player2 == 0 || TradingHands.player2 == 4)
             {
                 lblPlayers[0].BackgroundImage = null;
+                if (mnuPicPlayer.Checked)
+                    picPlayer.Visible = true;
                 Sort();
                 pnlPlayer.BringToFront();
+                picPlayer.BringToFront();
                 lblCounts[0].Text = PlayersCardsCount(0).ToString();
             }
             TradingHands.player1 = 4;
@@ -3460,10 +3665,6 @@ arrived:
 
         private void ToolTip_Popup(object sender, PopupEventArgs e)
         {
-            if (e.AssociatedControl.Size == new Size(UnoSize.WIDTH, UnoSize.HEIGHT))
-                toolTip.ToolTipTitle = GetNumberName(GetNumberId(e.AssociatedControl.Text));
-            else
-                toolTip.ToolTipTitle = "";
         }
 
         void TradeHands()
@@ -3474,7 +3675,12 @@ arrived:
             MovingCard.quickly = false;
             if (TradingHands.player1 == 0 || TradingHands.player2 == 0 || TradingHands.player2 == 4)
             {
-                RemoveChkPlayer();
+                if (mnuPicPlayer.Checked)
+                {
+                    picPlayer.Visible = false;
+                }    
+                else
+                    RemoveChkPlayer();
                 lblPlayers[0].BackgroundImage = Properties.Resources.uno_back;
                 lblPlayers[0].BringToFront();
             }
