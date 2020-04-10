@@ -3641,7 +3641,7 @@ arrived:
                     Reveal(p);
                 lblCounts[p].Text = PlayersCardsCount(p).ToString();
             }
-            PlayersTurn(NextPlayer(MovingCard.player));
+            PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
         }
 
         private void TimTurn_Tick(object sender, EventArgs e)
