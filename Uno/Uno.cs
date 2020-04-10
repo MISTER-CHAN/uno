@@ -129,7 +129,8 @@ namespace Uno
         readonly Cards pile = new Cards();
         readonly Cards[] players = new Cards[4];
         Graphics gpsPlayer;
-        Image imgPlayer, imgUno;
+        Image imgPlayer;
+        readonly Image imgUno;
         private int distance = 20, gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
