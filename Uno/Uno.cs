@@ -2732,9 +2732,13 @@ gameOver:
         }
 
 		void PlayersTurn(byte player, bool turn = true, int dbp = 0, bool delay = true) {
-            if (int.Parse(lblCounts[player].Text) <= dbp * 7)
+            int count = int.Parse(lblCounts[player].Text);
+            if (count <= 7 * Math.Pow(2, dbp - 1))
             {
-                dbp = (int.Parse(lblCounts[player].Text) - 1) / 7;
+                if (count <= 1)
+                    dbp = 0;
+                else
+                    dbp = (int)Math.Log((count - 1) / 7, 2) + 1;
             }
             if (turn)
             {
