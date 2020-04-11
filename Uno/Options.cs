@@ -231,7 +231,7 @@ namespace Uno {
             mnuWater.Checked = true;
             mnuAttack.Checked = true;
             mnuWildHitfire.Checked = true;
-            mnuTradeHands.Checked = false;
+            mnuTradeHands.Checked = true;
             mnuDos.Checked = true;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
@@ -242,7 +242,7 @@ namespace Uno {
             mnuDoubleDraw.Checked = true;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = true;
-            mnuSevenZero.Checked = false;
+            mnuSevenZero.Checked = true;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;
