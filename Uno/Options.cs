@@ -138,6 +138,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuTradeHands.Checked = false;
             mnuDos.Checked = false;
+            mnuFlip.Checked = false;
+            mnuCyan.Checked = false;
+            mnuMagenta.Checked = false;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = true;
@@ -236,6 +239,9 @@ namespace Uno {
             mnuWildHitfire.Checked = true;
             mnuTradeHands.Checked = true;
             mnuDos.Checked = true;
+            mnuFlip.Checked = true;
+            mnuCyan.Checked = true;
+            mnuMagenta.Checked = false;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
@@ -272,6 +278,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuTradeHands.Checked = false;
             mnuDos.Checked = true;
+            mnuCyan.Checked = true;
+            mnuMagenta.Checked = false;
+            mnuFlip.Checked = true;
             mnuPairs.Checked = true;
             mnuStacking.Checked = true;
             mnuPlayOrDrawAll.Checked = false;
@@ -419,6 +428,9 @@ namespace Uno {
             mnuWildHitfire.Checked = false;
             mnuTradeHands.Checked = false;
             mnuDos.Checked = false;
+            mnuFlip.Checked = false;
+            mnuCyan.Checked = false;
+            mnuMagenta.Checked = false;
             mnuPairs.Checked = false;
             mnuStacking.Checked = false;
             mnuPlayOrDrawAll.Checked = false;

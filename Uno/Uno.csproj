@@ -169,8 +169,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
+    <None Include="Resources\uno.png" />
     <None Include="Resources\logo.ico" />
-    <Content Include="Resources\uno.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
