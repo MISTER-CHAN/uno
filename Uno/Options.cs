@@ -230,7 +230,7 @@ namespace Uno {
         private void MnuDurable_Click(object sender, EventArgs e)
         {
             txtDealt.Text = "56";
-            txtDecks.Text = "5";
+            txtDecks.Text = "10";
             mnuBlank.Checked = true;
             mnuMagentaBlank.Checked = true;
             mnuBlackBlank.Checked = true;
@@ -248,7 +248,7 @@ namespace Uno {
             mnuDrawToMatch.Checked = true;
             mnuDrawAllAndPlay.Checked = false;
             mnuDrawAndPlay.Checked = true;
-            mnuDoubleDraw.Checked = true;
+            mnuDoubleDraw.Checked = false;
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = true;
             mnuSevenZero.Checked = true;
@@ -291,6 +291,38 @@ namespace Uno {
             mnuDrawBeforePlaying.Checked = true;
             mnuDrawTwoBeforePlaying.Checked = false;
             mnuSevenZero.Checked = false;
+            mnuSkipPlayers.Checked = false;
+            mnuSkipTimes.Checked = true;
+            mnuOneWinner.Checked = true;
+            mnuOneLoser.Checked = false;
+            mnuUno.Checked = false;
+        }
+
+        private void MnuHardcore_Click(object sender, EventArgs e)
+        {
+            txtDealt.Text = "56";
+            txtDecks.Text = "20";
+            mnuBlank.Checked = true;
+            mnuMagentaBlank.Checked = true;
+            mnuBlackBlank.Checked = true;
+            mnuWater.Checked = true;
+            mnuAttack.Checked = true;
+            mnuWildHitfire.Checked = true;
+            mnuTradeHands.Checked = true;
+            mnuDos.Checked = true;
+            mnuFlip.Checked = true;
+            mnuCyan.Checked = true;
+            mnuMagenta.Checked = false;
+            mnuPairs.Checked = true;
+            mnuStacking.Checked = true;
+            mnuPlayOrDrawAll.Checked = false;
+            mnuDrawToMatch.Checked = true;
+            mnuDrawAllAndPlay.Checked = false;
+            mnuDrawAndPlay.Checked = true;
+            mnuDoubleDraw.Checked = true;
+            mnuDrawBeforePlaying.Checked = true;
+            mnuDrawTwoBeforePlaying.Checked = true;
+            mnuSevenZero.Checked = true;
             mnuSkipPlayers.Checked = false;
             mnuSkipTimes.Checked = true;
             mnuOneWinner.Checked = true;

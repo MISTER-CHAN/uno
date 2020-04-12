@@ -296,16 +296,16 @@ namespace Uno
                     }
                 }
             }
-            else
+            else if (backNumber < UnoNumber.WILD)
                 quantityNumber = GetQuantityByNumber(player, backNumber);
             if (!form.mnuPlayOrDrawAll.Checked
                 && lblCards[1].Text == UnoNumberName.DRAW_1 && int.Parse(lblDraw.Text) >= 1)
             {
                 if (quantityNumber > 0)
                     bestCard.number = UnoNumber.DRAW_1;
-                else if (GetQuantityByNumber(player, UnoNumber.DRAW_2) > 0)
+                else if (GetNumberQuantity(player, UnoNumber.DRAW_2) > 0)
                     bestCard.number = UnoNumber.DRAW_2;
-                else if (GetQuantityByNumber(player, UnoNumber.DRAW_5) > 0)
+                else if (GetNumberQuantity(player, UnoNumber.DRAW_5) > 0)
                     bestCard.number = UnoNumber.DRAW_5;
                 else
                 {
@@ -318,7 +318,7 @@ namespace Uno
             {
                 if (quantityNumber > 0)
                     bestCard.number = UnoNumber.DRAW_2;
-                else if (GetQuantityByNumber(player, UnoNumber.DRAW_5) > 0)
+                else if (GetNumberQuantity(player, UnoNumber.DRAW_5) > 0)
                     bestCard.number = UnoNumber.DRAW_5;
                 else
                 {
@@ -358,7 +358,7 @@ namespace Uno
             else if (quantityColor == 0 && quantityNumber == 0)
             {
 
-                if (backNumber <= 10 && GetQuantityByNumber(player, UnoNumber.NUMBER) > 0)
+                if (backNumber <= 10 && GetNumberQuantity(player, UnoNumber.NUMBER) > 0)
                 {
                     bestCard.number = UnoNumber.NUMBER;
                 }
@@ -378,7 +378,7 @@ namespace Uno
             }
             else if (quantityColor >= quantityNumber)
             {
-                if (!form.mnuPairs.Checked || int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
+                if (int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
                 {
                     int mq = 0;
                     for (byte b = 0; b < UnoNumber.WILD; b++)
@@ -386,7 +386,39 @@ namespace Uno
                         byte n = playlist[b];
                         if (players[player].cards[backColor, n] > 0)
                         {
-                            int q = GetColorQuantityByNumber(player, n);
+                            int q = GetNumberQuantity(player, n);
+                            if (q > mq)
+                            {
+                                mq = q;
+                                bestCard.color = backColor;
+                                bestCard.number = n;
+                            }
+                        }
+                    }
+                    for (byte b = UnoNumber.WILD; b < UnoNumber.MAX_VALUE; b++)
+                    {
+                        byte n = playlist[b];
+                        if (players[player].cards[backColor, n] > 0)
+                        {
+                            int q = GetNumberQuantity(player, n);
+                            if (q > mq)
+                            {
+                                mq = q;
+                                bestCard.color = UnoColor.BLACK;
+                                bestCard.number = n;
+                            }
+                        }
+                    }
+                }
+                else if (!form.mnuPairs.Checked)
+                {
+                    int mq = 0;
+                    for (byte b = 0; b < UnoNumber.WILD; b++)
+                    {
+                        byte n = playlist[b];
+                        if (players[player].cards[backColor, n] > 0)
+                        {
+                            int q = GetNumberQuantity(player, n);
                             if (q > mq)
                             {
                                 mq = q;
@@ -865,7 +897,7 @@ deny:
                     RefillPile();
                     if (lblPile.Text == "0")
                     {
-                        DialogResult result = MessageBox.Show("废牌堆无牌!", "牌已用尽", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
+                        DialogResult result = MessageBox.Show("废牌堆无牌!", "牌已用尽", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error, MessageBoxDefaultButton.Button3);
                         switch (result)
                         {
                             default:
@@ -1701,11 +1733,12 @@ deny:
         }
 
         int GetQuantityByNumber(byte player, byte number) {
-            int q = 0, quantity = 0;
+            int q, quantity = 0;
             for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
             {
                 if (players[player].cards[c, number] > 0)
                 {
+                    q = 0;
                     for (byte n = 0; n <= UnoNumber.MAX_VALUE; n++)
                     {
                         q += players[player].cards[c, n];
