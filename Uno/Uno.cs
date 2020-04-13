@@ -310,7 +310,12 @@ namespace Uno
                 if (!gbp)
                     quantityColor = GetQuantityByColor(player, backColor);
                 else
+                {
                     quantityColor = GetColorQuantity(player, backColor);
+                    int q = GetColorQuantity(player, UnoColor.BLACK);
+                    if (q > quantityColor)
+                        quantityColor = q;
+                }
                 if (backNumber < UnoNumber.WILD)
                 {
                     if (!gbp)
@@ -1574,21 +1579,32 @@ deny:
 
         int GetColorQuantity(byte player, byte color)
         {
+            // eg: color = R
+            // if [R 0][R 1][Y 1][Y 2][Y 2][Y 2]
+            // then return 2
             int mq = 0;
             for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
             {
                 int q = players[player].cards[color, n];
-                if (q > mq)
-                    mq = q;
+                if (q > 0)
+                {
+                    for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                        q += players[player].cards[c, n];
+                    if (q > mq)
+                        mq = q;
+                }
             }
             return mq;
         }
 
         int GetColorQuantityByNumber(byte player, byte number)
         {
+            // eg: number = 0
+            // if [R 0][R 0][R 0][Y 0][R 1]
+            // then return 2
             int i = 0;
-            for (byte b = 0; b < UnoColor.MAX_VALUE; b++)
-                i += Math.Sign(players[player].cards[b, number]);
+            for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                i += Math.Sign(players[player].cards[c, number]);
             return i;
         }
 
@@ -1681,6 +1697,9 @@ deny:
 
         int GetNumberQuantity(byte player, byte number)
         {
+            // eg: number = 0
+            // if [R 0][R 0][Y 0][R 1]
+            // then return 3
             int i = 0;
             for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
                 i += players[player].cards[c, number];
@@ -1768,14 +1787,22 @@ deny:
             return points;
         }
 
-        int GetQuantityByColor(byte player, byte color) {
+        int GetQuantityByColor(byte player, byte color)
+        {
+            // eg: color = R
+            // if [R 0][R 1][R 2][Y 0]
+            // then return 3
             int quantity = 0;
             for (byte q = 0; q <= UnoNumber.MAX_VALUE; q++)
                 quantity += players[player].cards[color, q];
             return quantity;
         }
 
-        int GetQuantityByNumber(byte player, byte number) {
+        int GetQuantityByNumber(byte player, byte number)
+        {
+            // eg: number = 0
+            // if [R 0][R 1][Y 0][G 1][G 2][G 3]
+            // then return 2
             int q, quantity = 0;
             for (byte c = 0; c <= UnoColor.MAX_VALUE; c++)
             {
@@ -2675,7 +2702,7 @@ gameOver:
         private void PicPlayer_MouseMove(object sender, MouseEventArgs e)
         {
             int i = (int)(e.X / PicPlayer.cardWidth);
-            if (i >= PicPlayer.picPlayer.Count)
+            if (i >= PicPlayer.picPlayer.Count || i < 0)
                 return;
             pointing = i;
             if (i != PicPlayer.selecting)
