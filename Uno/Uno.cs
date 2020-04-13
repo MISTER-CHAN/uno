@@ -324,9 +324,14 @@ namespace Uno
             {
                 if (quantityNumber > 0)
                     bestCard.number = UnoNumber.DRAW_1;
-                else if (GetNumberQuantity(player, UnoNumber.DRAW_2) > 0)
+                else if (players[player].cards[UnoColor.BLACK, UnoNumber.DRAW_2] > 0)
+                {
+                    bestCard.color = UnoColor.BLACK;
                     bestCard.number = UnoNumber.DRAW_2;
-                else if (GetNumberQuantity(player, UnoNumber.DRAW_5) > 0)
+                }
+                else if (players[player].cards[backColor, UnoNumber.DRAW_2] > 0)
+                    bestCard.number = UnoNumber.DRAW_2;
+                else if (players[player].cards[backColor, UnoNumber.DRAW_5] > 0)
                     bestCard.number = UnoNumber.DRAW_5;
                 else
                 {
@@ -337,9 +342,14 @@ namespace Uno
             else if (!form.mnuPlayOrDrawAll.Checked
                 && lblCards[1].Text == UnoNumberName.DRAW_2 && int.Parse(lblDraw.Text) >= 2)
             {
-                if (quantityNumber > 0)
+                if (players[player].cards[UnoColor.BLACK, UnoNumber.DRAW_2] > 0)
+                {
+                    bestCard.color = UnoColor.BLACK;
                     bestCard.number = UnoNumber.DRAW_2;
-                else if (GetNumberQuantity(player, UnoNumber.DRAW_5) > 0)
+                }
+                else if (quantityNumber > 0)
+                    bestCard.number = UnoNumber.DRAW_2;
+                else if (players[player].cards[backColor, UnoNumber.DRAW_5] > 0)
                     bestCard.number = UnoNumber.DRAW_5;
                 else
                 {
