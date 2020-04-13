@@ -3064,8 +3064,16 @@ gameOver:
                     MovingCard.dbp = 0;
                     Action(0, "你的回合");
                     rdoUno.Checked = false;
-                    if (!form.Visible && !mnuPicPlayer.Checked)
-                        chkPlayer[0].Focus();
+                    if (mnuPicPlayer.Checked)
+                    {
+                        picPlayer.BringToFront();
+                    }
+                    else
+                    {
+                        pnlPlayer.BringToFront();
+                        if (!form.Visible)
+                            chkPlayer[0].Focus();
+                    }
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
                     if (form.mnuAutoSave.Checked)
