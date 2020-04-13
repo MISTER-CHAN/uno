@@ -139,7 +139,7 @@ namespace Uno
         Graphics gpsPlayer;
         Image imgPlayer;
         readonly Image imgUno;
-        private int distance = 20, gametime = 0, height = 0, skip = 0, swpcw = 0, width = 0;
+        private int distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
@@ -416,17 +416,7 @@ namespace Uno
                             }
                         }
                     }
-                    if (players[player].cards[UnoColor.BLACK, UnoNumber.BLANK] > 0)
-                    {
-                        int q = GetNumberQuantity(player, UnoNumber.BLANK);
-                        if (q > mq)
-                        {
-                            mq = q;
-                            bestCard.color = UnoColor.BLACK;
-                            bestCard.number = UnoNumber.BLANK;
-                        }
-                    }
-                    for (byte b = UnoNumber.WILD; b < UnoNumber.MAX_VALUE; b++)
+                    for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
                     {
                         byte n = playlist[b];
                         if (players[player].cards[UnoColor.BLACK, n] > 0)
@@ -2452,17 +2442,30 @@ gameOver:
 
         private void MnuCheat_Click(object sender, EventArgs e)
         {
-            Control control = mnuCheating.SourceControl;
             Card card = GetBestCard(0);
             if (card != null)
             {
                 hasCheat = true;
-                byte color = GetColorId(control.BackColor), number = GetNumberId(control.Text);
+                byte color, number;
+                Control control = mnuCheating.SourceControl;
+                if (mnuPicPlayer.Checked)
+                {
+                    color = PicPlayer.picPlayer[pointing].color;
+                    number = PicPlayer.picPlayer[pointing].number;
+                }
+                else
+                {
+                    color = GetColorId(control.BackColor);
+                    number = GetNumberId(control.Text);
+                }
                 pile.cards[card.color, card.number]--;
                 players[0].cards[color, number]--;
                 pile.cards[color, number]++;
                 players[0].cards[card.color, card.number]++;
-                SetCard(control, card.color, card.number);
+                if (mnuPicPlayer.Checked)
+                    PicPlayer_CheckedChanged();
+                else
+                    SetCard(control, card.color, card.number);
             }
         }
 
@@ -2664,6 +2667,7 @@ gameOver:
             int i = (int)(e.X / PicPlayer.cardWidth);
             if (i >= PicPlayer.picPlayer.Count)
                 return;
+            pointing = i;
             if (i != PicPlayer.selecting)
             {
                 if (i != PicPlayer.pointing)
