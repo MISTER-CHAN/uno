@@ -1706,10 +1706,6 @@ deny:
             return i;
         }
 
-        bool IsNumeric(string s) {
-			return new Regex(@"^[+-]?\d+[.\d]*$").IsMatch(s);
-		}
-
         int GetOnplayersCards(byte color, byte number)
         {
             int cards = 0;
@@ -1867,6 +1863,11 @@ deny:
         private void HPlayer_Scroll(object sender, ScrollEventArgs e)
         {
             pnlPlayer.Left = -((HScrollBar)sender).Value;
+        }
+
+        bool IsNumeric(string s)
+        {
+            return new Regex(@"^[+-]?\d+[.\d]*$").IsMatch(s);
         }
 
         private void ItmAbout_Click(object sender, EventArgs e)
@@ -3304,7 +3305,8 @@ gameOver:
             toolTip.ToolTipTitle = GetNumberName(number);
             toolTip.SetToolTip(card, "" +
                 "颜色\t" + GetColorName(color) + "\n" +
-                "数字\t" + card.Text + "\n" +
+                "数字\t" + GetNumber(number) + "\n" +
+                "點數\t" + GetPoints(number) + "\n" +
                 "类型\t" + GetType(color, number) + "\n" +
                 "功能\t" + usage);
         }
