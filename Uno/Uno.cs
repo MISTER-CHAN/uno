@@ -276,6 +276,7 @@ namespace Uno
                 if (!skipFirstCheating && form.mnuPairs.Checked)
                     CheatPairs(player);
             }
+            bool gbp = int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0;
             byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
             Card bestCard = new Card();
             List<Card> cards = new List<Card>();
@@ -283,12 +284,20 @@ namespace Uno
             {
                 return cards.ToArray();
             }
-            int quantityColor = GetQuantityByColor(player, backColor), quantityNumber = 0;
+            int quantityColor, quantityNumber = 0;
             if (backNumber == UnoNumber.NUMBER)
             {
+                if (!gbp)
+                    quantityColor = GetQuantityByColor(player, backColor);
+                else
+                    quantityColor = GetColorQuantity(player, backColor);
                 for (byte b = 10; b >= 0 && b < byte.MaxValue; b--)
                 {
-                    int i = GetQuantityByNumber(player, b);
+                    int i;
+                    if (!gbp)
+                        i = GetQuantityByNumber(player, b);
+                    else
+                        i = GetNumberQuantity(player, b);
                     if (i > quantityNumber)
                     {
                         quantityNumber = i;
@@ -296,8 +305,20 @@ namespace Uno
                     }
                 }
             }
-            else if (backNumber < UnoNumber.WILD)
-                quantityNumber = GetQuantityByNumber(player, backNumber);
+            else
+            {
+                if (!gbp)
+                    quantityColor = GetQuantityByColor(player, backColor);
+                else
+                    quantityColor = GetColorQuantity(player, backColor);
+                if (backNumber < UnoNumber.WILD)
+                {
+                    if (!gbp)
+                        quantityNumber = GetQuantityByNumber(player, backNumber);
+                    else
+                        quantityNumber = GetNumberQuantity(player, backNumber);
+                }
+            }
             if (!form.mnuPlayOrDrawAll.Checked
                 && lblCards[1].Text == UnoNumberName.DRAW_1 && int.Parse(lblDraw.Text) >= 1)
             {
@@ -378,7 +399,7 @@ namespace Uno
             }
             else if (quantityColor >= quantityNumber)
             {
-                if (int.Parse(lblCounts[player].Text) > 7 && GetDbp() > 0)
+                if (gbp)
                 {
                     int mq = 0;
                     for (byte b = 0; b < UnoNumber.WILD; b++)
@@ -395,10 +416,20 @@ namespace Uno
                             }
                         }
                     }
+                    if (players[player].cards[UnoColor.BLACK, UnoNumber.BLANK] > 0)
+                    {
+                        int q = GetNumberQuantity(player, UnoNumber.BLANK);
+                        if (q > mq)
+                        {
+                            mq = q;
+                            bestCard.color = UnoColor.BLACK;
+                            bestCard.number = UnoNumber.BLANK;
+                        }
+                    }
                     for (byte b = UnoNumber.WILD; b < UnoNumber.MAX_VALUE; b++)
                     {
                         byte n = playlist[b];
-                        if (players[player].cards[backColor, n] > 0)
+                        if (players[player].cards[UnoColor.BLACK, n] > 0)
                         {
                             int q = GetNumberQuantity(player, n);
                             if (q > mq)
@@ -1541,10 +1572,22 @@ deny:
             };
         }
 
+        int GetColorQuantity(byte player, byte color)
+        {
+            int mq = 0;
+            for (byte n = 0; n < UnoNumber.MAX_VALUE; n++)
+            {
+                int q = players[player].cards[color, n];
+                if (q > mq)
+                    mq = q;
+            }
+            return mq;
+        }
+
         int GetColorQuantityByNumber(byte player, byte number)
         {
             int i = 0;
-            for (byte b = 0; b <= UnoColor.MAX_VALUE; b++)
+            for (byte b = 0; b < UnoColor.MAX_VALUE; b++)
                 i += Math.Sign(players[player].cards[b, number]);
             return i;
         }
