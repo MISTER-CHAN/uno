@@ -1588,6 +1588,7 @@ deny:
                 int q = players[player].cards[color, n];
                 if (q > 0)
                 {
+                    q = 0;
                     for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
                         q += players[player].cards[c, n];
                     if (q > mq)
