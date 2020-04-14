@@ -2093,7 +2093,12 @@ gameOver:
             lblPile.Text = GetPile().Length - 1 + "";
             BackColor = GetColor(byte.Parse(keys[2]));
             foreach (Label card in lblCards)
-                SetCard(card, byte.Parse(keys[2]), byte.Parse(keys[3]));
+            {
+                byte c = byte.Parse(keys[2]), n = byte.Parse(keys[3]);
+                if (n >= UnoNumber.WILD)
+                    c = UnoColor.BLACK;
+                SetCard(card, c, n);
+            }
             skip = int.Parse(keys[4]);
             string[] sks = keys[5].Split(char.Parse("P"));
             for (byte sk = 0; sk <= 3; sk++)
@@ -2626,6 +2631,9 @@ gameOver:
 
         void PicPlayer_CheckedChanged()
         {
+            PicPlayer.picPlayer.Clear();
+            PicPlayer.count = PlayersCards(0).Length;
+            PicPlayer.checkeds = new bool[PicPlayer.count];
             if (PicPlayer.count <= 0)
             {
                 picPlayer.Visible = false;
@@ -2703,7 +2711,7 @@ gameOver:
         private void PicPlayer_MouseMove(object sender, MouseEventArgs e)
         {
             int i = (int)(e.X / PicPlayer.cardWidth);
-            if (i >= PicPlayer.picPlayer.Count || i < 0)
+            if (i >= PicPlayer.count || i < 0 || e.Y < 0 || e.Y > UnoSize.HEIGHT)
                 return;
             pointing = i;
             if (i != PicPlayer.selecting)
@@ -2743,7 +2751,7 @@ gameOver:
             PicPlayer.pointing = -1;
             if (e.Y < 0 && isPlayer0sTurn)
             {
-                PicPlayer.checkeds[(int)(e.X / PicPlayer.cardWidth)] = true;
+                PicPlayer.checkeds[pointing] = true;
                 Play(0);
             }
         }
@@ -3368,9 +3376,6 @@ gameOver:
         {
             if (mnuPicPlayer.Checked)
             {
-                PicPlayer.picPlayer.Clear();
-                PicPlayer.count = PlayersCards(0).Length;
-                PicPlayer.checkeds = new bool[PicPlayer.count];
                 PicPlayer_CheckedChanged();
             }
             else
