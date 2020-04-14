@@ -2632,8 +2632,6 @@ gameOver:
         void PicPlayer_CheckedChanged()
         {
             PicPlayer.picPlayer.Clear();
-            PicPlayer.count = PlayersCards(0).Length;
-            PicPlayer.checkeds = new bool[PicPlayer.count];
             if (PicPlayer.count <= 0)
             {
                 picPlayer.Visible = false;
@@ -3376,6 +3374,8 @@ gameOver:
         {
             if (mnuPicPlayer.Checked)
             {
+                PicPlayer.count = PlayersCards(0).Length;
+                PicPlayer.checkeds = new bool[PicPlayer.count];
                 PicPlayer_CheckedChanged();
             }
             else
