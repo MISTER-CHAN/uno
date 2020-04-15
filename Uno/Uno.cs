@@ -323,6 +323,11 @@ namespace Uno
                     else
                         quantityNumber = GetNumberQuantity(player, backNumber);
                 }
+                if (gbp && quantityColor == quantityNumber && quantityColor > 0)
+                {
+                    quantityColor = GetQuantityByColor(player, backColor);
+                    quantityNumber = GetQuantityByNumber(player, backNumber);
+                }
             }
             if (!form.mnuPlayOrDrawAll.Checked
                 && lblCards[1].Text == UnoNumberName.DRAW_1 && int.Parse(lblDraw.Text) >= 1)
