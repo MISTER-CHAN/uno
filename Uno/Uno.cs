@@ -2637,6 +2637,8 @@ gameOver:
 
         void PicPlayer_CheckedChanged()
         {
+            if (width <= 0)
+                return;
             PicPlayer.picPlayer.Clear();
             if (PicPlayer.count <= 0)
             {
@@ -4136,6 +4138,7 @@ arrived:
                 mnuAuto.Visible = false;
                 itmHelp.Visible = false;
                 isAutomatic = true;
+                mnuPlayPause.Visible = true;
                 mnuStop.Visible = true;
                 mnuForward.Visible = true;
             }
