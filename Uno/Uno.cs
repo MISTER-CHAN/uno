@@ -953,6 +953,7 @@ deny:
                                 lblDraw.Text = "0";
                                 MovingCard.dbp = 0;
                                 MovingCard.downpour = 0;
+                                drawColor = false;
                                 break;
                         }
                     }
@@ -3597,7 +3598,12 @@ draw:
                             if (rndCard.color == GetColorId(BackColor))
                                 drawColor = false;
                             else
+                            {
+                                CheckPile();
+                                if (!drawColor)
+                                    goto draw;
                                 timPileToPlayers.Enabled = true;
+                            }
                         }
                     }
                     if (int.Parse(lblDraw.Text) <= 0 && !drawColor && MovingCard.dbp <= 0 && MovingCard.downpour <= 0)
