@@ -1910,14 +1910,10 @@ deny:
         {
             Label l = (Label)sender;
             int i = int.Parse(l.Tag + "");
-            try
+            l.Left = lblPlayers[i].Left + lblPlayers[i].Width / 2 - l.Width / 2;
+            if (i == 0 || i == 2)
             {
-                
-                l.Left = lblPlayers[i].Left + lblPlayers[i].Width / 2 - l.Width / 2;
-            }
-            catch
-            {
-
+                lblBets[i].Left = l.Left + l.Width;
             }
         }
 
@@ -4253,15 +4249,9 @@ arrived:
         {
             Label l = (Label)sender;
             int i = int.Parse(l.Tag + "");
-            switch (i)
+            if (i == 3)
             {
-                case 0:
-                case 2:
-                    l.Left = lblCounts[i].Left + lblCounts[i].Width;
-                    break;
-                case 3:
-                    l.Left = width - l.Width;
-                    break;
+                l.Left = width - l.Width;
             }
         }
 
