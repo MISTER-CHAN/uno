@@ -133,6 +133,7 @@ namespace Uno
         }
         
         private bool canPlay = false, drawColor = false, hasCheat = false, isAutomatic = false, isFair = false, isPlayer0sTurn = false, isSelectingCards = false, reverse = false;
+        private bool[] hasBet = new bool[4];
         byte gameOver = 4;
         readonly Cards pile = new Cards();
         readonly Cards[] players = new Cards[4];
@@ -141,7 +142,7 @@ namespace Uno
         readonly Image imgUno;
         private int distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
-        readonly Label[] lblCounts = new Label[4];
+        readonly Label[] lblBets = new Label[4], lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
         readonly List<CheckBox> chkPlayer = new List<CheckBox>();
         private readonly List<Label> lblCards = new List<Label>();
@@ -1233,7 +1234,16 @@ deny:
                 PlayersTurn(player, false);
                 PlayersTurn(NextPlayer(player), true, GetDbp());
 			}
-		}
+            if (player == 0 && !isAutomatic && !hasBet[0] && !form.mnuCheat.Checked && !form.isPlayingRecord)
+            {
+                hasBet[0] = true;
+                pnlBet.Visible = false;
+                Action(0, "-$" + trkBet.Value);
+                mnuMoney.Text = "$" + (trkBet.Maximum - trkBet.Value);
+                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", trkBet.Maximum - trkBet.Value + "");
+                lblBets[0].Text = "$" + trkBet.Value;
+            }
+        }
 
         private void GameOver()
         {
@@ -1898,12 +1908,12 @@ deny:
 
         private void LblCounts_SizeChanged(object sender, EventArgs e)
         {
+            Label l = (Label)sender;
+            int i = int.Parse(l.Tag + "");
             try
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    lblCounts[i].Left = lblPlayers[i].Left + lblPlayers[i].Width / 2 - lblCounts[i].Width / 2;
-                }
+                
+                l.Left = lblPlayers[i].Left + lblPlayers[i].Width / 2 - l.Width / 2;
             }
             catch
             {
@@ -1924,6 +1934,43 @@ deny:
                 {
                     lblPlayers[index].Visible = false;
                     lblCounts[index].Visible = false;
+                    if (!form.mnuCheat.Checked)
+                    {
+                        byte ons = 0;
+                        int sum = 0;
+                        int[] payments = new int[4], points = new int[4];
+                        for (byte p = 0; p <= 3; p++)
+                        {
+                            if (lblPlayers[p].Visible)
+                            {
+                                ons++;
+                                points[p] = GetPointsByPlayer(p);
+                                sum += points[p];
+                            }
+                        }
+                        int average = sum / ons, win = 0;
+                        string msg = "";
+                        for (byte p = 0; p <= 3; p++)
+                        {
+                            if (lblPlayers[p].Visible)
+                            {
+                                payments[p] = (int)((float)points[p] / average * int.Parse(lblBets[index].Text.Substring(1)));
+                                win += payments[p];
+                                msg += $"{(p == 0 ? "你" : PLAYER_NAMES[p])}: -${payments[p]}\n";
+                            }
+                        }
+                        if (index == 0)
+                        {
+                            mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) + win) + "";
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
+                        }
+                        else if (payments[0] > 0)
+                        {
+                            mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) - payments[0]) + "";
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
+                        }
+                        Action(index, $"{msg}--------\n{(index == 0 ? "你" : PLAYER_NAMES[index])}: +${win}");
+                    }
                 }
                 byte player;
                 if (form.mnuOneWinner.Checked)
@@ -2112,7 +2159,10 @@ gameOver:
                 skips[sk] = int.Parse(sks[sk]);
             reverse = bool.Parse(keys[6]);
             lblDraw.Text = keys[7];
-            gametime = int.Parse(keys[8]);
+            string[] bs = keys[8].Split(char.Parse("P"));
+            for (byte p = 0; p <= 3; p++)
+                lblBets[p].Text = "$" + bs[p];
+            gametime = int.Parse(keys[9]);
         }
 
         private void LoadRecord()
@@ -2975,6 +3025,24 @@ gameOver:
             {
                 Draw(player);
             }
+            if (!hasBet[player] && !form.mnuCheat.Checked && !form.isPlayingRecord)
+            {
+                hasBet[player] = true;
+                if (player == 0)
+                {
+                    pnlBet.Visible = false;
+                    Action(0, "-$" + trkBet.Value);
+                    mnuMoney.Text = "$" + (trkBet.Maximum - trkBet.Value);
+                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", trkBet.Maximum - trkBet.Value + "");
+                    lblBets[0].Text = "$" + trkBet.Value;
+                }
+                else
+                {
+                    int i = (int)(trkBet.Maximum * Rnd());
+                    lblBets[player].Text = "$" + i;
+                    Action(player, "-$" + i);
+                }
+            }
         }
 
 		Card[] PlayersCards(byte player) {
@@ -3089,6 +3157,8 @@ gameOver:
                         if (!form.Visible)
                             chkPlayer[0].Focus();
                     }
+                    if (!hasBet[0] && !form.mnuCheat.Checked && !form.isPlayingRecord)
+                        pnlBet.Visible = true;
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
                     if (form.mnuAutoSave.Checked)
@@ -3207,7 +3277,14 @@ gameOver:
 			for (byte i = 0; i < 4; i++)
                 lblCounts[i].Location = new Point(lblPlayers[i].Left + lblPlayers[i].Width / 2 - lblCounts[i].Width / 2, lblPlayers[i].Top - lblCounts[i].Height);
             lblCounts[2].Top = lblPlayers[2].Top + UnoSize.HEIGHT;
+            lblBets[0].Location = new Point(lblCounts[0].Left + lblCounts[0].Width, lblCounts[0].Top + lblCounts[0].Height - lblBets[0].Height);
+            lblBets[1].Location = new Point(0, lblPlayers[1].Top + lblPlayers[1].Height);
+            lblBets[2].Location = new Point(lblCounts[2].Left + lblCounts[2].Width, lblCounts[2].Top);
+            lblBets[3].Location = new Point(width - lblBets[3].Width, lblPlayers[3].Top + lblPlayers[3].Height);
             lblWatch.Left = width - lblWatch.Width;
+            trkBet.Width = width - rdoUno.Width - lblCounts[0].Left - lblCounts[0].Width - lblBet.Width;
+            pnlBet.Width = lblBet.Width + trkBet.Width;
+            pnlBet.Location = new Point(lblBets[0].Left, lblBets[0].Top);
             rdoUno.Location = new Point(width - rdoUno.Width, lblCounts[0].Top);
             pnlPlayer.Top = rdoUno.Top + rdoUno.Height;
             picPlayer.Top = rdoUno.Top + rdoUno.Height;
@@ -3279,7 +3356,10 @@ gameOver:
             s += "K"; // 5
             s += reverse + "K"; // 6
             s += lblDraw.Text + "K"; // 7
-            s += gametime + "K"; // 8
+            for (byte p = 0; p <= 3; p++)
+                s += lblBets[p].Text.Substring(1) + "P";
+            s += "K"; // 8
+            s += gametime + "K"; // 9
             s += form.SaveRules();
             return s;
         }
@@ -3385,6 +3465,7 @@ gameOver:
             {
                 PicPlayer.count = PlayersCards(0).Length;
                 PicPlayer.checkeds = new bool[PicPlayer.count];
+                PicPlayer.selected = -1;
                 PicPlayer_CheckedChanged();
             }
             else
@@ -4011,6 +4092,11 @@ arrived:
             timTradeHands.Enabled = true;
         }
 
+        private void TrkBet_Scroll(object sender, EventArgs e)
+        {
+            Action(0, "$" + trkBet.Value);
+        }
+
         public Uno(Options form)
         {
             InitializeComponent();
@@ -4042,12 +4128,24 @@ arrived:
                 lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
                 lblCounts[i].Tag = i;
                 lblCounts[i].Text = "0";
-                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
                 lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
                 lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
+                lblBets[i] = new Label();
+                Controls.Add(lblBets[i]);
+                lblBets[i].AutoSize = true;
+                lblBets[i].Font = new Font(Font.FontFamily, Font.Size / 2);
+                lblBets[i].Tag = i;
+                lblBets[i].Text = "$0";
+                lblBets[i].BackColorChanged += Control_BackColorChanged;
+                lblBets[i].SizeChanged += LblBets_SizeChanged;
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
+            mnuMoney.Text = "$" + form.money;
+            if (form.money < 0)
+                form.money = 0;
+            trkBet.Maximum = form.money;
             bool[] ons;
             switch (form.ons)
             {
@@ -4147,6 +4245,23 @@ arrived:
                 mnuPlayPause.Visible = true;
                 mnuStop.Visible = true;
                 mnuForward.Visible = true;
+            }
+
+        }
+
+        private void LblBets_SizeChanged(object sender, EventArgs e)
+        {
+            Label l = (Label)sender;
+            int i = int.Parse(l.Tag + "");
+            switch (i)
+            {
+                case 0:
+                case 2:
+                    l.Left = lblCounts[i].Left + lblCounts[i].Width;
+                    break;
+                case 3:
+                    l.Left = width - l.Width;
+                    break;
             }
         }
 

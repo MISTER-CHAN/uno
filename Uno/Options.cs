@@ -15,7 +15,7 @@ namespace Uno {
         public bool on0 = true;
         public byte ons = 3;
         public bool isPlayingRecord = false;
-        public int animation = 20;
+        public int animation = 20, money = 0;
         public string[] keys = {};
 
 		public Options() {
@@ -46,6 +46,7 @@ namespace Uno {
                 mnuPlayRecord.Text = "(錄像) " + s.Substring(s.LastIndexOf('K') + 1);
                 mnuPlayRecord.Enabled = true;
             }
+            money = int.Parse(Interaction.GetSetting("UNO", "ACCOUNT", "MONEY", "0"));
         }
 
         private void KeepSafeForCheating_CheckedChanged(object sender, EventArgs e)
@@ -62,55 +63,55 @@ namespace Uno {
             string[] keys = save.Split(char.Parse("K"));
             if (save[0] != 'K')
                 this.keys = keys;
-            on0 = bool.Parse(keys[9]);
+            on0 = bool.Parse(keys[10]);
             txtPlayer0.Visible = on0;
             mnuAddRemovePlayer.Text = (on0 ? "移除" : "新增") + "玩家";
-            ons = byte.Parse(keys[10]);
+            ons = byte.Parse(keys[11]);
             ShowPlayers();
-            txtPlayer0.Text = keys[11];
-            txtPlayer1.Text = keys[12];
-            txtPlayer2.Text = keys[13];
-            txtPlayer3.Text = keys[14];
-            txtDealt.Text = keys[15];
-            txtDecks.Text = keys[16];
-            mnuBeginner.Checked = bool.Parse(keys[17]);
-            mnuPro.Checked = bool.Parse(keys[18]);
-            mnuCheater.Checked = bool.Parse(keys[19]);
-            mnuBotBeginner.Checked = bool.Parse(keys[20]);
-            mnuBotPro.Checked = bool.Parse(keys[21]);
-            mnuBlank.Checked = bool.Parse(keys[22]);
-            mnuMagentaBlank.Checked = bool.Parse(keys[23]);
-            mnuBlackBlank.Checked = bool.Parse(keys[24]);
-            txtBlankText.Text = keys[25];
-            txtBlankSkip.Text = keys[26];
-            mnuBlankReverse.Checked = bool.Parse(keys[27]);
-            txtBlankDraw.Text = keys[28];
-            txtBlankDownpourDraw.Text = keys[29];
-            mnuWater.Checked = bool.Parse(keys[30]);
-            mnuAttack.Checked = bool.Parse(keys[31]);
-            mnuWildHitfire.Checked = bool.Parse(keys[32]);
-            mnuTradeHands.Checked = bool.Parse(keys[33]);
-            mnuDos.Checked = bool.Parse(keys[34]);
-            mnuFlip.Checked = bool.Parse(keys[35]);
-            mnuCyan.Checked = bool.Parse(keys[36]);
-            mnuMagenta.Checked = bool.Parse(keys[37]);
-            mnuRevealable.Checked = bool.Parse(keys[38]);
-            mnuPairs.Checked = bool.Parse(keys[39]);
-            mnuStacking.Checked = bool.Parse(keys[40]);
-            mnuPlayOrDrawAll.Checked = bool.Parse(keys[41]);
-            mnuDrawToMatch.Checked = bool.Parse(keys[42]);
-            mnuDrawAllAndPlay.Checked = bool.Parse(keys[43]);
-            mnuDrawAndPlay.Checked = bool.Parse(keys[44]);
-            mnuDoubleDraw.Checked = bool.Parse(keys[45]);
-            mnuDrawBeforePlaying.Checked = bool.Parse(keys[46]);
-            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[47]);
-            mnuSevenZero.Checked = bool.Parse(keys[48]);
-            mnuSkipPlayers.Checked = bool.Parse(keys[49]);
-            mnuSkipTimes.Checked = bool.Parse(keys[50]);
-            mnuOneWinner.Checked = bool.Parse(keys[51]);
-            mnuOneLoser.Checked = bool.Parse(keys[52]);
-            mnuUno.Checked = bool.Parse(keys[53]);
-            mnuCheat.Checked = bool.Parse(keys[54]);
+            txtPlayer0.Text = keys[12];
+            txtPlayer1.Text = keys[13];
+            txtPlayer2.Text = keys[14];
+            txtPlayer3.Text = keys[15];
+            txtDealt.Text = keys[16];
+            txtDecks.Text = keys[17];
+            mnuBeginner.Checked = bool.Parse(keys[18]);
+            mnuPro.Checked = bool.Parse(keys[19]);
+            mnuCheater.Checked = bool.Parse(keys[20]);
+            mnuBotBeginner.Checked = bool.Parse(keys[21]);
+            mnuBotPro.Checked = bool.Parse(keys[22]);
+            mnuBlank.Checked = bool.Parse(keys[23]);
+            mnuMagentaBlank.Checked = bool.Parse(keys[24]);
+            mnuBlackBlank.Checked = bool.Parse(keys[25]);
+            txtBlankText.Text = keys[26];
+            txtBlankSkip.Text = keys[27];
+            mnuBlankReverse.Checked = bool.Parse(keys[28]);
+            txtBlankDraw.Text = keys[29];
+            txtBlankDownpourDraw.Text = keys[30];
+            mnuWater.Checked = bool.Parse(keys[31]);
+            mnuAttack.Checked = bool.Parse(keys[32]);
+            mnuWildHitfire.Checked = bool.Parse(keys[33]);
+            mnuTradeHands.Checked = bool.Parse(keys[34]);
+            mnuDos.Checked = bool.Parse(keys[35]);
+            mnuFlip.Checked = bool.Parse(keys[36]);
+            mnuCyan.Checked = bool.Parse(keys[37]);
+            mnuMagenta.Checked = bool.Parse(keys[38]);
+            mnuRevealable.Checked = bool.Parse(keys[39]);
+            mnuPairs.Checked = bool.Parse(keys[40]);
+            mnuStacking.Checked = bool.Parse(keys[41]);
+            mnuPlayOrDrawAll.Checked = bool.Parse(keys[42]);
+            mnuDrawToMatch.Checked = bool.Parse(keys[43]);
+            mnuDrawAllAndPlay.Checked = bool.Parse(keys[44]);
+            mnuDrawAndPlay.Checked = bool.Parse(keys[45]);
+            mnuDoubleDraw.Checked = bool.Parse(keys[46]);
+            mnuDrawBeforePlaying.Checked = bool.Parse(keys[47]);
+            mnuDrawTwoBeforePlaying.Checked = bool.Parse(keys[48]);
+            mnuSevenZero.Checked = bool.Parse(keys[49]);
+            mnuSkipPlayers.Checked = bool.Parse(keys[50]);
+            mnuSkipTimes.Checked = bool.Parse(keys[51]);
+            mnuOneWinner.Checked = bool.Parse(keys[52]);
+            mnuOneLoser.Checked = bool.Parse(keys[53]);
+            mnuUno.Checked = bool.Parse(keys[54]);
+            mnuCheat.Checked = bool.Parse(keys[55]);
         }
 
         private void MnuAddBot_Click(object sender, EventArgs e)
