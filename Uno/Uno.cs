@@ -140,7 +140,7 @@ namespace Uno
         Graphics gpsPlayer;
         Image imgPlayer;
         readonly Image imgUno;
-        private int bet = 0, deltaMoney = 0, distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
+        private int bet = 0, betTrackBarRate = 1, deltaMoney = 0, distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblBets = new Label[4], lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
@@ -1251,16 +1251,16 @@ deny:
                 }
                 else
                 {
-                    bet += trkBet.Value;
+                    bet += trkBet.Value * betTrackBarRate;
                     hasBet = new bool[4];
                     hasBet[player] = true;
-                    Action(0, "$" + bet);
+                    Action(0, Format(bet));
                 }
-                int delta = bet - int.Parse(lblBets[0].Text.Substring(1));
-                mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) - delta);
+                int delta = bet - Format(lblBets[0].Text);
+                mnuMoney.Text = Format(Format(mnuMoney.Text) - delta);
                 deltaMoney -= delta;
-                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
-                lblBets[0].Text = "$" + bet;
+                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                lblBets[0].Text = Format(bet);
             }
         }
 
@@ -1363,9 +1363,9 @@ deny:
                     msg += "\n" + (p == 0 ? "你" : PLAYER_NAMES[p]) + "\t" + GetPointsByPlayer(p);
                 msg += "\n";
                 if (deltaMoney > 0)
-                    msg += "\n你在本局中總共 +$" + deltaMoney;
+                    msg += "\n你在本局中總共 +" + Format(deltaMoney);
                 else if (deltaMoney < 0)
-                    msg += "\n你在本局中總共 -$" + -deltaMoney;
+                    msg += "\n你在本局中總共 -" + Format(-deltaMoney);
                 if (hasCheat)
                     msg += "\n(你在本局中出了老千)";
                 if (form.mnuCheat.Checked)
@@ -1979,21 +1979,21 @@ deny:
                                 if (p == 0)
                                     deltaMoney -= payments[0];
                                 win += payments[p];
-                                msg += $"{(p == 0 ? "你" : PLAYER_NAMES[p])}: -${payments[p]}\n";
+                                msg += $"{(p == 0 ? "你" : PLAYER_NAMES[p])}: -{Format(payments[p])}\n";
                             }
                         }
                         if (index == 0)
                         {
-                            mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) + win) + "";
+                            mnuMoney.Text = Format(Format(mnuMoney.Text) + win);
                             deltaMoney += win;
-                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
                         }
                         else if (payments[0] > 0)
                         {
-                            mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) - payments[0]) + "";
-                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
+                            mnuMoney.Text = Format(Format(mnuMoney.Text) - payments[0]);
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
                         }
-                        Action(index, $"{msg}--------\n{(index == 0 ? "你" : PLAYER_NAMES[index])}: +${win}");
+                        Action(index, $"{msg}----------------\n{(index == 0 ? "你" : PLAYER_NAMES[index])}: +{Format(win)}");
                     }
                 }
                 byte player;
@@ -3066,33 +3066,41 @@ gameOver:
                     }
                     else
                     {
-                        bet += trkBet.Value;
+                        bet += trkBet.Value * betTrackBarRate;
                         hasBet = new bool[4];
                         hasBet[player] = true;
-                        Action(0, "$" + bet);
+                        Action(0, Format(bet));
                     }
-                    int delta = bet - int.Parse(lblBets[0].Text.Substring(1));
-                    mnuMoney.Text = "$" + (int.Parse(mnuMoney.Text.Substring(1)) - delta);
+                    int delta = bet - Format(lblBets[0].Text);
+                    mnuMoney.Text = Format(Format(mnuMoney.Text) - delta);
                     deltaMoney -= delta;
-                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", mnuMoney.Text.Substring(1));
-                    lblBets[0].Text = "$" + bet;
+                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                    lblBets[0].Text = Format(bet);
                 }
                 else
                 {
-                    int i = (int)(form.money * Rnd());
+                    int i = (int)((form.money - bet / 2) * Math.Pow(Rnd(), 7) + bet / 2);
                     if (i <= bet)
                     {
                         hasBet[player] = true;
-                        Action(player, "跟");
+                        if (bet <= 0)
+                        {
+                            bet = betTrackBarRate;
+                            Action(player, Format(bet));
+                        }
+                        else
+                        {
+                            Action(player, "跟");
+                        }
                     }
                     else
                     {
                         bet = i;
                         hasBet = new bool[4];
                         hasBet[player] = true;
-                        Action(player, "$" + i);
+                        Action(player, Format(i));
                     }
-                    lblBets[player].Text = "$" + bet;
+                    lblBets[player].Text = Format(bet);
                 }
             }
         }
@@ -3211,7 +3219,13 @@ gameOver:
                     }
                     if (!hasBet[0] && lblBets[0].Visible && !form.mnuCheat.Checked && !form.isPlayingRecord)
                     {
-                        trkBet.Maximum = form.money - bet;
+                        int max = form.money - bet;
+                        betTrackBarRate = max / 100000;
+                        if (betTrackBarRate <= 0)
+                            betTrackBarRate = 1;
+                        else
+                            max /= betTrackBarRate;
+                        trkBet.Maximum = max;
                         trkBet.Value = 0;
                         pnlBet.Visible = true;
                         pnlBet.BringToFront();
@@ -4154,15 +4168,49 @@ arrived:
             timTradeHands.Enabled = true;
         }
 
+        string Format(int number)
+        {
+            return Format(number.ToString(), true);
+        }
+
+        int Format(string number)
+        {
+            return int.Parse(Format(number, false));
+        }
+
+        string Format(string number, bool format)
+        {
+            if (format)
+            {
+                byte b = 0;
+                string s = "";
+                for (int i = number.Length - 1; i >= 0; i--)
+                {
+                    if (b >= 4 && number[i] != '-')
+                    {
+                        s = ',' + s;
+                        b = 0;
+                    }
+                    s = number[i] + s;
+                    b++;
+                }
+                return "$" + s;
+            }
+            else
+            {
+                return number.Replace(",", "").Substring(1);
+            }
+        }
+
         private void TrkBet_Scroll(object sender, EventArgs e)
         {
-            Action(0, (bet > 0 ? "大 " : "") + "$" + trkBet.Value);
+            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate));
             if (trkBet.Value == 0)
             {
                 if (bet == 0)
                 {
                     trkBet.Value = 1;
-                    Action(0, "$1");
+                    Action(0, Format(betTrackBarRate));
                 }
                 else
                     Action(0, "跟");
@@ -4216,7 +4264,7 @@ arrived:
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
-            mnuMoney.Text = "$" + form.money;
+            mnuMoney.Text = Format(form.money);
             if (form.money <= 0)
             {
                 form.money = 0;

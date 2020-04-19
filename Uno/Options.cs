@@ -437,7 +437,7 @@ namespace Uno {
 
         private void MnuSaveRules_Click(object sender, EventArgs e)
         {
-            Interaction.SaveSetting("UNO", "RULES", "SAVE", "KKKKKKKKK" + SaveRules());
+            Interaction.SaveSetting("UNO", "RULES", "SAVE", "KKKKKKKKKK" + SaveRules());
             mnuLoadRules.Text = DateAndTime.Now.ToString();
             mnuLoadRules.Enabled = true;
         }
