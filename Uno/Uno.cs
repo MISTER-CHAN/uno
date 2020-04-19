@@ -884,7 +884,7 @@ deny:
 
         void CheatPairs(byte player)
         {
-        begin_hacking:
+begin_hacking:
             byte mn = UnoNumber.MAX_VALUE, mnc = UnoColor.MAX_VALUE;
             int mq = 0;
             for (byte b = 0; b < UnoNumber.MAX_VALUE; b++)
@@ -1219,7 +1219,8 @@ deny:
             }
             if ((!MovingCard.drew || form.mnuDrawToMatch.Checked) && int.Parse(lblPile.Text) > 0)
             {
-                Action(player, "摸牌");
+                if (gameOver >= 4)
+                    Action(player, "摸牌");
                 if (player == 0)
                 {
                     isPlayer0sTurn = false;
@@ -1300,7 +1301,7 @@ deny:
                     s += "P";
                 }
                 Interaction.SaveSetting("UNO", "RECORD", "PLAYERS", s.Substring(0, s.Length - 1));
-                Interaction.SaveSetting("UNO", "RECORD", "RULES", "KKKKKKKKK" + form.SaveRules());
+                Interaction.SaveSetting("UNO", "RECORD", "RULES", "KKKKKKKKKK" + form.SaveRules());
             }
             FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
             if (form.mnuOneWinner.Checked)
@@ -1953,9 +1954,9 @@ deny:
                 {
                     lblPlayers[index].Visible = false;
                     lblCounts[index].Visible = false;
-                    lblBets[index].Visible = false;
-                    if (!form.mnuCheat.Checked)
+                    if (!form.mnuCheat.Checked && lblBets[index].Visible)
                     {
+                        lblBets[index].Visible = false;
                         byte ons = 0;
                         int max = 0;
                         int[] payments = new int[4], points = new int[4];
@@ -3079,7 +3080,12 @@ gameOver:
                 }
                 else
                 {
-                    int i = (int)((form.money - bet / 2) * Math.Pow(Rnd(), 7) + bet / 2);
+                    double d = 6;
+                    if (form.mnuPro.Checked)
+                        d = 4;
+                    else if (form.mnuCheater.Checked)
+                        d = 2;
+                    int i = (int)((form.money - bet / 2) * Math.Pow(Rnd(), d) + bet / 2);
                     if (i <= bet)
                     {
                         hasBet[player] = true;
@@ -4265,7 +4271,7 @@ arrived:
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
             mnuMoney.Text = Format(form.money);
-            if (form.money <= 0)
+            if (form.money <= 0 || form.isPlayingRecord)
             {
                 form.money = 0;
                 foreach (Label l in lblBets)
