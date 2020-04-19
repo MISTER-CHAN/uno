@@ -55,6 +55,7 @@
             this.mnuPlayPause = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuForward = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMoney = new System.Windows.Forms.ToolStripMenuItem();
             this.timPlayersToCenter = new System.Windows.Forms.Timer(this.components);
             this.timPileToCenter = new System.Windows.Forms.Timer(this.components);
             this.lblDrawMark = new System.Windows.Forms.Label();
@@ -76,7 +77,8 @@
             this.trkBet = new System.Windows.Forms.TrackBar();
             this.lblBet = new System.Windows.Forms.Label();
             this.pnlBet = new System.Windows.Forms.Panel();
-            this.mnuMoney = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblBetOr = new System.Windows.Forms.Label();
+            this.btnBetGiveUp = new System.Windows.Forms.Button();
             this.mnuCheating.SuspendLayout();
             this.mnuGame.SuspendLayout();
             this.pnlPlayer.SuspendLayout();
@@ -339,6 +341,12 @@
             this.mnuForward.Visible = false;
             this.mnuForward.Click += new System.EventHandler(this.MnuForward_Click);
             // 
+            // mnuMoney
+            // 
+            this.mnuMoney.Name = "mnuMoney";
+            this.mnuMoney.Size = new System.Drawing.Size(34, 21);
+            this.mnuMoney.Text = "$0";
+            // 
             // timPlayersToCenter
             // 
             this.timPlayersToCenter.Interval = 10;
@@ -508,19 +516,18 @@
             // trkBet
             // 
             this.trkBet.AutoSize = false;
-            this.trkBet.Location = new System.Drawing.Point(50, 0);
+            this.trkBet.Location = new System.Drawing.Point(0, 34);
             this.trkBet.Name = "trkBet";
-            this.trkBet.Size = new System.Drawing.Size(104, 18);
+            this.trkBet.Size = new System.Drawing.Size(104, 34);
             this.trkBet.TabIndex = 16;
             this.trkBet.Scroll += new System.EventHandler(this.TrkBet_Scroll);
             // 
             // lblBet
             // 
             this.lblBet.AutoSize = true;
-            this.lblBet.Font = new System.Drawing.Font("微軟正黑體", 10F);
             this.lblBet.Location = new System.Drawing.Point(0, 0);
             this.lblBet.Name = "lblBet";
-            this.lblBet.Size = new System.Drawing.Size(50, 18);
+            this.lblBet.Size = new System.Drawing.Size(96, 34);
             this.lblBet.TabIndex = 15;
             this.lblBet.Text = "請下注";
             this.lblBet.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
@@ -528,19 +535,38 @@
             // pnlBet
             // 
             this.pnlBet.AutoSize = true;
+            this.pnlBet.Controls.Add(this.lblBetOr);
+            this.pnlBet.Controls.Add(this.btnBetGiveUp);
             this.pnlBet.Controls.Add(this.lblBet);
             this.pnlBet.Controls.Add(this.trkBet);
-            this.pnlBet.Location = new System.Drawing.Point(94, 159);
+            this.pnlBet.Location = new System.Drawing.Point(167, 116);
             this.pnlBet.Name = "pnlBet";
-            this.pnlBet.Size = new System.Drawing.Size(181, 41);
+            this.pnlBet.Size = new System.Drawing.Size(351, 127);
             this.pnlBet.TabIndex = 17;
             this.pnlBet.Visible = false;
             // 
-            // mnuMoney
+            // lblBetOr
             // 
-            this.mnuMoney.Name = "mnuMoney";
-            this.mnuMoney.Size = new System.Drawing.Size(34, 21);
-            this.mnuMoney.Text = "$0";
+            this.lblBetOr.AutoSize = true;
+            this.lblBetOr.Location = new System.Drawing.Point(0, 73);
+            this.lblBetOr.Name = "lblBetOr";
+            this.lblBetOr.Size = new System.Drawing.Size(42, 34);
+            this.lblBetOr.TabIndex = 18;
+            this.lblBetOr.Text = "或";
+            this.lblBetOr.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            // 
+            // btnBetGiveUp
+            // 
+            this.btnBetGiveUp.AutoSize = true;
+            this.btnBetGiveUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBetGiveUp.Location = new System.Drawing.Point(42, 68);
+            this.btnBetGiveUp.Name = "btnBetGiveUp";
+            this.btnBetGiveUp.Size = new System.Drawing.Size(81, 46);
+            this.btnBetGiveUp.TabIndex = 17;
+            this.btnBetGiveUp.Text = "不去";
+            this.btnBetGiveUp.UseVisualStyleBackColor = true;
+            this.btnBetGiveUp.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
+            this.btnBetGiveUp.Click += new System.EventHandler(this.BtnBetGiveUp_Click);
             // 
             // Uno
             // 
@@ -638,6 +664,8 @@
         private System.Windows.Forms.Label lblBet;
         private System.Windows.Forms.Panel pnlBet;
         private System.Windows.Forms.ToolStripMenuItem mnuMoney;
+        private System.Windows.Forms.Label lblBetOr;
+        private System.Windows.Forms.Button btnBetGiveUp;
     }
 }
 
