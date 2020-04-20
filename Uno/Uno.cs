@@ -3786,11 +3786,13 @@ draw:
                         }
                         else if (drawAll)
                         {
-                            MovingCard.drew = false;
                             if (form.mnuDrawAllAndPlay.Checked)
                                 PlayersTurn(MovingCard.player);
                             else
+                            {
+                                MovingCard.drew = false;
                                 PlayersTurn(NextPlayer(MovingCard.player), true, GetDbp());
+                            }
                         }
                         else if (!form.mnuDrawAndPlay.Checked)
                         {
