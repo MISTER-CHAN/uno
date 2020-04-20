@@ -1962,7 +1962,7 @@ begin_hacking:
                         int[] payments = new int[4], points = new int[4];
                         for (byte p = 0; p <= 3; p++)
                         {
-                            if (lblPlayers[p].Visible)
+                            if (lblBets[p].Visible)
                             {
                                 ons++;
                                 points[p] = GetPointsByPlayer(p);
@@ -3080,12 +3080,12 @@ gameOver:
                 }
                 else
                 {
-                    double d = 6;
+                    double d = 4;
                     if (form.mnuPro.Checked)
-                        d = 4;
-                    else if (form.mnuCheater.Checked)
                         d = 2;
-                    int i = (int)((form.money - bet / 2) * Math.Pow(Rnd(), d) + bet / 2);
+                    else if (form.mnuCheater.Checked)
+                        d = 1;
+                    int i = (int)((form.money - bet / 10 * 9) * PowRnd(d) + bet / 10 * 9);
                     if (i <= bet)
                     {
                         hasBet[player] = true;
@@ -3262,6 +3262,14 @@ gameOver:
                 }
                 Play(player);
             }
+        }
+
+        double PowRnd(double y)
+        {
+            double d = Rnd();
+            for (int i = 2; i <= y; i++)
+                d *= Rnd();
+            return d;
         }
 
         void RefillPile()
