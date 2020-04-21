@@ -47,6 +47,7 @@ namespace Uno {
                 mnuPlayRecord.Enabled = true;
             }
             money = int.Parse(Interaction.GetSetting("UNO", "ACCOUNT", "MONEY", "0"));
+            mnuMe.Text = "$" + money;
         }
 
         private void KeepSafeForCheating_CheckedChanged(object sender, EventArgs e)
@@ -111,7 +112,8 @@ namespace Uno {
             mnuOneWinner.Checked = bool.Parse(keys[52]);
             mnuOneLoser.Checked = bool.Parse(keys[53]);
             mnuUno.Checked = bool.Parse(keys[54]);
-            mnuCheat.Checked = bool.Parse(keys[55]);
+            mnuBet.Checked = bool.Parse(keys[55]);
+            mnuCheat.Checked = bool.Parse(keys[56]);
         }
 
         private void MnuAddBot_Click(object sender, EventArgs e)
@@ -193,6 +195,16 @@ namespace Uno {
             mnuBack.Visible = false;
         }
 
+        private void MnuBet_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_Click(sender, e);
+            if (mnuBet.Checked && mnuCheat.Checked)
+            {
+                mnuCheat.Checked = false;
+                MessageBox.Show("無法在賭博中作弊!", "賭博", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void MnuBlank_CheckedChanged(object sender, EventArgs e)
         {
             foreach (ToolStripItem itm in mnuBlank.DropDownItems)
@@ -204,6 +216,16 @@ namespace Uno {
             mnuBotBeginner.Checked = false;
             mnuBotPro.Checked = false;
             ((ToolStripMenuItem)sender).Checked = true;
+        }
+
+        private void MnuCheat_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem_Click(sender, e);
+            if (mnuBet.Checked && mnuCheat.Checked)
+            {
+                mnuBet.Checked = false;
+                MessageBox.Show("無法在賭博中作弊!", "作弊", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void MnuCustom_Click(object sender, EventArgs e)
@@ -553,6 +575,7 @@ namespace Uno {
             s += mnuOneWinner.Checked + "K";
             s += mnuOneLoser.Checked + "K";
             s += mnuUno.Checked + "K";
+            s += mnuBet.Checked + "K";
             s += mnuCheat.Checked + "K";
             s += DateAndTime.Now.ToString();
             return s;
@@ -565,6 +588,35 @@ namespace Uno {
             txtPlayer3.Visible = ons >= 3;
             mnuAddBot.Visible = ons < 3;
             mnuRemoveBot.Visible = ons > 0;
+        }
+
+        private void MnuDailyMoney_Click(object sender, EventArgs e)
+        {
+            string s = Interaction.GetSetting("UNO", "ACCOUNT", "LAST", "");
+            if (s == "")
+            {
+                MessageBox.Show("歡迎新人, 請收下新手禮品.", "新手禮品", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", "50000000");
+                money = 50000000;
+                mnuMe.Text = "$" + money;
+                MessageBox.Show("+$5000,0000", "新手禮品", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Interaction.SaveSetting("UNO", "ACCOUNT", "LAST", DateTime.Today.Ticks + "");
+            }
+            else
+            {
+                if (new TimeSpan(DateTime.Today.Ticks - long.Parse(s)).TotalDays > 1)
+                {
+                    Interaction.SaveSetting("UNO", "ACCOUNT", "LAST", DateTime.Today.Ticks + "");
+                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", money + 10000000 + "");
+                    money += 10000000;
+                    mnuMe.Text = "$" + money;
+                    MessageBox.Show("+$1000,0000", "簽到", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("請明日再來", "簽到", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         public void ToolStripMenuItem_Click(object sender, EventArgs e)
