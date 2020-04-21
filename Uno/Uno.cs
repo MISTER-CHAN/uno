@@ -1988,7 +1988,7 @@ begin_hacking:
                         {
                             if (lblBets[p].Visible)
                             {
-                                payments[p] = (int)((float)points[p] / max * bet);
+                                payments[p] = (int)((float)points[p] / max * bet) + bet;
                                 if (p == 0)
                                     deltaMoney -= payments[0];
                                 win += payments[p];
