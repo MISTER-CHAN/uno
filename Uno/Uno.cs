@@ -717,6 +717,11 @@ get_best:
         {
             if (form.mnuBet.Checked)
             {
+                if (form.money <= 0)
+                {
+                    MessageBox.Show("你已負債累累, 等你有錢再來玩吧!", "開始", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 deltaMoney -= form.money / 100;
                 form.money -= form.money / 100;
                 Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
