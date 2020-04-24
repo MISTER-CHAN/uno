@@ -604,7 +604,7 @@ namespace Uno {
             }
             else
             {
-                if (new TimeSpan(DateTime.Today.Ticks - long.Parse(s)).TotalDays > 1)
+                if (new TimeSpan(DateTime.Today.Ticks - long.Parse(s)).TotalDays >= 1)
                 {
                     Interaction.SaveSetting("UNO", "ACCOUNT", "LAST", DateTime.Today.Ticks + "");
                     Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", money + 10000000 + "");
