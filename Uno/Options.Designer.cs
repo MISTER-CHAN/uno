@@ -112,6 +112,13 @@
             this.mnuOneLoser = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuUno = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBuyIn = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn0 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn200000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn1000000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn10000000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn50000000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyIn100000000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuyInAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWatch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAutoSave = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,13 +140,6 @@
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn0 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn200000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn10000000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn50000000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn100000000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyIn1000000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuyInAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -896,6 +896,64 @@
             this.mnuBuyIn.Size = new System.Drawing.Size(205, 22);
             this.mnuBuyIn.Text = "聚眾賭博";
             // 
+            // mnuBuyIn0
+            // 
+            this.mnuBuyIn0.Checked = true;
+            this.mnuBuyIn0.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuBuyIn0.Name = "mnuBuyIn0";
+            this.mnuBuyIn0.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn0.Tag = "0";
+            this.mnuBuyIn0.Text = "$0 買入";
+            this.mnuBuyIn0.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyIn200000
+            // 
+            this.mnuBuyIn200000.Name = "mnuBuyIn200000";
+            this.mnuBuyIn200000.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn200000.Tag = "200000";
+            this.mnuBuyIn200000.Text = "$20,0000 買入";
+            this.mnuBuyIn200000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyIn1000000
+            // 
+            this.mnuBuyIn1000000.Name = "mnuBuyIn1000000";
+            this.mnuBuyIn1000000.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn1000000.Tag = "1000000";
+            this.mnuBuyIn1000000.Text = "$100,0000 買入";
+            this.mnuBuyIn1000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyIn10000000
+            // 
+            this.mnuBuyIn10000000.Name = "mnuBuyIn10000000";
+            this.mnuBuyIn10000000.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn10000000.Tag = "10000000";
+            this.mnuBuyIn10000000.Text = "$1000,0000 買入";
+            this.mnuBuyIn10000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyIn50000000
+            // 
+            this.mnuBuyIn50000000.Name = "mnuBuyIn50000000";
+            this.mnuBuyIn50000000.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn50000000.Tag = "50000000";
+            this.mnuBuyIn50000000.Text = "$5000,0000 買入";
+            this.mnuBuyIn50000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyIn100000000
+            // 
+            this.mnuBuyIn100000000.Name = "mnuBuyIn100000000";
+            this.mnuBuyIn100000000.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyIn100000000.Tag = "100000000";
+            this.mnuBuyIn100000000.Text = "$1,0000,0000 買入";
+            this.mnuBuyIn100000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuBuyInAll
+            // 
+            this.mnuBuyInAll.Name = "mnuBuyInAll";
+            this.mnuBuyInAll.Size = new System.Drawing.Size(180, 22);
+            this.mnuBuyInAll.Tag = "-1";
+            this.mnuBuyInAll.Text = "全部買入";
+            this.mnuBuyInAll.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
             // mnuSettings
             // 
             this.mnuSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1076,63 +1134,6 @@
             this.mnuQuit.Size = new System.Drawing.Size(44, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
-            // 
-            // mnuBuyIn0
-            // 
-            this.mnuBuyIn0.Checked = true;
-            this.mnuBuyIn0.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuBuyIn0.Name = "mnuBuyIn0";
-            this.mnuBuyIn0.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn0.Text = "$0 買入";
-            this.mnuBuyIn0.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyIn200000
-            // 
-            this.mnuBuyIn200000.Name = "mnuBuyIn200000";
-            this.mnuBuyIn200000.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn200000.Tag = "200000";
-            this.mnuBuyIn200000.Text = "$20,0000 買入";
-            this.mnuBuyIn200000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyIn10000000
-            // 
-            this.mnuBuyIn10000000.Name = "mnuBuyIn10000000";
-            this.mnuBuyIn10000000.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn10000000.Tag = "10000000";
-            this.mnuBuyIn10000000.Text = "$1000,0000 買入";
-            this.mnuBuyIn10000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyIn50000000
-            // 
-            this.mnuBuyIn50000000.Name = "mnuBuyIn50000000";
-            this.mnuBuyIn50000000.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn50000000.Tag = "50000000";
-            this.mnuBuyIn50000000.Text = "$5000,0000 買入";
-            this.mnuBuyIn50000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyIn100000000
-            // 
-            this.mnuBuyIn100000000.Name = "mnuBuyIn100000000";
-            this.mnuBuyIn100000000.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn100000000.Tag = "100000000";
-            this.mnuBuyIn100000000.Text = "$1,0000,0000 買入";
-            this.mnuBuyIn100000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyIn1000000
-            // 
-            this.mnuBuyIn1000000.Name = "mnuBuyIn1000000";
-            this.mnuBuyIn1000000.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyIn1000000.Tag = "1000000";
-            this.mnuBuyIn1000000.Text = "$100,0000 買入";
-            this.mnuBuyIn1000000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuBuyInAll
-            // 
-            this.mnuBuyInAll.Name = "mnuBuyInAll";
-            this.mnuBuyInAll.Size = new System.Drawing.Size(180, 22);
-            this.mnuBuyInAll.Tag = "-1";
-            this.mnuBuyInAll.Text = "全部買入";
-            this.mnuBuyInAll.Click += new System.EventHandler(this.MnuBuyIn_Click);
             // 
             // Options
             // 
