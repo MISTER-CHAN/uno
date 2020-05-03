@@ -140,7 +140,7 @@ namespace Uno
         Graphics gpsPlayer;
         Image imgPlayer;
         readonly Image imgUno;
-        private int bet = 0, betTrackBarRate = 1, deltaMoney = 0, distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
+        private int bet = 0, betTrackBarRate = 1, distance = 20, gametime = 0, height = 0, money = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
         readonly Label[] lblBets = new Label[4], lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
@@ -715,17 +715,17 @@ get_best:
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            if (form.mnuBet.Checked)
+            if (!form.mnuBuyIn0.Checked)
             {
                 if (form.money <= 0)
                 {
                     MessageBox.Show("你已負債累累, 等你有錢再來玩吧!", "開始", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                deltaMoney -= form.money / 100;
-                form.money -= form.money / 100;
+                money -= form.buyIn / 1000;
+                form.money -= form.buyIn / 1000;
                 Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
-                mnuMoney.Text = Format(form.money);
+                mnuMoney.Text = Format(money);
             }
             if (!form.on0 && form.ons <= 0)
             {
@@ -734,7 +734,7 @@ get_best:
                     "打和!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
-                    + (form.mnuBet.Checked ? (deltaMoney < 0 ? "\n你在本局中總共 -" + Format(-deltaMoney) : "") : "")
+                    + (!form.mnuBuyIn0.Checked ? (money - form.buyIn < 0 ? "\n你在本局中總共 -" + Format(-(money - form.buyIn)) : "") : "")
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
@@ -1255,7 +1255,7 @@ begin_hacking:
                 PlayersTurn(player, false);
                 PlayersTurn(NextPlayer(player), true, GetDbp());
 			}
-            if (form.mnuBet.Checked && player == 0 && !isAutomatic && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
+            if (!form.mnuBuyIn0.Checked && player == 0 && !isAutomatic && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
             {
                 pnlBet.Visible = false;
                 if (trkBet.Value == 0)
@@ -1265,15 +1265,16 @@ begin_hacking:
                 }
                 else
                 {
-                    bet += trkBet.Value * betTrackBarRate;
+                    bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000);
                     hasBet = new bool[4];
                     hasBet[player] = true;
                     Action(0, Format(bet));
                 }
                 int delta = bet - Format(lblBets[0].Text);
-                mnuMoney.Text = Format(Format(mnuMoney.Text) - delta);
-                deltaMoney -= delta;
-                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                money -= delta;
+                mnuMoney.Text = Format(money);
+                form.money -= delta;
+                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                 lblBets[0].Text = Format(bet);
             }
         }
@@ -1376,12 +1377,12 @@ begin_hacking:
                 for (byte p = 0; p <= 3; p++)
                     msg += "\n" + (p == 0 ? "你" : PLAYER_NAMES[p]) + "\t" + GetPointsByPlayer(p);
                 msg += "\n";
-                if (form.mnuBet.Checked)
+                if (!form.mnuBuyIn0.Checked)
                 {
-                    if (deltaMoney > 0)
-                        msg += "\n你在本局中總共 +" + Format(deltaMoney);
-                    else if (deltaMoney < 0)
-                        msg += "\n你在本局中總共 -" + Format(-deltaMoney);
+                    if (money - form.buyIn > 0)
+                        msg += "\n你在本局中總共 +" + Format(money - form.buyIn);
+                    else if (money - form.buyIn < 0)
+                        msg += "\n你在本局中總共 -" + Format(-(money - form.buyIn));
                 }
                 if (hasCheat)
                     msg += "\n(你在本局中出了老千)";
@@ -1443,7 +1444,7 @@ begin_hacking:
                     (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + " 输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
-                    + (form.mnuBet.Checked ? (deltaMoney > 0 ? "\n你在本局中總共 +" + Format(deltaMoney) : (deltaMoney < 0 ? "\n你在本局中總共 -" + Format(-deltaMoney) : "")) : "")
+                    + (!form.mnuBuyIn0.Checked ? (money - form.buyIn > 0 ? "\n你在本局中總共 +" + Format(money - form.buyIn) : (money - form.buyIn < 0 ? "\n你在本局中總共 -" + Format(-(money - form.buyIn)) : "")) : "")
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
@@ -1971,7 +1972,7 @@ begin_hacking:
                 {
                     lblPlayers[index].Visible = false;
                     lblCounts[index].Visible = false;
-                    if (form.mnuBet.Checked && lblBets[index].Visible)
+                    if (!form.mnuBuyIn0.Checked && lblBets[index].Visible)
                     {
                         lblBets[index].Visible = false;
                         byte ons = 0;
@@ -1994,22 +1995,23 @@ begin_hacking:
                             if (lblBets[p].Visible)
                             {
                                 payments[p] = (int)((float)points[p] / max * bet) + bet;
-                                if (p == 0)
-                                    deltaMoney -= payments[0];
                                 win += payments[p];
                                 msg += $"{(p == 0 ? "你" : PLAYER_NAMES[p])}: -{Format(payments[p])}\n";
                             }
                         }
                         if (index == 0)
                         {
-                            mnuMoney.Text = Format(Format(mnuMoney.Text) + win);
-                            deltaMoney += win;
-                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                            money += win;
+                            mnuMoney.Text = Format(money);
+                            form.money += win;
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                         }
                         else if (payments[0] > 0)
                         {
-                            mnuMoney.Text = Format(Format(mnuMoney.Text) - payments[0]);
-                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                            money -= payments[0];
+                            mnuMoney.Text = Format(money);
+                            form.money -= payments[0];
+                            Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                         }
                         Action(index, $"{msg}----------------\n{(index == 0 ? "你" : PLAYER_NAMES[index])}: +{Format(win)}");
                     }
@@ -3071,7 +3073,7 @@ gameOver:
             {
                 Draw(player);
             }
-            if (form.mnuBet.Checked && !hasBet[player] && lblBets[player].Visible && !form.isPlayingRecord)
+            if (!form.mnuBuyIn0.Checked && !hasBet[player] && lblBets[player].Visible && !form.isPlayingRecord)
             {
                 hasBet[player] = true;
                 if (player == 0)
@@ -3084,15 +3086,16 @@ gameOver:
                     }
                     else
                     {
-                        bet += trkBet.Value * betTrackBarRate;
+                        bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000);
                         hasBet = new bool[4];
                         hasBet[player] = true;
                         Action(0, Format(bet));
                     }
                     int delta = bet - Format(lblBets[0].Text);
-                    mnuMoney.Text = Format(Format(mnuMoney.Text) - delta);
-                    deltaMoney -= delta;
-                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", Format(mnuMoney.Text, false));
+                    money -= delta;
+                    mnuMoney.Text = Format(money);
+                    form.money -= delta;
+                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                     lblBets[0].Text = Format(bet);
                 }
                 else
@@ -3102,7 +3105,10 @@ gameOver:
                         d = 2;
                     else if (form.mnuCheater.Checked)
                         d = 1;
-                    int i = (int)((form.money - bet / 20 * 19) * PowRnd(d) + bet / 20 * 19);
+                    int i = (int)((form.buyIn - bet / 50 * 49) * PowRnd(d) + bet / 50 * 49);
+                    i = i / 100 * 100;
+                    if (i >= form.buyIn / 10 * 9)
+                        i = form.buyIn;
                     if (i <= bet)
                     {
                         hasBet[player] = true;
@@ -3240,9 +3246,9 @@ gameOver:
                         if (!form.Visible)
                             chkPlayer[0].Focus();
                     }
-                    if (form.mnuBet.Checked && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
+                    if (!form.mnuBuyIn0.Checked && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
                     {
-                        int max = form.money - bet;
+                        int max = form.buyIn - bet;
                         betTrackBarRate = max / 100000;
                         if (betTrackBarRate <= 0)
                             betTrackBarRate = 1;
@@ -3255,12 +3261,12 @@ gameOver:
                     }
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
-                    if (form.mnuAutoSave.Checked && !form.mnuBet.Checked)
+                    if (form.mnuAutoSave.Checked && form.mnuBuyIn0.Checked)
                         Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
                 }
                 isPlayer0sTurn = turn;
                 rdoUno.Visible = turn;
-                if (!form.mnuBet.Checked)
+                if (form.mnuBuyIn0.Checked)
                     mnuSaveGame.Enabled = turn;
             }
             else if (turn)
@@ -4248,13 +4254,12 @@ arrived:
 
         private void TrkBet_Scroll(object sender, EventArgs e)
         {
-            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate));
+            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000)));
             if (trkBet.Value == 0)
             {
                 if (bet == 0)
                 {
                     trkBet.Value = 1;
-                    Action(0, Format(betTrackBarRate));
                 }
                 else
                     Action(0, "跟");
@@ -4308,10 +4313,11 @@ arrived:
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
-            mnuMoney.Text = Format(form.money);
-            if (!form.mnuBet.Checked || form.money <= 0 || form.isPlayingRecord)
+            money = form.buyIn;
+            mnuMoney.Text = Format(form.buyIn);
+            if (form.mnuBuyIn0.Checked || form.buyIn <= 0 || form.isPlayingRecord)
             {
-                form.money = 0;
+                form.buyIn = 0;
                 foreach (Label l in lblBets)
                     l.Visible = false;
             }
@@ -4344,9 +4350,9 @@ arrived:
             Controls.Add(lblCards[0]);
             lblCards[0].Visible = false;
             lblCards[0].BackColor = Color.White;
-            if (form.mnuBet.Checked)
+            if (!form.mnuBuyIn0.Checked)
             {
-                btnStart.Text = $"開始 (-{Format(form.money / 100)})";
+                btnStart.Text = $"開始 (-{Format(form.buyIn / 1000)})";
             }
             ResizeForm();
             SetInterval(form.animation);

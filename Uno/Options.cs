@@ -15,7 +15,7 @@ namespace Uno {
         public bool on0 = true;
         public byte ons = 3;
         public bool isPlayingRecord = false;
-        public int animation = 20, money = 0;
+        public int animation = 20, buyIn = 0, money = 0;
         public string[] keys = {};
 
 		public Options() {
@@ -112,8 +112,13 @@ namespace Uno {
             mnuOneWinner.Checked = bool.Parse(keys[52]);
             mnuOneLoser.Checked = bool.Parse(keys[53]);
             mnuUno.Checked = bool.Parse(keys[54]);
-            mnuBet.Checked = bool.Parse(keys[55]);
-            mnuCheat.Checked = bool.Parse(keys[56]);
+            mnuBuyIn0.Checked = bool.Parse(keys[55]);
+            mnuBuyIn200000.Checked = bool.Parse(keys[56]);
+            mnuBuyIn1000000.Checked = bool.Parse(keys[57]);
+            mnuBuyIn10000000.Checked = bool.Parse(keys[58]);
+            mnuBuyIn50000000.Checked = bool.Parse(keys[59]);
+            mnuBuyIn100000000.Checked = bool.Parse(keys[60]);
+            mnuCheat.Checked = bool.Parse(keys[61]);
         }
 
         private void MnuAddBot_Click(object sender, EventArgs e)
@@ -195,16 +200,6 @@ namespace Uno {
             mnuBack.Visible = false;
         }
 
-        private void MnuBet_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem_Click(sender, e);
-            if (mnuBet.Checked && mnuCheat.Checked)
-            {
-                mnuCheat.Checked = false;
-                MessageBox.Show("無法在賭博中作弊!", "賭博", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
         private void MnuBlank_CheckedChanged(object sender, EventArgs e)
         {
             foreach (ToolStripItem itm in mnuBlank.DropDownItems)
@@ -218,12 +213,23 @@ namespace Uno {
             ((ToolStripMenuItem)sender).Checked = true;
         }
 
+        private void MnuBuyIn_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            foreach (ToolStripMenuItem itm in mnuBuyIn.DropDownItems)
+                itm.Checked = false;
+            menuItem.Checked = true;
+            buyIn = int.Parse(menuItem.Tag + "");
+            if (buyIn == -1)
+                buyIn = money;
+        }
+
         private void MnuCheat_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem_Click(sender, e);
-            if (mnuBet.Checked && mnuCheat.Checked)
+            if (mnuBuyIn.Checked && mnuCheat.Checked)
             {
-                mnuBet.Checked = false;
+                mnuBuyIn.Checked = false;
                 MessageBox.Show("無法在賭博中作弊!", "作弊", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -575,7 +581,12 @@ namespace Uno {
             s += mnuOneWinner.Checked + "K";
             s += mnuOneLoser.Checked + "K";
             s += mnuUno.Checked + "K";
-            s += mnuBet.Checked + "K";
+            s += mnuBuyIn0.Checked + "K";
+            s += mnuBuyIn200000.Checked + "K";
+            s += mnuBuyIn1000000.Checked + "K";
+            s += mnuBuyIn10000000.Checked + "K";
+            s += mnuBuyIn50000000.Checked + "K";
+            s += mnuBuyIn100000000.Checked + "K";
             s += mnuCheat.Checked + "K";
             s += DateAndTime.Now.ToString();
             return s;
