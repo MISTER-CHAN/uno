@@ -1265,7 +1265,7 @@ begin_hacking:
                 }
                 else
                 {
-                    bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000);
+                    bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000;
                     hasBet = new bool[4];
                     hasBet[player] = true;
                     Action(0, Format(bet));
@@ -3086,7 +3086,10 @@ gameOver:
                     }
                     else
                     {
-                        bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000);
+                        if (trkBet.Value < trkBet.Maximum)
+                            bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000;
+                        else
+                            bet = form.buyIn;
                         hasBet = new bool[4];
                         hasBet[player] = true;
                         Action(0, Format(bet));
@@ -4254,7 +4257,7 @@ arrived:
 
         private void TrkBet_Scroll(object sender, EventArgs e)
         {
-            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000)));
+            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000));
             if (trkBet.Value == 0)
             {
                 if (bet == 0)
@@ -4313,8 +4316,8 @@ arrived:
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
-            money = form.buyIn;
-            mnuMoney.Text = Format(form.buyIn);
+            money = form.buyIn + form.buyIn / 1000;
+            mnuMoney.Text = Format(money);
             if (form.mnuBuyIn0.Checked || form.buyIn <= 0 || form.isPlayingRecord)
             {
                 form.buyIn = 0;
