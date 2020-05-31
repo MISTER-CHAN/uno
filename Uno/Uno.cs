@@ -3103,7 +3103,7 @@ gameOver:
                 }
                 else
                 {
-                    double d = 6;
+                    double d = 4;
                     if (form.mnuPro.Checked)
                         d = 2;
                     else if (form.mnuCheater.Checked)
