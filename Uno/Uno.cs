@@ -133,16 +133,15 @@ namespace Uno
         }
         
         private bool canPlay = false, drawColor = false, hasCheat = false, isAutomatic = false, isFair = false, isPlayer0sTurn = false, isSelectingCards = false, reverse = false;
-        private bool[] hasBet = new bool[4];
         byte gameOver = 4;
         readonly Cards pile = new Cards();
         readonly Cards[] players = new Cards[4];
         Graphics gpsPlayer;
         Image imgPlayer;
         readonly Image imgUno;
-        private int bet = 0, betTrackBarRate = 1, distance = 20, gametime = 0, height = 0, money = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
+        private int distance = 20, gametime = 0, height = 0, pointing = -1, skip = 0, swpcw = 0, width = 0;
         readonly int[] skips = new int[4];
-        readonly Label[] lblBets = new Label[4], lblCounts = new Label[4];
+        readonly Label[] lblCounts = new Label[4];
         public Label[] lblPlayers = new Label[4];
         readonly List<CheckBox> chkPlayer = new List<CheckBox>();
         private readonly List<Label> lblCards = new List<Label>();
@@ -706,26 +705,18 @@ get_best:
             return cards.ToArray();
         }
 
-        private void BtnBetGiveUp_Click(object sender, EventArgs e)
-        {
-            pnlBet.Visible = false;
-            lblBets[0].Visible = false;
-            Action(0, "不去");
-        }
-
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            if (!form.mnuBuyIn0.Checked)
+            if (!form.mnuMultiply0.Checked)
             {
                 if (form.money <= 0)
                 {
                     MessageBox.Show("你已負債累累, 等你有錢再來玩吧!", "開始", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                money -= form.buyIn / 1000;
-                form.money -= form.buyIn / 1000;
+                form.money -= form.multiplier * 10;
                 Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
-                mnuMoney.Text = Format(money);
+                mnuMoney.Text = Format(form.money);
             }
             if (!form.on0 && form.ons <= 0)
             {
@@ -734,7 +725,6 @@ get_best:
                     "打和!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
-                    + (!form.mnuBuyIn0.Checked ? (money - form.buyIn < 0 ? "\n你在本局中總共 -" + Format(-(money - form.buyIn)) : "") : "")
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
@@ -1255,27 +1245,39 @@ begin_hacking:
                 PlayersTurn(player, false);
                 PlayersTurn(NextPlayer(player), true, GetDbp());
 			}
-            if (!form.mnuBuyIn0.Checked && player == 0 && !isAutomatic && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
+        }
+
+        string Format(int number)
+        {
+            return Format(number.ToString(), true);
+        }
+
+        int Format(string number)
+        {
+            return int.Parse(Format(number, false));
+        }
+
+        string Format(string number, bool format)
+        {
+            if (format)
             {
-                pnlBet.Visible = false;
-                if (trkBet.Value == 0)
+                byte b = 0;
+                string s = "";
+                for (int i = number.Length - 1; i >= 0; i--)
                 {
-                    hasBet[player] = true;
-                    Action(player, "跟");
+                    if (b >= 4 && number[i] != '-')
+                    {
+                        s = ',' + s;
+                        b = 0;
+                    }
+                    s = number[i] + s;
+                    b++;
                 }
-                else
-                {
-                    bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000;
-                    hasBet = new bool[4];
-                    hasBet[player] = true;
-                    Action(0, Format(bet));
-                }
-                int delta = bet - Format(lblBets[0].Text);
-                money -= delta;
-                mnuMoney.Text = Format(money);
-                form.money -= delta;
-                Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
-                lblBets[0].Text = Format(bet);
+                return "$" + s;
+            }
+            else
+            {
+                return number.Replace(",", "").Substring(1);
             }
         }
 
@@ -1315,7 +1317,7 @@ begin_hacking:
                     s += "P";
                 }
                 Interaction.SaveSetting("UNO", "RECORD", "PLAYERS", s.Substring(0, s.Length - 1));
-                Interaction.SaveSetting("UNO", "RECORD", "RULES", "KKKKKKKKKK" + form.SaveRules());
+                Interaction.SaveSetting("UNO", "RECORD", "RULES", "KKKKKKKKK" + form.SaveRules());
             }
             FormClosing -= new FormClosingEventHandler(Uno_FormClosing);
             if (form.mnuOneWinner.Checked)
@@ -1377,13 +1379,6 @@ begin_hacking:
                 for (byte p = 0; p <= 3; p++)
                     msg += "\n" + (p == 0 ? "你" : PLAYER_NAMES[p]) + "\t" + GetPointsByPlayer(p);
                 msg += "\n";
-                if (!form.mnuBuyIn0.Checked)
-                {
-                    if (money - form.buyIn > 0)
-                        msg += "\n你在本局中總共 +" + Format(money - form.buyIn);
-                    else if (money - form.buyIn < 0)
-                        msg += "\n你在本局中總共 -" + Format(-(money - form.buyIn));
-                }
                 if (hasCheat)
                     msg += "\n(你在本局中出了老千)";
                 if (form.mnuCheat.Checked)
@@ -1444,7 +1439,6 @@ begin_hacking:
                     (gameOver == 0 ? "你" : PLAYER_NAMES[gameOver]) + " 输了!\n"
                     + (form.mnuWatch.Checked && !form.isPlayingRecord ? $"\n游戏时长\t{lblWatch.Text}" : "")
                     + "\n"
-                    + (!form.mnuBuyIn0.Checked ? (money - form.buyIn > 0 ? "\n你在本局中總共 +" + Format(money - form.buyIn) : (money - form.buyIn < 0 ? "\n你在本局中總共 -" + Format(-(money - form.buyIn)) : "")) : "")
                     + (hasCheat ? "\n(你在本局中出了老千)" : "")
                     + (form.mnuCheat.Checked ? "\n(本局允許作弊)" : "")
                     , "结束", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.Retry)
@@ -1953,10 +1947,6 @@ begin_hacking:
             Label l = (Label)sender;
             int i = int.Parse(l.Tag + "");
             l.Left = lblPlayers[i].Left + lblPlayers[i].Width / 2 - l.Width / 2;
-            if (i == 0 || i == 2)
-            {
-                lblBets[i].Left = l.Left + l.Width;
-            }
         }
 
         private void LblCounts_TextChanged(object sender, EventArgs e) {
@@ -1972,45 +1962,37 @@ begin_hacking:
                 {
                     lblPlayers[index].Visible = false;
                     lblCounts[index].Visible = false;
-                    if (!form.mnuBuyIn0.Checked && lblBets[index].Visible)
+                    if (!form.mnuMultiply0.Checked)
                     {
-                        lblBets[index].Visible = false;
-                        byte ons = 0;
-                        int max = 0;
                         int[] payments = new int[4], points = new int[4];
                         for (byte p = 0; p <= 3; p++)
                         {
-                            if (lblBets[p].Visible)
+                            if (lblCounts[p].Visible)
                             {
-                                ons++;
                                 points[p] = GetPointsByPlayer(p);
-                                if (points[p] > max)
-                                max = points[p];
                             }
                         }
                         int win = 0;
                         string msg = "";
                         for (byte p = 0; p <= 3; p++)
                         {
-                            if (lblBets[p].Visible)
+                            if (lblCounts[p].Visible)
                             {
-                                payments[p] = (int)((float)points[p] / max * bet) + bet;
+                                payments[p] = points[p] * form.multiplier;
                                 win += payments[p];
                                 msg += $"{(p == 0 ? "你" : PLAYER_NAMES[p])}: -{Format(payments[p])}\n";
                             }
                         }
                         if (index == 0)
                         {
-                            money += win;
-                            mnuMoney.Text = Format(money);
                             form.money += win;
+                            mnuMoney.Text = Format(form.money);
                             Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                         }
                         else if (payments[0] > 0)
                         {
-                            money -= payments[0];
-                            mnuMoney.Text = Format(money);
                             form.money -= payments[0];
+                            mnuMoney.Text = Format(form.money);
                             Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
                         }
                         Action(index, $"{msg}----------------\n{(index == 0 ? "你" : PLAYER_NAMES[index])}: +{Format(win)}");
@@ -2203,14 +2185,7 @@ gameOver:
                 skips[sk] = int.Parse(sks[sk]);
             reverse = bool.Parse(keys[6]);
             lblDraw.Text = keys[7];
-            string[] bs = keys[8].Split('B');
-            string[] bvs = bs[0].Split('P'), bhs = bs[1].Split('P');
-            for (byte p = 0; p <= 3; p++)
-            {
-                lblBets[p].Text = Format(bvs[p], true);
-                hasBet[p] = bool.Parse(bhs[p]);
-            }
-            gametime = int.Parse(keys[9]);
+            gametime = int.Parse(keys[8]);
         }
 
         private void LoadRecord()
@@ -3073,68 +3048,6 @@ gameOver:
             {
                 Draw(player);
             }
-            if (!form.mnuBuyIn0.Checked && !hasBet[player] && lblBets[player].Visible && !form.isPlayingRecord)
-            {
-                hasBet[player] = true;
-                if (player == 0)
-                {
-                    pnlBet.Visible = false;
-                    if (trkBet.Value == 0)
-                    {
-                        hasBet[player] = true;
-                        Action(player, "跟");
-                    }
-                    else
-                    {
-                        if (trkBet.Value < trkBet.Maximum)
-                            bet += trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000;
-                        else
-                            bet = form.buyIn;
-                        hasBet = new bool[4];
-                        hasBet[player] = true;
-                        Action(0, Format(bet));
-                    }
-                    int delta = bet - Format(lblBets[0].Text);
-                    money -= delta;
-                    mnuMoney.Text = Format(money);
-                    form.money -= delta;
-                    Interaction.SaveSetting("UNO", "ACCOUNT", "MONEY", form.money + "");
-                    lblBets[0].Text = Format(bet);
-                }
-                else
-                {
-                    double d = 4;
-                    if (form.mnuPro.Checked)
-                        d = 2;
-                    else if (form.mnuCheater.Checked)
-                        d = 1;
-                    int i = (int)((form.buyIn - bet / 50 * 49) * PowRnd(d) + bet / 50 * 49);
-                    i = i / 100 * 100;
-                    if (i >= form.buyIn / 10 * 9)
-                        i = form.buyIn;
-                    if (i <= bet)
-                    {
-                        hasBet[player] = true;
-                        if (bet <= 0)
-                        {
-                            bet = betTrackBarRate;
-                            Action(player, Format(bet));
-                        }
-                        else
-                        {
-                            Action(player, "跟");
-                        }
-                    }
-                    else
-                    {
-                        bet = i;
-                        hasBet = new bool[4];
-                        hasBet[player] = true;
-                        Action(player, Format(i));
-                    }
-                    lblBets[player].Text = Format(bet);
-                }
-            }
         }
 
 		Card[] PlayersCards(byte player) {
@@ -3249,27 +3162,14 @@ gameOver:
                         if (!form.Visible)
                             chkPlayer[0].Focus();
                     }
-                    if (!form.mnuBuyIn0.Checked && !hasBet[0] && lblBets[0].Visible && !form.isPlayingRecord)
-                    {
-                        int max = form.buyIn - bet;
-                        betTrackBarRate = max / 100000;
-                        if (betTrackBarRate <= 0)
-                            betTrackBarRate = 1;
-                        else
-                            max /= betTrackBarRate;
-                        trkBet.Maximum = max;
-                        trkBet.Value = 0;
-                        pnlBet.Visible = true;
-                        pnlBet.BringToFront();
-                    }
                     if (distance == 1 && form.animation > 0)
                         SetInterval(form.animation);
-                    if (form.mnuAutoSave.Checked && form.mnuBuyIn0.Checked)
+                    if (form.mnuAutoSave.Checked && form.mnuMultiply0.Checked)
                         Interaction.SaveSetting("UNO", "GAME", "AUTO", SaveGame());
                 }
                 isPlayer0sTurn = turn;
                 rdoUno.Visible = turn;
-                if (form.mnuBuyIn0.Checked)
+                if (form.mnuMultiply0.Checked)
                     mnuSaveGame.Enabled = turn;
             }
             else if (turn)
@@ -3289,14 +3189,6 @@ gameOver:
                 }
                 Play(player);
             }
-        }
-
-        double PowRnd(double y)
-        {
-            double d = Rnd();
-            for (int i = 2; i <= y; i++)
-                d *= Rnd();
-            return d;
         }
 
         void RefillPile()
@@ -3389,16 +3281,6 @@ gameOver:
 			for (byte i = 0; i < 4; i++)
                 lblCounts[i].Location = new Point(lblPlayers[i].Left + lblPlayers[i].Width / 2 - lblCounts[i].Width / 2, lblPlayers[i].Top - lblCounts[i].Height);
             lblCounts[2].Top = lblPlayers[2].Top + UnoSize.HEIGHT;
-            lblBets[0].Location = new Point(lblCounts[0].Left + lblCounts[0].Width, lblCounts[0].Top + lblCounts[0].Height - lblBets[0].Height);
-            lblBets[1].Location = new Point(0, lblPlayers[1].Top + lblPlayers[1].Height);
-            lblBets[2].Location = new Point(lblCounts[2].Left + lblCounts[2].Width, lblCounts[2].Top);
-            lblBets[3].Location = new Point(width - lblBets[3].Width, lblPlayers[3].Top + lblPlayers[3].Height);
-            trkBet.Width = width / 2;
-            pnlBet.Width = trkBet.Width;
-            lblBet.Left = pnlBet.Width / 2 - lblBet.Width / 2;
-            lblBetOr.Left = pnlBet.Width / 2 - (lblBetOr.Width + btnBetGiveUp.Width) / 2;
-            btnBetGiveUp.Left = lblBetOr.Left + lblBetOr.Width;
-            pnlBet.Location = new Point(width / 2 - pnlBet.Width / 2, lblCounts[0].Top - lblAction.Height - pnlBet.Height);
             rdoUno.Location = new Point(width - rdoUno.Width, lblCounts[0].Top);
             pnlPlayer.Top = rdoUno.Top + rdoUno.Height;
             picPlayer.Top = rdoUno.Top + rdoUno.Height;
@@ -3470,13 +3352,7 @@ gameOver:
             s += "K"; // 5
             s += reverse + "K"; // 6
             s += lblDraw.Text + "K"; // 7
-            for (byte p = 0; p <= 3; p++)
-                s += Format(lblBets[p].Text) + "P";
-            s += "B";
-            for (byte p = 0; p <= 3; p++)
-                s += hasBet[p] + "P";
-            s += "K"; // 8
-            s += gametime + "K"; // 9
+            s += gametime + "K"; // 8
             s += form.SaveRules();
             return s;
         }
@@ -4220,57 +4096,6 @@ arrived:
                 lblPlayers[p].BringToFront();
             timTradeHands.Enabled = true;
         }
-
-        string Format(int number)
-        {
-            return Format(number.ToString(), true);
-        }
-
-        int Format(string number)
-        {
-            return int.Parse(Format(number, false));
-        }
-
-        string Format(string number, bool format)
-        {
-            if (format)
-            {
-                byte b = 0;
-                string s = "";
-                for (int i = number.Length - 1; i >= 0; i--)
-                {
-                    if (b >= 4 && number[i] != '-')
-                    {
-                        s = ',' + s;
-                        b = 0;
-                    }
-                    s = number[i] + s;
-                    b++;
-                }
-                return "$" + s;
-            }
-            else
-            {
-                return number.Replace(",", "").Substring(1);
-            }
-        }
-
-        private void TrkBet_Scroll(object sender, EventArgs e)
-        {
-            Action(0, (bet > 0 ? "大 " : "") + Format(trkBet.Value * betTrackBarRate / (form.buyIn / 1000) * (form.buyIn / 1000) + form.buyIn / 1000));
-            if (trkBet.Value == 0)
-            {
-                if (bet == 0)
-                {
-                    trkBet.Value = 1;
-                }
-                else
-                    Action(0, "跟");
-            }
-            else if (trkBet.Value == trkBet.Maximum)
-                Action(0, "全下");
-        }
-
         public Uno(Options form)
         {
             InitializeComponent();
@@ -4305,24 +4130,13 @@ arrived:
                 lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
                 lblCounts[i].SizeChanged += LblCounts_SizeChanged;
                 lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
-                lblBets[i] = new Label();
-                Controls.Add(lblBets[i]);
-                lblBets[i].AutoSize = true;
-                lblBets[i].Font = new Font(Font.FontFamily, Font.Size / 2);
-                lblBets[i].Tag = i;
-                lblBets[i].Text = "$0";
-                lblBets[i].BackColorChanged += Control_BackColorChanged;
-                lblBets[i].SizeChanged += LblBets_SizeChanged;
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
-            money = form.buyIn + form.buyIn / 1000;
-            mnuMoney.Text = Format(money);
-            if (form.mnuBuyIn0.Checked || form.buyIn <= 0 || form.isPlayingRecord)
+            mnuMoney.Text = Format(form.money);
+            if (form.mnuMultiply0.Checked || form.multiplier <= 0 || form.isPlayingRecord)
             {
-                form.buyIn = 0;
-                foreach (Label l in lblBets)
-                    l.Visible = false;
+                form.multiplier = 0;
             }
             bool[] ons;
             switch (form.ons)
@@ -4353,9 +4167,9 @@ arrived:
             Controls.Add(lblCards[0]);
             lblCards[0].Visible = false;
             lblCards[0].BackColor = Color.White;
-            if (!form.mnuBuyIn0.Checked)
+            if (!form.mnuMultiply0.Checked)
             {
-                btnStart.Text = $"開始 (-{Format(form.buyIn / 1000)})";
+                btnStart.Text = $"開始 (-{Format(form.multiplier * 10)})";
             }
             ResizeForm();
             SetInterval(form.animation);
@@ -4429,16 +4243,6 @@ arrived:
                 mnuForward.Visible = true;
             }
 
-        }
-
-        private void LblBets_SizeChanged(object sender, EventArgs e)
-        {
-            Label l = (Label)sender;
-            int i = int.Parse(l.Tag + "");
-            if (i == 3)
-            {
-                l.Left = width - l.Width;
-            }
         }
 
         private void Uno_Click(object sender, EventArgs e)

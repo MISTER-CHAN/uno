@@ -15,7 +15,7 @@ namespace Uno {
         public bool on0 = true;
         public byte ons = 3;
         public bool isPlayingRecord = false;
-        public int animation = 20, buyIn = 0, money = 0;
+        public int animation = 20, multiplier = 0, money = 0;
         public string[] keys = {};
 
 		public Options() {
@@ -112,12 +112,12 @@ namespace Uno {
             mnuOneWinner.Checked = bool.Parse(keys[52]);
             mnuOneLoser.Checked = bool.Parse(keys[53]);
             mnuUno.Checked = bool.Parse(keys[54]);
-            mnuBuyIn0.Checked = bool.Parse(keys[55]);
-            mnuBuyIn200000.Checked = bool.Parse(keys[56]);
-            mnuBuyIn1000000.Checked = bool.Parse(keys[57]);
-            mnuBuyIn10000000.Checked = bool.Parse(keys[58]);
-            mnuBuyIn50000000.Checked = bool.Parse(keys[59]);
-            mnuBuyIn100000000.Checked = bool.Parse(keys[60]);
+            mnuMultiply0.Checked = bool.Parse(keys[55]);
+            mnuMultiply1.Checked = bool.Parse(keys[56]);
+            mnuMultiply10000.Checked = bool.Parse(keys[57]);
+            mnuMultiply10.Checked = bool.Parse(keys[58]);
+            mnuMultiply100.Checked = bool.Parse(keys[59]);
+            mnuMultiply1000.Checked = bool.Parse(keys[60]);
             mnuCheat.Checked = bool.Parse(keys[61]);
         }
 
@@ -216,20 +216,18 @@ namespace Uno {
         private void MnuBuyIn_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            foreach (ToolStripMenuItem itm in mnuBuyIn.DropDownItems)
+            foreach (ToolStripMenuItem itm in mnuGamble.DropDownItems)
                 itm.Checked = false;
             menuItem.Checked = true;
-            buyIn = int.Parse(menuItem.Tag + "");
-            if (buyIn == -1)
-                buyIn = money;
+            multiplier = int.Parse(menuItem.Tag + "");
         }
 
         private void MnuCheat_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem_Click(sender, e);
-            if (mnuBuyIn.Checked && mnuCheat.Checked)
+            if (mnuGamble.Checked && mnuCheat.Checked)
             {
-                mnuBuyIn.Checked = false;
+                mnuGamble.Checked = false;
                 MessageBox.Show("無法在賭博中作弊!", "作弊", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -465,7 +463,7 @@ namespace Uno {
 
         private void MnuSaveRules_Click(object sender, EventArgs e)
         {
-            Interaction.SaveSetting("UNO", "RULES", "SAVE", "KKKKKKKKKK" + SaveRules());
+            Interaction.SaveSetting("UNO", "RULES", "SAVE", "KKKKKKKKK" + SaveRules());
             mnuLoadRules.Text = DateAndTime.Now.ToString();
             mnuLoadRules.Enabled = true;
         }
@@ -581,12 +579,12 @@ namespace Uno {
             s += mnuOneWinner.Checked + "K";
             s += mnuOneLoser.Checked + "K";
             s += mnuUno.Checked + "K";
-            s += mnuBuyIn0.Checked + "K";
-            s += mnuBuyIn200000.Checked + "K";
-            s += mnuBuyIn1000000.Checked + "K";
-            s += mnuBuyIn10000000.Checked + "K";
-            s += mnuBuyIn50000000.Checked + "K";
-            s += mnuBuyIn100000000.Checked + "K";
+            s += mnuMultiply0.Checked + "K";
+            s += mnuMultiply1.Checked + "K";
+            s += mnuMultiply10000.Checked + "K";
+            s += mnuMultiply10.Checked + "K";
+            s += mnuMultiply100.Checked + "K";
+            s += mnuMultiply1000.Checked + "K";
             s += mnuCheat.Checked + "K";
             s += DateAndTime.Now.ToString();
             return s;
