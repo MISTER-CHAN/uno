@@ -3704,7 +3704,7 @@ gameOver:
                                 break;
                         }
                     }
-                    if (!options.mnuMultiply0.Checked)
+                    if (options.multiplier > 0)
                         new Multiplier(options).ShowDialog();
                     int i = options.multiplier;
                     PlayersTurn(nextPlayer, true, GetDbp());
