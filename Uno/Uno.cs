@@ -1973,7 +1973,7 @@ begin_hacking:
             {
                 case UnoNumber.SKIP: return "禁止下家出牌";
                 case UnoNumber.SKIP_EVERYONE: return "禁止每家出牌";
-                case UnoNumber.REVERSE: return "反转出牌顺序" + (options.mnuWildPunch.Checked ? "\n玩家免受懲罰" : "");
+                case UnoNumber.REVERSE: return "反转出牌顺序";
                 case UnoNumber.DRAW_1: return "下家罚抽 1 张牌";
                 case UnoNumber.DRAW_2: return "下家罚抽 2 张牌";
                 case UnoNumber.DRAW_5: return "下家罚抽 5 张牌";
@@ -3486,6 +3486,8 @@ gameOver:
                 UnoColor.BLACK => "任意指定颜色" + (usage == "" ? "" : "\n　　\t") + usage,
                 _ => usage,
             };
+            if (color == UnoColor.BLACK && number == UnoNumber.REVERSE)
+                usage += "\n　　\t玩家免受懲罰";
             toolTip.ToolTipTitle = GetNumberName(number);
             toolTip.SetToolTip(card, "" +
                 "颜色\t" + GetColorName(color) + "\n" +
