@@ -96,14 +96,6 @@
             this.mnuPlayOrDrawAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawToMatch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawAllAndPlay = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuGamble = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply0 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply100 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply1000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply10000 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuMultiply100000 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawAndPlay = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCrazySkipAndReverse = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDoubleDraw = new System.Windows.Forms.ToolStripMenuItem();
@@ -119,6 +111,14 @@
             this.mnuOneWinner = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOneLoser = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuUno = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuGamble = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply0 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply100 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply1000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply10000 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply100000 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWatch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAutoSave = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,6 +140,7 @@
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWildPunch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -498,7 +499,8 @@
             this.mnuAttack,
             this.mnuSpin,
             this.mnuDos,
-            this.mnuFlip});
+            this.mnuFlip,
+            this.mnuWildPunch});
             this.mnuCards.Name = "mnuCards";
             this.mnuCards.Size = new System.Drawing.Size(44, 20);
             this.mnuCards.Text = "牌型";
@@ -516,7 +518,7 @@
             this.mnuBlackBlank,
             this.mnuMagentaBlank});
             this.mnuBlank.Name = "mnuBlank";
-            this.mnuBlank.Size = new System.Drawing.Size(143, 22);
+            this.mnuBlank.Size = new System.Drawing.Size(180, 22);
             this.mnuBlank.Text = "[空白]";
             this.mnuBlank.CheckedChanged += new System.EventHandler(this.MnuBlank_CheckedChanged);
             this.mnuBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -620,7 +622,7 @@
             // mnuWater
             // 
             this.mnuWater.Name = "mnuWater";
-            this.mnuWater.Size = new System.Drawing.Size(143, 22);
+            this.mnuWater.Size = new System.Drawing.Size(180, 22);
             this.mnuWater.Text = "UNO H₂O";
             this.mnuWater.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -630,7 +632,7 @@
             this.mnuWildHitfire,
             this.mnuTradeHands});
             this.mnuAttack.Name = "mnuAttack";
-            this.mnuAttack.Size = new System.Drawing.Size(143, 22);
+            this.mnuAttack.Size = new System.Drawing.Size(180, 22);
             this.mnuAttack.Text = "UNO Attack";
             this.mnuAttack.CheckedChanged += new System.EventHandler(this.MnuAttack_CheckedChanged);
             this.mnuAttack.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -656,13 +658,13 @@
             // 
             this.mnuSpin.Enabled = false;
             this.mnuSpin.Name = "mnuSpin";
-            this.mnuSpin.Size = new System.Drawing.Size(143, 22);
+            this.mnuSpin.Size = new System.Drawing.Size(180, 22);
             this.mnuSpin.Text = "UNO Spin";
             // 
             // mnuDos
             // 
             this.mnuDos.Name = "mnuDos";
-            this.mnuDos.Size = new System.Drawing.Size(143, 22);
+            this.mnuDos.Size = new System.Drawing.Size(180, 22);
             this.mnuDos.Text = "DOS";
             this.mnuDos.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -672,7 +674,7 @@
             this.mnuCyan,
             this.mnuMagenta});
             this.mnuFlip.Name = "mnuFlip";
-            this.mnuFlip.Size = new System.Drawing.Size(143, 22);
+            this.mnuFlip.Size = new System.Drawing.Size(180, 22);
             this.mnuFlip.Text = "UNO FLIP!";
             this.mnuFlip.CheckedChanged += new System.EventHandler(this.MnuFlip_CheckedChanged);
             this.mnuFlip.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -680,7 +682,7 @@
             // mnuCyan
             // 
             this.mnuCyan.Name = "mnuCyan";
-            this.mnuCyan.Size = new System.Drawing.Size(123, 22);
+            this.mnuCyan.Size = new System.Drawing.Size(180, 22);
             this.mnuCyan.Text = "包含 [靑]";
             this.mnuCyan.Visible = false;
             // 
@@ -688,7 +690,7 @@
             // 
             this.mnuMagenta.Enabled = false;
             this.mnuMagenta.Name = "mnuMagenta";
-            this.mnuMagenta.Size = new System.Drawing.Size(123, 22);
+            this.mnuMagenta.Size = new System.Drawing.Size(180, 22);
             this.mnuMagenta.Text = "包含 [紫]";
             this.mnuMagenta.Visible = false;
             // 
@@ -761,78 +763,6 @@
             this.mnuDrawAllAndPlay.Size = new System.Drawing.Size(205, 22);
             this.mnuDrawAllAndPlay.Text = "惩罚幷出牌";
             this.mnuDrawAllAndPlay.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
-            // 
-            // mnuGamble
-            // 
-            this.mnuGamble.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuMultiply0,
-            this.mnuMultiply1,
-            this.mnuMultiply10,
-            this.mnuMultiply100,
-            this.mnuMultiply1000,
-            this.mnuMultiply10000,
-            this.mnuMultiply100000});
-            this.mnuGamble.Name = "mnuGamble";
-            this.mnuGamble.Size = new System.Drawing.Size(205, 22);
-            this.mnuGamble.Text = "聚眾賭博";
-            // 
-            // mnuMultiply0
-            // 
-            this.mnuMultiply0.Checked = true;
-            this.mnuMultiply0.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnuMultiply0.Name = "mnuMultiply0";
-            this.mnuMultiply0.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply0.Tag = "0";
-            this.mnuMultiply0.Text = "0 倍";
-            this.mnuMultiply0.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply1
-            // 
-            this.mnuMultiply1.Name = "mnuMultiply1";
-            this.mnuMultiply1.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply1.Tag = "1";
-            this.mnuMultiply1.Text = "1 倍";
-            this.mnuMultiply1.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply10
-            // 
-            this.mnuMultiply10.Name = "mnuMultiply10";
-            this.mnuMultiply10.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply10.Tag = "10";
-            this.mnuMultiply10.Text = "10 倍";
-            this.mnuMultiply10.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply100
-            // 
-            this.mnuMultiply100.Name = "mnuMultiply100";
-            this.mnuMultiply100.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply100.Tag = "100";
-            this.mnuMultiply100.Text = "100 倍";
-            this.mnuMultiply100.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply1000
-            // 
-            this.mnuMultiply1000.Name = "mnuMultiply1000";
-            this.mnuMultiply1000.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply1000.Tag = "1000";
-            this.mnuMultiply1000.Text = "1000 倍";
-            this.mnuMultiply1000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply10000
-            // 
-            this.mnuMultiply10000.Name = "mnuMultiply10000";
-            this.mnuMultiply10000.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply10000.Tag = "10000";
-            this.mnuMultiply10000.Text = "1,0000 倍";
-            this.mnuMultiply10000.Click += new System.EventHandler(this.MnuBuyIn_Click);
-            // 
-            // mnuMultiply100000
-            // 
-            this.mnuMultiply100000.Name = "mnuMultiply100000";
-            this.mnuMultiply100000.Size = new System.Drawing.Size(180, 22);
-            this.mnuMultiply100000.Tag = "100000";
-            this.mnuMultiply100000.Text = "10,0000 倍";
-            this.mnuMultiply100000.Click += new System.EventHandler(this.MnuBuyIn_Click);
             // 
             // mnuDrawAndPlay
             // 
@@ -954,6 +884,78 @@
             this.mnuUno.Text = "喊 UNO!";
             this.mnuUno.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
+            // mnuGamble
+            // 
+            this.mnuGamble.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuMultiply0,
+            this.mnuMultiply1,
+            this.mnuMultiply10,
+            this.mnuMultiply100,
+            this.mnuMultiply1000,
+            this.mnuMultiply10000,
+            this.mnuMultiply100000});
+            this.mnuGamble.Name = "mnuGamble";
+            this.mnuGamble.Size = new System.Drawing.Size(205, 22);
+            this.mnuGamble.Text = "聚眾賭博";
+            // 
+            // mnuMultiply0
+            // 
+            this.mnuMultiply0.Checked = true;
+            this.mnuMultiply0.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuMultiply0.Name = "mnuMultiply0";
+            this.mnuMultiply0.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply0.Tag = "0";
+            this.mnuMultiply0.Text = "0 倍";
+            this.mnuMultiply0.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply1
+            // 
+            this.mnuMultiply1.Name = "mnuMultiply1";
+            this.mnuMultiply1.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply1.Tag = "1";
+            this.mnuMultiply1.Text = "1 倍";
+            this.mnuMultiply1.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply10
+            // 
+            this.mnuMultiply10.Name = "mnuMultiply10";
+            this.mnuMultiply10.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply10.Tag = "10";
+            this.mnuMultiply10.Text = "10 倍";
+            this.mnuMultiply10.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply100
+            // 
+            this.mnuMultiply100.Name = "mnuMultiply100";
+            this.mnuMultiply100.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply100.Tag = "100";
+            this.mnuMultiply100.Text = "100 倍";
+            this.mnuMultiply100.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply1000
+            // 
+            this.mnuMultiply1000.Name = "mnuMultiply1000";
+            this.mnuMultiply1000.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply1000.Tag = "1000";
+            this.mnuMultiply1000.Text = "1000 倍";
+            this.mnuMultiply1000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply10000
+            // 
+            this.mnuMultiply10000.Name = "mnuMultiply10000";
+            this.mnuMultiply10000.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply10000.Tag = "10000";
+            this.mnuMultiply10000.Text = "1,0000 倍";
+            this.mnuMultiply10000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
+            // mnuMultiply100000
+            // 
+            this.mnuMultiply100000.Name = "mnuMultiply100000";
+            this.mnuMultiply100000.Size = new System.Drawing.Size(136, 22);
+            this.mnuMultiply100000.Tag = "100000";
+            this.mnuMultiply100000.Text = "10,0000 倍";
+            this.mnuMultiply100000.Click += new System.EventHandler(this.MnuBuyIn_Click);
+            // 
             // mnuSettings
             // 
             this.mnuSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -974,7 +976,7 @@
             this.mnuWatch.Checked = true;
             this.mnuWatch.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuWatch.Name = "mnuWatch";
-            this.mnuWatch.Size = new System.Drawing.Size(148, 22);
+            this.mnuWatch.Size = new System.Drawing.Size(180, 22);
             this.mnuWatch.Text = "计时";
             this.mnuWatch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -983,7 +985,7 @@
             this.mnuAutoSave.Checked = true;
             this.mnuAutoSave.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuAutoSave.Name = "mnuAutoSave";
-            this.mnuAutoSave.Size = new System.Drawing.Size(148, 22);
+            this.mnuAutoSave.Size = new System.Drawing.Size(180, 22);
             this.mnuAutoSave.Text = "自動存檔";
             this.mnuAutoSave.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -992,7 +994,7 @@
             this.mnuMe.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDailyMoney});
             this.mnuMe.Name = "mnuMe";
-            this.mnuMe.Size = new System.Drawing.Size(148, 22);
+            this.mnuMe.Size = new System.Drawing.Size(180, 22);
             this.mnuMe.Text = "$0";
             // 
             // mnuDailyMoney
@@ -1005,7 +1007,7 @@
             // mnuSeed
             // 
             this.mnuSeed.Name = "mnuSeed";
-            this.mnuSeed.Size = new System.Drawing.Size(148, 22);
+            this.mnuSeed.Size = new System.Drawing.Size(180, 22);
             this.mnuSeed.Text = "不洗牌";
             this.mnuSeed.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -1018,7 +1020,7 @@
             this.mnuAnim15,
             this.mnuAnim20});
             this.mnuAnimation.Name = "mnuAnimation";
-            this.mnuAnimation.Size = new System.Drawing.Size(148, 22);
+            this.mnuAnimation.Size = new System.Drawing.Size(180, 22);
             this.mnuAnimation.Text = "动画长度";
             // 
             // mnuAnim0
@@ -1068,7 +1070,7 @@
             this.mnuThinking.Checked = true;
             this.mnuThinking.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuThinking.Name = "mnuThinking";
-            this.mnuThinking.Size = new System.Drawing.Size(148, 22);
+            this.mnuThinking.Size = new System.Drawing.Size(180, 22);
             this.mnuThinking.Text = "愚鈍的機器人";
             this.mnuThinking.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -1080,7 +1082,7 @@
             this.mnuRNGCryptoServiceProvider,
             this.mnuMembership});
             this.mnuRnd.Name = "mnuRnd";
-            this.mnuRnd.Size = new System.Drawing.Size(148, 22);
+            this.mnuRnd.Size = new System.Drawing.Size(180, 22);
             this.mnuRnd.Text = "洗牌人";
             // 
             // mnuRandom
@@ -1116,7 +1118,7 @@
             // mnuCheat
             // 
             this.mnuCheat.Name = "mnuCheat";
-            this.mnuCheat.Size = new System.Drawing.Size(148, 22);
+            this.mnuCheat.Size = new System.Drawing.Size(180, 22);
             this.mnuCheat.Text = "允许作弊";
             this.mnuCheat.Click += new System.EventHandler(this.MnuCheat_Click);
             // 
@@ -1134,6 +1136,13 @@
             this.mnuQuit.Size = new System.Drawing.Size(44, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
+            // 
+            // mnuWildPunch
+            // 
+            this.mnuWildPunch.Name = "mnuWildPunch";
+            this.mnuWildPunch.Size = new System.Drawing.Size(180, 22);
+            this.mnuWildPunch.Text = "[Wild Punch]";
+            this.mnuWildPunch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // Options
             // 
@@ -1274,5 +1283,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply1000;
         public System.Windows.Forms.ToolStripMenuItem mnuMultiply0;
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply100000;
+        public System.Windows.Forms.ToolStripMenuItem mnuWildPunch;
     }
 }
