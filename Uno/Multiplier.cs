@@ -12,8 +12,7 @@ namespace Uno
 {
     public partial class Multiplier : Form
     {
-
-        Options options;
+        readonly Options options;
 
         private void MnuMultiply_Click(object sender, EventArgs e)
         {
@@ -26,7 +25,7 @@ namespace Uno
             this.options = options;
             foreach (ToolStripMenuItem mnu in mnuMultiplier.Items)
                 mnu.Font = new Font(mnu.Font.FontFamily, mnu.Font.Size * 4);
-            Size = new Size(mnuMultiplier.Items[0].Width * 4, mnuMultiplier.Height);
+            Size = new Size(mnuMultiplier.Items[0].Width * 5, mnuMultiplier.Height);
         }
     }
 }

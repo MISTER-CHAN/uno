@@ -918,7 +918,7 @@ end_discard_all:
                 byte n = backNumber;
                 foreach (Card c in card)
                 {
-                    if (c.color == backColor)
+                    if (c.color == backColor || c.color == UnoColor.BLACK)
                     {
                         n = UnoNumber.MAX_VALUE;
                         break;
@@ -3314,7 +3314,7 @@ gameOver:
             }
             if (options.mnuBlank.Checked && options.mnuMagentaBlank.Checked)
                 pile.cards[UnoColor.MAGENTA, UnoNumber.BLANK] = 1 * decks - GetOnplayersCards(UnoColor.MAGENTA, UnoNumber.BLANK);
-            if (options.mnuWater.Checked && options.mnuBlackBlank.Checked)
+            if (options.mnuBlank.Checked && options.mnuBlackBlank.Checked)
                 pile.cards[UnoColor.BLACK, UnoNumber.BLANK] = 2 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.BLANK);
             pile.cards[UnoColor.BLACK, UnoNumber.WILD] = 4 * decks - GetOnplayersCards(UnoColor.BLACK, UnoNumber.WILD);
             if (options.mnuWater.Checked)

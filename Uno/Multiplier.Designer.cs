@@ -33,6 +33,7 @@
             this.mnuMultiply2 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMultiply4 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMultiply8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuMultiply16 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMultiplier.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,7 +44,8 @@
             this.mnuMultiply1,
             this.mnuMultiply2,
             this.mnuMultiply4,
-            this.mnuMultiply8});
+            this.mnuMultiply8,
+            this.mnuMultiply16});
             this.mnuMultiplier.Location = new System.Drawing.Point(0, 0);
             this.mnuMultiplier.Name = "mnuMultiplier";
             this.mnuMultiplier.Padding = new System.Windows.Forms.Padding(7, 3, 0, 3);
@@ -53,7 +55,7 @@
             // mnuMultiply1
             // 
             this.mnuMultiply1.Name = "mnuMultiply1";
-            this.mnuMultiply1.Size = new System.Drawing.Size(56, 21);
+            this.mnuMultiply1.Size = new System.Drawing.Size(56, 20);
             this.mnuMultiply1.Tag = "1";
             this.mnuMultiply1.Text = "不加倍";
             this.mnuMultiply1.Click += new System.EventHandler(this.MnuMultiply_Click);
@@ -61,7 +63,7 @@
             // mnuMultiply2
             // 
             this.mnuMultiply2.Name = "mnuMultiply2";
-            this.mnuMultiply2.Size = new System.Drawing.Size(44, 21);
+            this.mnuMultiply2.Size = new System.Drawing.Size(44, 20);
             this.mnuMultiply2.Tag = "2";
             this.mnuMultiply2.Text = "加倍";
             this.mnuMultiply2.Click += new System.EventHandler(this.MnuMultiply_Click);
@@ -69,18 +71,26 @@
             // mnuMultiply4
             // 
             this.mnuMultiply4.Name = "mnuMultiply4";
-            this.mnuMultiply4.Size = new System.Drawing.Size(43, 21);
+            this.mnuMultiply4.Size = new System.Drawing.Size(68, 20);
             this.mnuMultiply4.Tag = "4";
-            this.mnuMultiply4.Text = "4 倍";
+            this.mnuMultiply4.Text = "超級加倍";
             this.mnuMultiply4.Click += new System.EventHandler(this.MnuMultiply_Click);
             // 
             // mnuMultiply8
             // 
             this.mnuMultiply8.Name = "mnuMultiply8";
-            this.mnuMultiply8.Size = new System.Drawing.Size(43, 21);
+            this.mnuMultiply8.Size = new System.Drawing.Size(42, 20);
             this.mnuMultiply8.Tag = "8";
             this.mnuMultiply8.Text = "8 倍";
             this.mnuMultiply8.Click += new System.EventHandler(this.MnuMultiply_Click);
+            // 
+            // mnuMultiply16
+            // 
+            this.mnuMultiply16.Name = "mnuMultiply16";
+            this.mnuMultiply16.Size = new System.Drawing.Size(49, 20);
+            this.mnuMultiply16.Tag = "16";
+            this.mnuMultiply16.Text = "16 倍";
+            this.mnuMultiply16.Click += new System.EventHandler(this.MnuMultiply_Click);
             // 
             // Multiplier
             // 
@@ -109,5 +119,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply2;
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply4;
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply8;
+        private System.Windows.Forms.ToolStripMenuItem mnuMultiply16;
     }
 }
