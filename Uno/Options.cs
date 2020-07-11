@@ -115,10 +115,10 @@ namespace Uno {
             mnuUno.Checked = bool.Parse(keys[54]);
             mnuMultiply0.Checked = bool.Parse(keys[55]);
             mnuMultiply1.Checked = bool.Parse(keys[56]);
-            mnuMultiply10000.Checked = bool.Parse(keys[57]);
-            mnuMultiply10.Checked = bool.Parse(keys[58]);
-            mnuMultiply100.Checked = bool.Parse(keys[59]);
-            mnuMultiply1000.Checked = bool.Parse(keys[60]);
+            mnuMultiply10.Checked = bool.Parse(keys[57]);
+            mnuMultiply100.Checked = bool.Parse(keys[58]);
+            mnuMultiply1000.Checked = bool.Parse(keys[59]);
+            mnuMultiply10000.Checked = bool.Parse(keys[60]);
             multiplier = int.Parse(keys[61]);
             mnuCheat.Checked = bool.Parse(keys[62]);
         }
@@ -589,10 +589,10 @@ namespace Uno {
             s += mnuUno.Checked + "K";
             s += mnuMultiply0.Checked + "K";
             s += mnuMultiply1.Checked + "K";
-            s += mnuMultiply10000.Checked + "K";
             s += mnuMultiply10.Checked + "K";
             s += mnuMultiply100.Checked + "K";
             s += mnuMultiply1000.Checked + "K";
+            s += mnuMultiply10000.Checked + "K";
             s += multiplier + "K";
             s += mnuCheat.Checked + "K";
             s += DateAndTime.Now.ToString();

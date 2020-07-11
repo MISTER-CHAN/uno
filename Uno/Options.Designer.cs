@@ -89,6 +89,7 @@
             this.mnuFlip = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCyan = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMagenta = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuWildPunch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRevealable = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPairs = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +141,6 @@
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuWildPunch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -347,7 +347,7 @@
             this.mnuRemoveBot,
             this.mnuAddBot});
             this.mnuOns.Name = "mnuOns";
-            this.mnuOns.Size = new System.Drawing.Size(172, 22);
+            this.mnuOns.Size = new System.Drawing.Size(180, 22);
             this.mnuOns.Text = "玩家";
             // 
             // txtPlayer0
@@ -406,7 +406,7 @@
             this.mnuDealt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDealt});
             this.mnuDealt.Name = "mnuDealt";
-            this.mnuDealt.Size = new System.Drawing.Size(172, 22);
+            this.mnuDealt.Size = new System.Drawing.Size(180, 22);
             this.mnuDealt.Text = "每玩家牌数（张）";
             // 
             // txtDealt
@@ -421,7 +421,7 @@
             this.mnuDecks.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDecks});
             this.mnuDecks.Name = "mnuDecks";
-            this.mnuDecks.Size = new System.Drawing.Size(172, 22);
+            this.mnuDecks.Size = new System.Drawing.Size(180, 22);
             this.mnuDecks.Text = "总牌数（副）";
             // 
             // txtDecks
@@ -438,7 +438,7 @@
             this.mnuPro,
             this.mnuCheater});
             this.mnuDifficulty.Name = "mnuDifficulty";
-            this.mnuDifficulty.Size = new System.Drawing.Size(172, 22);
+            this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
             this.mnuDifficulty.Text = "對手水平";
             // 
             // mnuBeginner
@@ -472,7 +472,7 @@
             this.mnuBotBeginner,
             this.mnuBotPro});
             this.mnuBotDifficulty.Name = "mnuBotDifficulty";
-            this.mnuBotDifficulty.Size = new System.Drawing.Size(172, 22);
+            this.mnuBotDifficulty.Size = new System.Drawing.Size(180, 22);
             this.mnuBotDifficulty.Text = "託管水平";
             // 
             // mnuBotBeginner
@@ -685,6 +685,7 @@
             this.mnuCyan.Size = new System.Drawing.Size(180, 22);
             this.mnuCyan.Text = "包含 [靑]";
             this.mnuCyan.Visible = false;
+            this.mnuCyan.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuMagenta
             // 
@@ -693,6 +694,13 @@
             this.mnuMagenta.Size = new System.Drawing.Size(180, 22);
             this.mnuMagenta.Text = "包含 [紫]";
             this.mnuMagenta.Visible = false;
+            // 
+            // mnuWildPunch
+            // 
+            this.mnuWildPunch.Name = "mnuWildPunch";
+            this.mnuWildPunch.Size = new System.Drawing.Size(180, 22);
+            this.mnuWildPunch.Text = "[Wild Punch]";
+            this.mnuWildPunch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // mnuRules
             // 
@@ -1136,13 +1144,6 @@
             this.mnuQuit.Size = new System.Drawing.Size(44, 20);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
-            // 
-            // mnuWildPunch
-            // 
-            this.mnuWildPunch.Name = "mnuWildPunch";
-            this.mnuWildPunch.Size = new System.Drawing.Size(180, 22);
-            this.mnuWildPunch.Text = "[Wild Punch]";
-            this.mnuWildPunch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
             // Options
             // 
