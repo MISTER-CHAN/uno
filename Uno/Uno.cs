@@ -888,7 +888,7 @@ rnd:
             if (options.mnuAttack.Checked)
             {
                 if (card[0].number != UnoNumber.DISCARD_ALL)
-                    goto end_discard_all;
+                    goto wild_number;
                 byte discardColor = UnoColor.MAX_VALUE;
                 List<byte> discardColors = new List<byte>();
                 if (lblCards[1].Text != UnoNumberName.DISCARD_ALL)
@@ -912,9 +912,11 @@ rnd:
                     goto deny;
                 goto end_number;
             }
-end_discard_all:
+wild_number:
             if (options.mnuDos.Checked)
             {
+                if (!card.Cast<Card>().Select(b => b.number).Contains(UnoNumber.NUMBER))
+                    goto number;
                 byte n = backNumber;
                 foreach (Card c in card)
                 {
