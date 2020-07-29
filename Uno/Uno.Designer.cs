@@ -313,7 +313,7 @@
             // mnuPlayPause
             // 
             this.mnuPlayPause.Name = "mnuPlayPause";
-            this.mnuPlayPause.Size = new System.Drawing.Size(72, 21);
+            this.mnuPlayPause.Size = new System.Drawing.Size(79, 21);
             this.mnuPlayPause.Text = "⏸暫停 (&P)";
             this.mnuPlayPause.Visible = false;
             this.mnuPlayPause.Click += new System.EventHandler(this.MnuPlayPause_Click);
@@ -321,7 +321,7 @@
             // mnuStop
             // 
             this.mnuStop.Name = "mnuStop";
-            this.mnuStop.Size = new System.Drawing.Size(71, 21);
+            this.mnuStop.Size = new System.Drawing.Size(79, 21);
             this.mnuStop.Text = "⏹停止 (&S)";
             this.mnuStop.Visible = false;
             this.mnuStop.Click += new System.EventHandler(this.MnuStop_Click);
@@ -329,7 +329,7 @@
             // mnuForward
             // 
             this.mnuForward.Name = "mnuForward";
-            this.mnuForward.Size = new System.Drawing.Size(71, 21);
+            this.mnuForward.Size = new System.Drawing.Size(78, 21);
             this.mnuForward.Text = "⏩快進 (&F)";
             this.mnuForward.Visible = false;
             this.mnuForward.Click += new System.EventHandler(this.MnuForward_Click);
@@ -437,7 +437,7 @@
             this.pnlPlayer.Controls.Add(this.hPlayer);
             this.pnlPlayer.Location = new System.Drawing.Point(0, 206);
             this.pnlPlayer.Name = "pnlPlayer";
-            this.pnlPlayer.Size = new System.Drawing.Size(90, 120);
+            this.pnlPlayer.Size = new System.Drawing.Size(90, 135);
             this.pnlPlayer.TabIndex = 10;
             this.pnlPlayer.Visible = false;
             this.pnlPlayer.BackColorChanged += new System.EventHandler(this.Control_BackColorChanged);
@@ -499,7 +499,7 @@
             // 
             this.picPlayer.Location = new System.Drawing.Point(96, 206);
             this.picPlayer.Name = "picPlayer";
-            this.picPlayer.Size = new System.Drawing.Size(90, 120);
+            this.picPlayer.Size = new System.Drawing.Size(90, 135);
             this.picPlayer.TabIndex = 15;
             this.picPlayer.TabStop = false;
             this.picPlayer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseDown);

@@ -2810,7 +2810,7 @@ gameOver:
             int i = 0;
             if (PicPlayer.count * UnoSize.WIDTH <= width)
             {
-                imgPlayer = new Bitmap(PicPlayer.count * UnoSize.WIDTH, UnoSize.HEIGHT);
+                imgPlayer = new Bitmap(PicPlayer.count * UnoSize.WIDTH, UnoSize.HEIGHT + UnoSize.HEIGHT / 8);
                 gpsPlayer = Graphics.FromImage(imgPlayer);
                 picPlayer.Width = PicPlayer.count * UnoSize.WIDTH;
                 PicPlayer.cardWidth = UnoSize.WIDTH;
@@ -3364,7 +3364,7 @@ gameOver:
 		void ResizeForm() {
             width = ClientRectangle.Width;
             height = ClientRectangle.Height - mnuGame.Height;
-            lblPlayers[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, ClientRectangle.Height - UnoSize.HEIGHT);
+            lblPlayers[0].Location = new Point(width / 2 - UnoSize.WIDTH / 2, height - UnoSize.HEIGHT);
             lblPlayers[1].Location = new Point(0, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
             lblPlayers[2].Location = new Point(width / 2 - UnoSize.WIDTH / 2, mnuGame.Height);
             lblPlayers[3].Location = new Point(width - UnoSize.WIDTH, height / 2 - UnoSize.HEIGHT / 2 + mnuGame.Height / 2);
