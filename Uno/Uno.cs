@@ -2836,7 +2836,7 @@ gameOver:
             }
             else
             {
-                imgPlayer = new Bitmap(width, UnoSize.HEIGHT);
+                imgPlayer = new Bitmap(width, UnoSize.HEIGHT + UnoSize.HEIGHT / 8);
                 gpsPlayer = Graphics.FromImage(imgPlayer);
                 picPlayer.Width = width;
                 PicPlayer.cardWidth = (float)width / PicPlayer.count;
