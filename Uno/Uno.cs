@@ -1543,26 +1543,40 @@ begin_hacking:
             if (MovingCard.isPlaying)
             {
                 byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
+                if (backNumber == UnoNumber.REVERSE && lblCards[1].BackColor == Color.Black && !options.mnuPlayOrDrawAll.Checked)
+                {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
+                    return null;
+                }
                 if (backNumber == UnoNumber.WILD_HITFIRE && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_HITFIRE] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_HITFIRE);
                     return null;
                 }
                 if (backNumber == UnoNumber.WILD_DRAW_COLOR && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_COLOR] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_COLOR);
                     return null;
                 }
                 if (backNumber == UnoNumber.WILD_DRAW_4 && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     return null;
                 }
                 if (backNumber == UnoNumber.DRAW_5 && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     foreach (byte b in colorList)
@@ -1572,6 +1586,8 @@ begin_hacking:
                 }
                 if (backNumber == UnoNumber.DRAW_2 && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     foreach (byte b in colorList)
@@ -1586,6 +1602,8 @@ begin_hacking:
                 }
                 if (backNumber == UnoNumber.DRAW_1 && !options.mnuPlayOrDrawAll.Checked)
                 {
+                    if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
+                        return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
                     if (pile.cards[UnoColor.BLACK, UnoNumber.WILD_DRAW_4] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.WILD_DRAW_4);
                     foreach (byte b in colorList)
