@@ -747,7 +747,10 @@ exit:
                         if (options.mnuPairs.Checked)
                         {
                             List<byte> colors = new List<byte>();
-                            for (byte c = 0; c < UnoColor.MAX_VALUE; c++)
+                            List<byte> allColors = new List<byte>() { 0, 1, 2, 3, 4, 5, 6 };
+                            allColors.Remove(bestCard.color);
+                            allColors.Insert(0, bestCard.color);
+                            foreach (byte c in allColors)
                             {
                                 for (int i = 1; i <= pile.cards[c, bestCard.number]; i++)
                                 { 
@@ -1543,7 +1546,7 @@ begin_hacking:
             if (MovingCard.isPlaying)
             {
                 byte backColor = GetColorId(BackColor), backNumber = GetNumberId(lblCards[1].Text);
-                if (backNumber == UnoNumber.REVERSE && lblCards[1].BackColor == Color.Black && !options.mnuPlayOrDrawAll.Checked)
+                if (backNumber == UnoNumber.REVERSE && lblCards.Last().BackColor == Color.Black && !options.mnuPlayOrDrawAll.Checked)
                 {
                     if (pile.cards[UnoColor.BLACK, UnoNumber.REVERSE] > 0)
                         return new Card(UnoColor.BLACK, UnoNumber.REVERSE);
