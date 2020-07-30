@@ -3131,23 +3131,28 @@ gameOver:
                 {
                     SetCard(lblMovingCards[c], cards[c - 1].color, cards[c - 1].number);
                 }
-                if (lblMovingCards.Count > swpcw / 2)
-                {
-                    for (int c = 1; c < lblMovingCards.Count; c++)
-                    {
-                        lblMovingCards[c].Location = new Point(UnoSize.WIDTH * (int)((c - 1f) % (swpcw / 2f)),
-                            UnoSize.HEIGHT * (int)((c - 1f) / swpcw * 2f));
-                    }
-                    pnlMovingCards.Size = new Size(UnoSize.WIDTH * (int)(swpcw / 2f),
-                        UnoSize.HEIGHT * (int)((lblMovingCards.Count - 1f) / swpcw * 2f));
-                }
-                else
+
+                if (lblMovingCards.Count <= swpcw / 2) // swpcw: Screen's Width Per Card's Width
                 {
                     for (int c = 1; c < lblMovingCards.Count; c++)
                     {
                         lblMovingCards[c].Location = new Point(UnoSize.WIDTH * (c - 1), 0);
                     }
                     pnlMovingCards.Size = new Size(UnoSize.WIDTH * (lblMovingCards.Count - 1), UnoSize.HEIGHT);
+                }
+                else
+                {
+                    int lines = (int)((lblMovingCards.Count - 1f) / swpcw * 2f);
+                    if (lines == 0)
+                        lines = 1;
+                    int cpl = lblMovingCards.Count / lines;
+                    int w = width / 2 / cpl;
+                    for (int c = 1; c < lblMovingCards.Count; c++)
+                    {
+                        lblMovingCards[c].Location = new Point(w * (int)((c - 1f) % cpl),
+                            UnoSize.HEIGHT * (int)((c - 1f) / cpl));
+                    }
+                    pnlMovingCards.Size = new Size(width / 2, UnoSize.HEIGHT * lines);
                 }
                 timPlayersToCenter.Enabled = true;
                 pnlMovingCards.Location = new Point(-pnlMovingCards.Width, -pnlMovingCards.Height);
@@ -3691,7 +3696,10 @@ gameOver:
                     byte nextPlayer;
                     if (!options.isPlayingRecord)
                     {
-                        nextPlayer = NextPlayer((byte)(4 * Rnd()));
+                        if (options.mnuFirst.Checked)
+                            nextPlayer = 0;
+                        else
+                            nextPlayer = NextPlayer((byte)(4 * Rnd()));
                         Record.firstTurn = nextPlayer;
                     }
                     else

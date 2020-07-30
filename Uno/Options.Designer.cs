@@ -141,6 +141,7 @@
             this.mnuCheat = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFirst = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -347,7 +348,7 @@
             this.mnuRemoveBot,
             this.mnuAddBot});
             this.mnuOns.Name = "mnuOns";
-            this.mnuOns.Size = new System.Drawing.Size(180, 22);
+            this.mnuOns.Size = new System.Drawing.Size(172, 22);
             this.mnuOns.Text = "玩家";
             // 
             // txtPlayer0
@@ -406,7 +407,7 @@
             this.mnuDealt.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDealt});
             this.mnuDealt.Name = "mnuDealt";
-            this.mnuDealt.Size = new System.Drawing.Size(180, 22);
+            this.mnuDealt.Size = new System.Drawing.Size(172, 22);
             this.mnuDealt.Text = "每玩家牌数（张）";
             // 
             // txtDealt
@@ -421,7 +422,7 @@
             this.mnuDecks.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.txtDecks});
             this.mnuDecks.Name = "mnuDecks";
-            this.mnuDecks.Size = new System.Drawing.Size(180, 22);
+            this.mnuDecks.Size = new System.Drawing.Size(172, 22);
             this.mnuDecks.Text = "总牌数（副）";
             // 
             // txtDecks
@@ -438,7 +439,7 @@
             this.mnuPro,
             this.mnuCheater});
             this.mnuDifficulty.Name = "mnuDifficulty";
-            this.mnuDifficulty.Size = new System.Drawing.Size(180, 22);
+            this.mnuDifficulty.Size = new System.Drawing.Size(172, 22);
             this.mnuDifficulty.Text = "對手水平";
             // 
             // mnuBeginner
@@ -472,7 +473,7 @@
             this.mnuBotBeginner,
             this.mnuBotPro});
             this.mnuBotDifficulty.Name = "mnuBotDifficulty";
-            this.mnuBotDifficulty.Size = new System.Drawing.Size(180, 22);
+            this.mnuBotDifficulty.Size = new System.Drawing.Size(172, 22);
             this.mnuBotDifficulty.Text = "託管水平";
             // 
             // mnuBotBeginner
@@ -518,7 +519,7 @@
             this.mnuBlackBlank,
             this.mnuMagentaBlank});
             this.mnuBlank.Name = "mnuBlank";
-            this.mnuBlank.Size = new System.Drawing.Size(180, 22);
+            this.mnuBlank.Size = new System.Drawing.Size(147, 22);
             this.mnuBlank.Text = "[空白]";
             this.mnuBlank.CheckedChanged += new System.EventHandler(this.MnuBlank_CheckedChanged);
             this.mnuBlank.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -622,7 +623,7 @@
             // mnuWater
             // 
             this.mnuWater.Name = "mnuWater";
-            this.mnuWater.Size = new System.Drawing.Size(180, 22);
+            this.mnuWater.Size = new System.Drawing.Size(147, 22);
             this.mnuWater.Text = "UNO H₂O";
             this.mnuWater.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -632,7 +633,7 @@
             this.mnuWildHitfire,
             this.mnuTradeHands});
             this.mnuAttack.Name = "mnuAttack";
-            this.mnuAttack.Size = new System.Drawing.Size(180, 22);
+            this.mnuAttack.Size = new System.Drawing.Size(147, 22);
             this.mnuAttack.Text = "UNO Attack";
             this.mnuAttack.CheckedChanged += new System.EventHandler(this.MnuAttack_CheckedChanged);
             this.mnuAttack.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -658,13 +659,13 @@
             // 
             this.mnuSpin.Enabled = false;
             this.mnuSpin.Name = "mnuSpin";
-            this.mnuSpin.Size = new System.Drawing.Size(180, 22);
+            this.mnuSpin.Size = new System.Drawing.Size(147, 22);
             this.mnuSpin.Text = "UNO Spin";
             // 
             // mnuDos
             // 
             this.mnuDos.Name = "mnuDos";
-            this.mnuDos.Size = new System.Drawing.Size(180, 22);
+            this.mnuDos.Size = new System.Drawing.Size(147, 22);
             this.mnuDos.Text = "DOS";
             this.mnuDos.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -674,7 +675,7 @@
             this.mnuCyan,
             this.mnuMagenta});
             this.mnuFlip.Name = "mnuFlip";
-            this.mnuFlip.Size = new System.Drawing.Size(180, 22);
+            this.mnuFlip.Size = new System.Drawing.Size(147, 22);
             this.mnuFlip.Text = "UNO FLIP!";
             this.mnuFlip.CheckedChanged += new System.EventHandler(this.MnuFlip_CheckedChanged);
             this.mnuFlip.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -682,7 +683,7 @@
             // mnuCyan
             // 
             this.mnuCyan.Name = "mnuCyan";
-            this.mnuCyan.Size = new System.Drawing.Size(180, 22);
+            this.mnuCyan.Size = new System.Drawing.Size(123, 22);
             this.mnuCyan.Text = "包含 [靑]";
             this.mnuCyan.Visible = false;
             this.mnuCyan.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
@@ -691,14 +692,14 @@
             // 
             this.mnuMagenta.Enabled = false;
             this.mnuMagenta.Name = "mnuMagenta";
-            this.mnuMagenta.Size = new System.Drawing.Size(180, 22);
+            this.mnuMagenta.Size = new System.Drawing.Size(123, 22);
             this.mnuMagenta.Text = "包含 [紫]";
             this.mnuMagenta.Visible = false;
             // 
             // mnuWildPunch
             // 
             this.mnuWildPunch.Name = "mnuWildPunch";
-            this.mnuWildPunch.Size = new System.Drawing.Size(180, 22);
+            this.mnuWildPunch.Size = new System.Drawing.Size(147, 22);
             this.mnuWildPunch.Text = "[Wild Punch]";
             this.mnuWildPunch.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
             // 
@@ -974,7 +975,8 @@
             this.mnuAnimation,
             this.mnuThinking,
             this.mnuRnd,
-            this.mnuCheat});
+            this.mnuCheat,
+            this.mnuFirst});
             this.mnuSettings.Name = "mnuSettings";
             this.mnuSettings.Size = new System.Drawing.Size(44, 20);
             this.mnuSettings.Text = "設置";
@@ -1145,6 +1147,13 @@
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.MnuQuit_Click);
             // 
+            // mnuFirst
+            // 
+            this.mnuFirst.Name = "mnuFirst";
+            this.mnuFirst.Size = new System.Drawing.Size(180, 22);
+            this.mnuFirst.Text = "先手";
+            this.mnuFirst.Click += new System.EventHandler(this.ToolStripMenuItem_Click);
+            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -1285,5 +1294,6 @@
         public System.Windows.Forms.ToolStripMenuItem mnuMultiply0;
         private System.Windows.Forms.ToolStripMenuItem mnuMultiply100000;
         public System.Windows.Forms.ToolStripMenuItem mnuWildPunch;
+        public System.Windows.Forms.ToolStripMenuItem mnuFirst;
     }
 }
