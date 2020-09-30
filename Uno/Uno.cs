@@ -2554,7 +2554,7 @@ gameOver:
                         case "/play":
                             if (data.Length > 1)
                             {
-                                if (data[1] == "false" || data[1] == "true")
+                                if (data[1].ToLower() == "false" || data[1].ToLower() == "true")
                                 {
                                     canPlay = bool.Parse(data[1]);
                                     Action(0, "已切換強制出牌");
@@ -2695,7 +2695,11 @@ gameOver:
                 pile.cards[color, number]++;
                 players[0].cards[card.color, card.number]++;
                 if (mnuPicPlayer.Checked)
+                {
+                    PicPlayer.picPlayer[pointing].color = card.color;
+                    PicPlayer.picPlayer[pointing].number = card.number;
                     PicPlayer_CheckedChanged();
+                }
                 else
                     SetCard(control, card.color, card.number);
             }
@@ -2764,6 +2768,9 @@ gameOver:
         private void MnuPicPlayer_Click(object sender, EventArgs e)
         {
             mnuPicPlayer.Checked = !mnuPicPlayer.Checked;
+            pnlPlayer.Visible = !mnuPicPlayer.Checked;
+            picPlayer.Visible = mnuPicPlayer.Checked;
+            Sort();
         }
 
         private void MnuPlayPause_Click(object sender, EventArgs e)
@@ -2818,11 +2825,17 @@ gameOver:
             return lblPlayers[next].Visible ? next : NextPlayer(next, reverse);
         }
 
-        void PicPlayer_CheckedChanged()
+        void PicPlayer_CheckedChanged(bool sort = false)
         {
             if (width <= 0)
                 return;
-            PicPlayer.picPlayer.Clear();
+            if (sort)
+            {
+                PicPlayer.count = PlayersCards(0).Length;
+                PicPlayer.checkeds = new bool[PicPlayer.count];
+                PicPlayer.selected = -1;
+                PicPlayer.picPlayer.Clear();
+            }
             if (PicPlayer.count <= 0)
             {
                 picPlayer.Visible = false;
@@ -2833,53 +2846,69 @@ gameOver:
             {
                 imgPlayer = new Bitmap(PicPlayer.count * UnoSize.WIDTH, UnoSize.HEIGHT + UnoSize.HEIGHT / 8);
                 gpsPlayer = Graphics.FromImage(imgPlayer);
-                picPlayer.Width = PicPlayer.count * UnoSize.WIDTH;
-                PicPlayer.cardWidth = UnoSize.WIDTH;
-                if (mnuByColor.Checked)
-                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                            for (int c = 1; c <= players[0].cards[color, number]; c++)
-                            {
-                                PicPlayer.picPlayer.Add(new Card(color, number));
-                                gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
-                                i++;
-                            }
-                else
-                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                if (sort)
+                {
+                    picPlayer.Width = PicPlayer.count * UnoSize.WIDTH;
+                    PicPlayer.cardWidth = UnoSize.WIDTH;
+                    if (mnuByColor.Checked)
                         for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                            for (int c = 1; c <= players[0].cards[color, number]; c++)
-                            {
-                                PicPlayer.picPlayer.Add(new Card(color, number));
-                                gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
-                                i++;
-                            }
-                picPlayer.Left = width / 2 - picPlayer.Width / 2;
+                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                                for (int c = 1; c <= players[0].cards[color, number]; c++)
+                                {
+                                    PicPlayer.picPlayer.Add(new Card(color, number));
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    i++;
+                                }
+                    else
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                                for (int c = 1; c <= players[0].cards[color, number]; c++)
+                                {
+                                    PicPlayer.picPlayer.Add(new Card(color, number));
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    i++;
+                                }
+                    picPlayer.Left = width / 2 - picPlayer.Width / 2;
+                }
+                else
+                {
+                    for (i = 0; i < PicPlayer.count; i++)
+                        gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * 120, PicPlayer.picPlayer[i].color * 160, 120, 160, GraphicsUnit.Pixel);
+                }
             }
             else
             {
                 imgPlayer = new Bitmap(width, UnoSize.HEIGHT + UnoSize.HEIGHT / 8);
                 gpsPlayer = Graphics.FromImage(imgPlayer);
-                picPlayer.Width = width;
-                PicPlayer.cardWidth = (float)width / PicPlayer.count;
-                if (mnuByColor.Checked)
-                    for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
-                            for (int c = 1; c <= players[0].cards[color, number]; c++)
-                            {
-                                PicPlayer.picPlayer.Add(new Card(color, number));
-                                gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
-                                i++;
-                            }
-                else
-                    for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                if (sort)
+                {
+                    picPlayer.Width = width;
+                    PicPlayer.cardWidth = (float)width / PicPlayer.count;
+                    if (mnuByColor.Checked)
                         for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
-                            for (int c = 1; c <= players[0].cards[color, number]; c++)
-                            {
-                                PicPlayer.picPlayer.Add(new Card(color, number));
-                                gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
-                                i++;
-                            }
-                picPlayer.Left = 0;
+                            for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                                for (int c = 1; c <= players[0].cards[color, number]; c++)
+                                {
+                                    PicPlayer.picPlayer.Add(new Card(color, number));
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    i++;
+                                }
+                    else
+                        for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
+                            for (byte color = 0; color <= UnoColor.MAX_VALUE; color++)
+                                for (int c = 1; c <= players[0].cards[color, number]; c++)
+                                {
+                                    PicPlayer.picPlayer.Add(new Card(color, number));
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    i++;
+                                }
+                    picPlayer.Left = 0;
+                }
+                else
+                {
+                    for (i = 0; i < PicPlayer.count; i++)
+                        gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * 120, PicPlayer.picPlayer[i].color * 160, 120, 160, GraphicsUnit.Pixel);
+                }
             }
             picPlayer.Image = imgPlayer;
             PicPlayer.selecting = -1;
@@ -2915,16 +2944,24 @@ gameOver:
                     switch (e.Button)
                     {
                         case MouseButtons.Left:
-                            if (!options.mnuPairs.Checked && PicPlayer.selected != -1)
-                                PicPlayer.checkeds[PicPlayer.selected] = false;
-                            PicPlayer.checkeds[i] = true;
-                            if (!options.mnuPairs.Checked)
-                                PicPlayer.selected = i;
-                            PicPlayer_CheckedChanging(i, true);
+                            if (!PicPlayer.checkeds[i])
+                            {
+                                if (!options.mnuPairs.Checked && PicPlayer.selected != -1)
+                                    PicPlayer.checkeds[PicPlayer.selected] = false;
+                                PicPlayer.checkeds[i] = true;
+                                if (!options.mnuPairs.Checked)
+                                    PicPlayer.selected = i;
+                                PicPlayer_CheckedChanging(i, true);
+                            }
+                            else
+                            {
+                                PicPlayer.checkeds[i] = false;
+                                PicPlayer_CheckedChanging(i, false);
+                            }
                             break;
                         case MouseButtons.Right:
+                            PicPlayer_CheckedChanging(i, !PicPlayer.checkeds[i]);
                             PicPlayer.checkeds[i] = false;
-                            PicPlayer_CheckedChanging(i, false);
                             break;
                     }
                     PicPlayer.selecting = i;
@@ -3479,13 +3516,11 @@ gameOver:
             card.Text = GetNumber(number);
             if (mnuAppearance.Checked)
             {
-                card.ForeColor = card.BackColor;
                 Image image = new Bitmap(120, 160);
                 Graphics graphics = Graphics.FromImage(image);
                 graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
                 card.BackgroundImage = image;
-                if (number != UnoNumber.BLANK)
-                    card.Font = new Font(card.Font.FontFamily, 1);
+                card.Font = new Font(card.Font.FontFamily, 1);
                 graphics.Flush();
                 graphics.Dispose();
             }
@@ -3586,10 +3621,7 @@ gameOver:
         {
             if (mnuPicPlayer.Checked)
             {
-                PicPlayer.count = PlayersCards(0).Length;
-                PicPlayer.checkeds = new bool[PicPlayer.count];
-                PicPlayer.selected = -1;
-                PicPlayer_CheckedChanged();
+                PicPlayer_CheckedChanged(true);
             }
             else
             {
@@ -4238,34 +4270,39 @@ arrived:
             height = ClientRectangle.Height - mnuGame.Height;
             this.options = options;
             imgUno = Properties.Resources.uno;
+            Graphics gpsUno = Graphics.FromImage(imgUno);
+            Brush brush = new SolidBrush(Color.Black);
+            Font font = new Font(new FontFamily("MS Gothic"), 84f);
+            for (byte b = 0; b <= UnoColor.MAX_VALUE; b++)
+                gpsUno.DrawString(options.txtBlankText.Text, font, brush, new PointF(UnoNumber.BLANK * 120, b * 160 + 40));
             lblPile.Top = mnuGame.Height;
             lblPile.BackgroundImageLayout = ImageLayout.Stretch;
             lblPile.BackgroundImage = Properties.Resources.uno_pile;
             isFair = options.mnuBotPro.Checked;
-            for (byte i = 0; i < 4; i++)
+            for (byte b = 0; b < 4; b++)
             {
-                lblPlayers[i] = new Label();
-                Controls.Add(lblPlayers[i]);
-                lblPlayers[i].AutoSize = options.mnuRevealable.Checked;
-                lblPlayers[i].BackgroundImageLayout = ImageLayout.Stretch;
-                if (i > 0 && !options.mnuRevealable.Checked)
-                    lblPlayers[i].BackgroundImage = Properties.Resources.uno_back;
-                lblPlayers[i].ForeColor = Color.Black;
-                lblPlayers[i].Tag = i;
-                lblPlayers[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblPlayers[i].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
-                lblPlayers[i].Tag = i;
-                if (i > 0) lblPlayers[i].BorderStyle = BorderStyle.FixedSingle;
-                lblPlayers[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                lblCounts[i] = new Label();
-                Controls.Add(lblCounts[i]);
-                lblCounts[i].AutoSize = true;
-                lblCounts[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblCounts[i].Tag = i;
-                lblCounts[i].Text = "0";
-                lblCounts[i].BackColorChanged += new EventHandler(Control_BackColorChanged);
-                lblCounts[i].SizeChanged += LblCounts_SizeChanged;
-                lblCounts[i].TextChanged += new EventHandler(LblCounts_TextChanged);
+                lblPlayers[b] = new Label();
+                Controls.Add(lblPlayers[b]);
+                lblPlayers[b].AutoSize = options.mnuRevealable.Checked;
+                lblPlayers[b].BackgroundImageLayout = ImageLayout.Stretch;
+                if (b > 0 && !options.mnuRevealable.Checked)
+                    lblPlayers[b].BackgroundImage = Properties.Resources.uno_back;
+                lblPlayers[b].ForeColor = Color.White;
+                lblPlayers[b].Tag = b;
+                lblPlayers[b].TextAlign = ContentAlignment.MiddleCenter;
+                lblPlayers[b].Size = new Size(UnoSize.WIDTH, UnoSize.HEIGHT);
+                lblPlayers[b].Tag = b;
+                if (b > 0) lblPlayers[b].BorderStyle = BorderStyle.FixedSingle;
+                lblPlayers[b].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[b] = new Label();
+                Controls.Add(lblCounts[b]);
+                lblCounts[b].AutoSize = true;
+                lblCounts[b].TextAlign = ContentAlignment.MiddleCenter;
+                lblCounts[b].Tag = b;
+                lblCounts[b].Text = "0";
+                lblCounts[b].BackColorChanged += new EventHandler(Control_BackColorChanged);
+                lblCounts[b].SizeChanged += LblCounts_SizeChanged;
+                lblCounts[b].TextChanged += new EventHandler(LblCounts_TextChanged);
             }
             lblPlayers[0].BackColor = Color.Transparent;
             lblPlayers[0].Text = "";
