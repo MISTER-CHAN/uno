@@ -2214,7 +2214,7 @@ gameOver:
                         c.ContextMenuStrip = mnuCheating;
                 isFair = true;
                 mnuCheatAll.Visible = options.mnuPairs.Checked;
-                MessageBox.Show("你現在可以使用某些操作來出術.", "你好像不小心從牌堆中發現了甚麼");
+                MessageBox.Show("你現在可以使用某些操作來出術.", "你好像從牌堆中發現了甚麼");
             }
         }
 
