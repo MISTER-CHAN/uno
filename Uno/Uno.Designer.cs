@@ -509,6 +509,7 @@
             this.picPlayer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseDown);
             this.picPlayer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseMove);
             this.picPlayer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseUp);
+            this.picPlayer.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.PicPlayer_MouseWheel);
             // 
             // Uno
             // 
@@ -548,9 +549,9 @@
 
 		}
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.Label lblPile;
+        private System.Windows.Forms.Label lblPile;
 		private System.Windows.Forms.Timer timPileToPlayers;
 		private System.Windows.Forms.MenuStrip mnuGame;
 		private System.Windows.Forms.ToolStripMenuItem itmGame;

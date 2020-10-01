@@ -1884,12 +1884,7 @@ begin_hacking:
                 for (byte number = 0; number <= UnoNumber.MAX_VALUE; number++)
                     for (int c = 1; c <= pile.cards[color, number]; c++)
                     {
-                        Card card = new Card
-                        {
-                            color = color,
-                            number = number
-                        };
-                        cards.Add(card);
+                        cards.Add(new Card(color, number));
                     };
             return cards.ToArray();
         }
@@ -2979,6 +2974,44 @@ gameOver:
             {
                 PicPlayer.checkeds[pointing] = true;
                 Play(0);
+            }
+        }
+
+        private void PicPlayer_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (isFair)
+            {
+                Card oldCard = PicPlayer.picPlayer[pointing];
+                int count = pile.cards[oldCard.color, oldCard.number];
+                pile.cards[oldCard.color, oldCard.number] = 1;
+                Card[] p = GetPile();
+                int i;
+                for (i = 0; i < p.Length; i++)
+                    if (p[i].color == oldCard.color && p[i].number == oldCard.number)
+                        break;
+                pile.cards[oldCard.color, oldCard.number] = count;
+                Card newCard = null;
+                switch (Math.Sign(e.Delta))
+                {
+                    case -1:
+                        if (i > 0)
+                            newCard = p[i - 1];
+                        else
+                            newCard = p.Last();
+                        break;
+                    case 1:
+                        if (i < p.Length - 1)
+                            newCard = p[i + 1];
+                        else
+                            newCard = p.First();
+                        break;
+                }
+                players[0].cards[oldCard.color, oldCard.number]--;
+                pile.cards[oldCard.color, oldCard.number]++;
+                pile.cards[newCard.color, newCard.number]--;
+                players[0].cards[newCard.color, newCard.number]++;
+                PicPlayer.picPlayer[pointing] = newCard;
+                PicPlayer_CheckedChanged();
             }
         }
 
