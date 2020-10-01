@@ -2985,6 +2985,9 @@ gameOver:
                 int count = pile.cards[oldCard.color, oldCard.number];
                 pile.cards[oldCard.color, oldCard.number] = 1;
                 Card[] p = GetPile();
+                if (p.Length <= 1)
+                    return;
+                hasCheat = true;
                 int i;
                 for (i = 0; i < p.Length; i++)
                     if (p[i].color == oldCard.color && p[i].number == oldCard.number)
