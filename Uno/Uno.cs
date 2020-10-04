@@ -65,6 +65,12 @@ namespace Uno
             public static List<Card[]>[] players = new List<Card[]>[4] { new List<Card[]>(), new List<Card[]>(), new List<Card[]>(), new List<Card[]>() };
         }
 
+        public class ResourceUnoSize
+        {
+            public const int WIDTH = 120;
+            public const int HEIGHT = 160;
+        }
+
         public class TradingHands
         {
             public static byte player1 = 4, player2 = 4;
@@ -2852,7 +2858,7 @@ gameOver:
                                 for (int c = 1; c <= players[0].cards[color, number]; c++)
                                 {
                                     PicPlayer.picPlayer.Add(new Card(color, number));
-                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * ResourceUnoSize.WIDTH, color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                                     i++;
                                 }
                     else
@@ -2861,7 +2867,7 @@ gameOver:
                                 for (int c = 1; c <= players[0].cards[color, number]; c++)
                                 {
                                     PicPlayer.picPlayer.Add(new Card(color, number));
-                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * ResourceUnoSize.WIDTH, color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                                     i++;
                                 }
                     picPlayer.Left = width / 2 - picPlayer.Width / 2;
@@ -2869,7 +2875,7 @@ gameOver:
                 else
                 {
                     for (i = 0; i < PicPlayer.count; i++)
-                        gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * 120, PicPlayer.picPlayer[i].color * 160, 120, 160, GraphicsUnit.Pixel);
+                        gpsPlayer.DrawImage(imgUno, new Rectangle(i * UnoSize.WIDTH, PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * ResourceUnoSize.WIDTH, PicPlayer.picPlayer[i].color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                 }
             }
             else
@@ -2886,7 +2892,7 @@ gameOver:
                                 for (int c = 1; c <= players[0].cards[color, number]; c++)
                                 {
                                     PicPlayer.picPlayer.Add(new Card(color, number));
-                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * ResourceUnoSize.WIDTH, color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                                     i++;
                                 }
                     else
@@ -2895,7 +2901,7 @@ gameOver:
                                 for (int c = 1; c <= players[0].cards[color, number]; c++)
                                 {
                                     PicPlayer.picPlayer.Add(new Card(color, number));
-                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                                    gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), number * ResourceUnoSize.WIDTH, color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                                     i++;
                                 }
                     picPlayer.Left = 0;
@@ -2903,7 +2909,7 @@ gameOver:
                 else
                 {
                     for (i = 0; i < PicPlayer.count; i++)
-                        gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * 120, PicPlayer.picPlayer[i].color * 160, 120, 160, GraphicsUnit.Pixel);
+                        gpsPlayer.DrawImage(imgUno, new Rectangle((int)(i * PicPlayer.cardWidth), PicPlayer.checkeds[i] ? 0 : UnoSize.HEIGHT / 8, UnoSize.WIDTH, UnoSize.HEIGHT), PicPlayer.picPlayer[i].number * ResourceUnoSize.WIDTH, PicPlayer.picPlayer[i].color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                 }
             }
             picPlayer.Image = imgPlayer;
@@ -3553,9 +3559,9 @@ gameOver:
             card.Text = GetNumber(number);
             if (mnuAppearance.Checked)
             {
-                Image image = new Bitmap(120, 160);
+                Image image = new Bitmap(ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT);
                 Graphics graphics = Graphics.FromImage(image);
-                graphics.DrawImage(imgUno, new Rectangle(0, 0, 120, 160), number * 120, color * 160, 120, 160, GraphicsUnit.Pixel);
+                graphics.DrawImage(imgUno, new Rectangle(0, 0, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT), number * ResourceUnoSize.WIDTH, color * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT, GraphicsUnit.Pixel);
                 card.BackgroundImage = image;
                 card.Font = new Font(card.Font.FontFamily, 1);
                 graphics.Flush();
@@ -4309,9 +4315,18 @@ arrived:
             imgUno = Properties.Resources.uno;
             Graphics gpsUno = Graphics.FromImage(imgUno);
             Brush brush = new SolidBrush(Color.Black);
+            string text = options.txtBlankText.Text;
             Font font = new Font(new FontFamily("MS Gothic"), 84f);
+            float fontSize = 84f;
+            SizeF ms = gpsUno.MeasureString(text, font);
+            while (ms.Width > ResourceUnoSize.WIDTH && fontSize >= 21)
+            {
+                fontSize--;
+                font = new Font(font.FontFamily, fontSize);
+                ms = gpsUno.MeasureString(text, font);
+            }
             for (byte b = 0; b <= UnoColor.MAX_VALUE; b++)
-                gpsUno.DrawString(options.txtBlankText.Text, font, brush, new PointF(UnoNumber.BLANK * 120, b * 160 + 40));
+                gpsUno.DrawString(text, font, brush, new RectangleF(UnoNumber.BLANK * ResourceUnoSize.WIDTH, b * ResourceUnoSize.HEIGHT, ResourceUnoSize.WIDTH, ResourceUnoSize.HEIGHT), new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             lblPile.Top = mnuGame.Height;
             lblPile.BackgroundImageLayout = ImageLayout.Stretch;
             lblPile.BackgroundImage = Properties.Resources.uno_pile;
