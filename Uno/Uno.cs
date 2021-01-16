@@ -855,7 +855,7 @@ rnd:
                                 && card[0].number != UnoNumber.DRAW_2
                                 && card[0].number != UnoNumber.DRAW_5
                                 && card[0].number != UnoNumber.WILD_DRAW_4
-                                && (card[0].number != UnoNumber.REVERSE || card[0].color != UnoColor.BLACK))
+                                && (card[0].number != UnoNumber.REVERSE || card.Last().color != UnoColor.BLACK))
                                 goto deny;
                         break;
                     case UnoNumberName.DRAW_2:
@@ -2974,7 +2974,6 @@ gameOver:
         private void PicPlayer_MouseUp(object sender, MouseEventArgs e)
         {
             PicPlayer.isSelecting = false;
-            PicPlayer_CheckedChanged();
             PicPlayer.selecting = -1;
             PicPlayer.pointing = -1;
             if (e.Y < 0 && isPlayer0sTurn)
@@ -2982,6 +2981,7 @@ gameOver:
                 PicPlayer.checkeds[pointing] = true;
                 Play(0);
             }
+            PicPlayer_CheckedChanged();
         }
 
         private void PicPlayer_MouseWheel(object sender, MouseEventArgs e)
