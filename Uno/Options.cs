@@ -423,8 +423,8 @@ namespace Uno {
 
         private void MnuPairs_CheckedChanged(object sender, EventArgs e)
         {
-            mnuCheater.Visible = mnuPairs.Checked;
-            if (mnuCheater.Checked && !mnuCheater.Visible)
+            mnuCheater.Enabled = mnuPairs.Checked;
+            if (mnuCheater.Checked && !mnuCheater.Enabled)
             {
                 mnuCheater.Checked = false;
                 mnuPro.Checked = true;
