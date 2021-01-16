@@ -2205,7 +2205,7 @@ gameOver:
 
         private void LblPile_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right && !options.isPlayingRecord)
             {
                 lblPile.MouseDoubleClick -= LblPile_MouseDoubleClick;
                 for (byte p = 1; p <= 3; p++)
