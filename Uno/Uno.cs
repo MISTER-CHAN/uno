@@ -15,12 +15,14 @@ namespace Uno
         private static readonly byte[]
             mvcList = new byte[UnoNumber.MaxValue]
             {
-                UnoNumber.WildHitfire,
+                UnoNumber.WildHitFire,
                 UnoNumber.WildDrawColor,
                 UnoNumber.WildDraw4,
                 UnoNumber.WildDownpourDraw4,
                 UnoNumber.WildDownpourDraw2,
                 UnoNumber.WildDownpourDraw1,
+                UnoNumber.WildAllHit,
+                UnoNumber.WildAttackAttack,
                 UnoNumber.Wild,
                 UnoNumber.Blank,
                 UnoNumber.DiscardAll,
@@ -48,25 +50,29 @@ namespace Uno
                 UnoNumber.Blank,
                 UnoNumber.TradeHands,
                 UnoNumber.Wild,
+                UnoNumber.WildAttackAttack,
+                UnoNumber.WildAllHit,
                 UnoNumber.WildDownpourDraw1,
                 UnoNumber.WildDownpourDraw2,
                 UnoNumber.WildDownpourDraw4,
                 UnoNumber.WildDraw4,
                 UnoNumber.WildDrawColor,
-                UnoNumber.WildHitfire
+                UnoNumber.WildHitFire
             },
             wildPlaylist = new byte[UnoNumber.MaxValue]
             {
                 UnoNumber.Wild,
                 2,
                 UnoNumber.Blank,
+                UnoNumber.WildAttackAttack,
+                UnoNumber.WildAllHit,
                 UnoNumber.WildDownpourDraw1,
                 UnoNumber.WildDownpourDraw2,
                 UnoNumber.WildDownpourDraw4,
                 UnoNumber.Draw2,
                 UnoNumber.WildDraw4,
                 UnoNumber.WildDrawColor,
-                UnoNumber.WildHitfire,
+                UnoNumber.WildHitFire,
                 UnoNumber.Reverse,
                 UnoNumber.SkipEveryone,
                 UnoNumber.DiscardAll,
@@ -338,10 +344,10 @@ namespace Uno
             else if (!options.mnuPlayOrDrawAll.Checked
                 && lblCards[1].Text == UnoNumberName.WildHitfire && draw > 0)
             {
-                if (players[player].cards[UnoColor.Black, UnoNumber.WildHitfire] > 0)
+                if (players[player].cards[UnoColor.Black, UnoNumber.WildHitFire] > 0)
                 {
                     bestCard.color = UnoColor.Black;
-                    bestCard.number = UnoNumber.WildHitfire;
+                    bestCard.number = UnoNumber.WildHitFire;
                 }
                 else if (options.mnuWildPunch.Checked
                     && players[player].cards[UnoColor.Black, UnoNumber.Reverse] > 0)
@@ -765,7 +771,7 @@ namespace Uno
                             goto deny;
                         break;
                     case UnoNumberName.WildHitfire:
-                        if (draw > 0 && card[0].number != UnoNumber.WildHitfire
+                        if (draw > 0 && card[0].number != UnoNumber.WildHitFire
                             && (card[0].number != UnoNumber.Reverse || card.Last().color != UnoColor.Black))
                             goto deny;
                         break;
@@ -1445,12 +1451,12 @@ namespace Uno
                         return new Card(UnoColor.Black, UnoNumber.Reverse);
                     return null;
                 }
-                if (backNumber == UnoNumber.WildHitfire && !options.mnuPlayOrDrawAll.Checked)
+                if (backNumber == UnoNumber.WildHitFire && !options.mnuPlayOrDrawAll.Checked)
                 {
                     if (pile.cards[UnoColor.Black, UnoNumber.Reverse] > 0)
                         return new Card(UnoColor.Black, UnoNumber.Reverse);
-                    if (pile.cards[UnoColor.Black, UnoNumber.WildHitfire] > 0)
-                        return new Card(UnoColor.Black, UnoNumber.WildHitfire);
+                    if (pile.cards[UnoColor.Black, UnoNumber.WildHitFire] > 0)
+                        return new Card(UnoColor.Black, UnoNumber.WildHitFire);
                     return null;
                 }
                 if (backNumber == UnoNumber.WildDrawColor && !options.mnuPlayOrDrawAll.Checked)
@@ -1686,12 +1692,14 @@ namespace Uno
                 UnoNumber.Number => UnoNumberName.Number,
                 UnoNumber.Blank => options.txtBlankText.Text,
                 UnoNumber.Wild => UnoNumberName.Wild,
+                UnoNumber.WildAttackAttack => UnoNumberName.WildAttackAttack,
+                UnoNumber.WildAllHit => UnoNumberName.WildAllHit,
                 UnoNumber.WildDownpourDraw1 => UnoNumberName.WildDownpourDraw1,
                 UnoNumber.WildDownpourDraw2 => UnoNumberName.WildDownpourDraw2,
                 UnoNumber.WildDownpourDraw4 => UnoNumberName.WildDownpourDraw4,
                 UnoNumber.WildDraw4 => UnoNumberName.WildDraw4,
                 UnoNumber.WildDrawColor => UnoNumberName.WildDrawColor,
-                UnoNumber.WildHitfire => UnoNumberName.WildHitfire,
+                UnoNumber.WildHitFire => UnoNumberName.WildHitfire,
                 UnoNumber.Null => UnoNumberName.Null,
                 _ => id + "",
             };
@@ -1715,12 +1723,14 @@ namespace Uno
                 UnoNumberName.TradeHands => UnoNumber.TradeHands,
                 UnoNumberName.Number => UnoNumber.Number,
                 UnoNumberName.Wild => UnoNumber.Wild,
+                UnoNumberName.WildAttackAttack => UnoNumber.WildAttackAttack,
+                UnoNumberName.WildAllHit => UnoNumber.WildAllHit,
                 UnoNumberName.WildDownpourDraw1 => UnoNumber.WildDownpourDraw1,
                 UnoNumberName.WildDownpourDraw2 => UnoNumber.WildDownpourDraw2,
                 UnoNumberName.WildDownpourDraw4 => UnoNumber.WildDownpourDraw4,
                 UnoNumberName.WildDraw4 => UnoNumber.WildDraw4,
                 UnoNumberName.WildDrawColor => UnoNumber.WildDrawColor,
-                UnoNumberName.WildHitfire => UnoNumber.WildHitfire,
+                UnoNumberName.WildHitfire => UnoNumber.WildHitFire,
                 UnoNumberName.Null => UnoNumber.Null,
                 _ => byte.Parse(number),
             };
@@ -1744,12 +1754,14 @@ namespace Uno
                 UnoNumber.TradeHands => "Trade Hands",
                 UnoNumber.Number => "Wild Number",
                 UnoNumber.Wild => "Wild",
+                UnoNumber.WildAttackAttack => "Wild Attack-Attack",
+                UnoNumber.WildAllHit => "Wild All Hit",
                 UnoNumber.WildDownpourDraw1 => "Wild Downpour Draw One",
                 UnoNumber.WildDownpourDraw2 => "Wild Downpour Draw Two",
                 UnoNumber.WildDownpourDraw4 => "Wild Downpour Draw Four",
                 UnoNumber.WildDraw4 => "Wild Draw Four",
                 UnoNumber.WildDrawColor => "Wild Draw Color",
-                UnoNumber.WildHitfire => "Wild Hit-fire",
+                UnoNumber.WildHitFire => "Wild Hit-Fire",
                 UnoNumber.Null => "Null",
                 _ => number + "",
             };
@@ -1807,9 +1819,11 @@ namespace Uno
                 UnoNumber.Number
                 => 40,
                 UnoNumber.Wild or
+                UnoNumber.WildAttackAttack or
+                UnoNumber.WildAllHit or
                 UnoNumber.WildDownpourDraw4 or
                 UnoNumber.WildDraw4 or
-                UnoNumber.WildHitfire
+                UnoNumber.WildHitFire
                 => 50,
                 UnoNumber.WildDrawColor
                 => 60,
@@ -1904,12 +1918,14 @@ namespace Uno
                         + (downpourDraw > 0 ? $"\n　　\t所有玩家罚抽 {downpourDraw} 张牌" : "");
                     return s == "" ? "普通的空白牌" : s.Substring(4);
                 case UnoNumber.Wild: return "";
+                case UnoNumber.WildAttackAttack: return "选择一位玩家罚抽 2 张牌";
+                case UnoNumber.WildAllHit: return "所有玩家罚抽 1 张牌";
                 case UnoNumber.WildDownpourDraw1: return "所有玩家罚抽 1 张牌";
                 case UnoNumber.WildDownpourDraw2: return "所有玩家罚抽 2 张牌";
                 case UnoNumber.WildDownpourDraw4: return "所有玩家罚抽 4 张牌";
                 case UnoNumber.WildDraw4: return "下家罚抽 4 张牌";
                 case UnoNumber.WildDrawColor: return "下家罚抽牌直至抽到被指定顏色的牌";
-                case UnoNumber.WildHitfire: return "下家罚抽牌盒中的所有牌";
+                case UnoNumber.WildHitFire: return "下家罚抽牌盒中的所有牌";
                 default: return $"普通的 {number} 号牌";
             };
         }
@@ -2038,9 +2054,11 @@ namespace Uno
                         case UnoNumber.Draw5:
                         case UnoNumber.WildDraw4:
                         case UnoNumber.WildDrawColor:
-                        case UnoNumber.WildHitfire:
+                        case UnoNumber.WildHitFire:
                             Draw(NextPlayer(index));
                             break;
+                        case UnoNumber.WildAttackAttack:
+                        case UnoNumber.WildAllHit:
                         case UnoNumber.WildDownpourDraw1:
                         case UnoNumber.WildDownpourDraw2:
                         case UnoNumber.WildDownpourDraw4:
@@ -3341,7 +3359,7 @@ namespace Uno
                 pile.cards[UnoColor.Black, UnoNumber.WildDrawColor] = 4 * decks - GetOnplayersCards(UnoColor.Black, UnoNumber.WildDrawColor);
             if (options.mnuWildHitfire.Checked)
             {
-                pile.cards[UnoColor.Black, UnoNumber.WildHitfire] = 2 * decks - GetOnplayersCards(UnoColor.Black, UnoNumber.WildHitfire);
+                pile.cards[UnoColor.Black, UnoNumber.WildHitFire] = 2 * decks - GetOnplayersCards(UnoColor.Black, UnoNumber.WildHitFire);
             }
             if (options.mnuWildPunch.Checked)
                 pile.cards[UnoColor.Black, UnoNumber.Reverse] = 4 * decks - GetOnplayersCards(UnoColor.Black, UnoNumber.Reverse);
@@ -4022,6 +4040,10 @@ namespace Uno
                     case UnoNumberName.Draw5:
                         AddDraw(5);
                         break;
+                    case UnoNumberName.WildAttackAttack:
+                        break;
+                    case UnoNumberName.WildAllHit:
+                        break;
                     case UnoNumberName.WildDownpourDraw1:
                         downpour.count += options.mnuDoubleDraw.Checked ? 2 : 1;
                         break;
@@ -4408,14 +4430,16 @@ namespace Uno
             Number = 19,
             Blank = 20,
             Wild = 21,
-            WildDownpourDraw1 = 22,
-            WildDownpourDraw2 = 23,
-            WildDownpourDraw4 = 24,
-            WildDraw4 = 25,
-            WildDrawColor = 26,
-            WildHitfire = 27,
-            Null = 28,
-            MaxValue = 28;
+            WildAttackAttack = 22,
+            WildAllHit = 23,
+            WildDownpourDraw1 = 24,
+            WildDownpourDraw2 = 25,
+            WildDownpourDraw4 = 26,
+            WildDraw4 = 27,
+            WildDrawColor = 28,
+            WildHitFire = 29,
+            Null = 30,
+            MaxValue = 30;
     }
 
     public class Card
@@ -4493,22 +4517,24 @@ namespace Uno
 
     public class UnoNumberName
     {
-        public const string Skip = "⊘";
-        public const string SkipEveryone = "⟳";
-        public const string Reverse = "⇅";
-        public const string Draw1 = "+1";
-        public const string Draw2 = "+2";
-        public const string Draw5 = "+5";
-        public const string DiscardAll = "×";
-        public const string TradeHands = "<>";
-        public const string Number = "#";
-        public const string Wild = "∷";
-        public const string WildDownpourDraw1 = "!1";
-        public const string WildDownpourDraw2 = "!2";
-        public const string WildDownpourDraw4 = "!4";
-        public const string WildDraw4 = "+4";
-        public const string WildDrawColor = "↑";
-        public const string WildHitfire = "+?";
-        public const string Null = "";
+        public const string Skip = "⊘",
+            SkipEveryone = "⟳",
+            Reverse = "⇅",
+            Draw1 = "+1",
+            Draw2 = "+2",
+            Draw5 = "+5",
+            DiscardAll = "×",
+            TradeHands = "<>",
+            Number = "#",
+            Wild = "∷",
+            WildAttackAttack = "2+",
+            WildAllHit = "⚥⚥",
+            WildDownpourDraw1 = "!1",
+            WildDownpourDraw2 = "!2",
+            WildDownpourDraw4 = "!4",
+            WildDraw4 = "+4",
+            WildDrawColor = "↑",
+            WildHitfire = "+?",
+            Null = "";
     }
 }
