@@ -3187,7 +3187,7 @@ namespace Uno
         private void PlayersTurn(byte player, bool turn = true, int dbp = 0, bool delay = true)
         {
             int count = int.Parse(lblCounts[player].Text);
-            if (count <= 7 * Math.Pow(2, dbp - 1))
+            if (count <= 7 * (1 << dbp - 1))
             {
                 if (count <= 1)
                     dbp = 0;
